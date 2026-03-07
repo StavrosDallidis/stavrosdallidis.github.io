@@ -377,31 +377,69 @@ z-index:-1;
 
 }
 
-@media (max-width:768px){
+/* MOBILE LAYOUT */
+
+@media screen and (max-width:768px){
+
+/* make content full width */
 
 .col-md-8{
-margin-left:10px;
-margin-right:10px;
-width:auto;
+width:100%;
+margin-left:0;
+padding:20px;
 }
 
-.header-description{
-max-width:100%;
+/* remove bootstrap offset */
+
+.col-md-offset-2{
+margin-left:0;
 }
+
+/* stack navbar items */
+
+.navbar-nav{
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+/* stack experience title and date */
+
+.experience-header{
+flex-direction:column;
+align-items:flex-start;
+gap:4px;
+}
+
+/* wrap social buttons */
 
 .profile-links{
 flex-wrap:wrap;
 gap:10px;
 }
 
-.experience-header{
-flex-direction:column;
-align-items:flex-start;
+/* prevent header text from being narrow */
+
+.header-description{
+max-width:100%;
 }
 
-.navbar-nav > li{
-display:block;
-margin-bottom:5px;
+/* make cards slightly smaller */
+
+.col-md-8{
+padding:18px;
+}
+
+/* adjust separator line */
+
+.section-divider{
+width:90%;
+}
+
+/* improve spacing */
+
+.section{
+margin-top:30px;
 }
 
 }
