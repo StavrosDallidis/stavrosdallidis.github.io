@@ -339,3 +339,13 @@ white-space:nowrap;
 .cv-button:hover{
 background:#002a52;
 }
+
+.profile-links a{
+display:inline-flex;
+align-items:center;
+gap:6px;
+white-space:nowrap;
+text-decoration:none;
+color:#003E74;
+font-weight:500;
+}
