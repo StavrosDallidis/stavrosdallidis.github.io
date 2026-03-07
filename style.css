@@ -25,15 +25,10 @@ margin-bottom:20px;
 
 }
 
-ul {
-
-line-height:1.8;
-
-}
-
 .navbar {
 
-border-radius:0;
+background-color:#003E74;
+border:none;
 
 }
 
@@ -51,29 +46,16 @@ display:inline-block;
 
 }
 
-footer {
+.navbar-nav > li > a {
 
-margin-top:40px;
-padding:20px;
-color:#777;
-
-}
-
-a {
-
-color:#1a73e8;
+color:white;
+font-weight:500;
 
 }
 
-a:hover {
+.navbar-nav > li > a:hover {
 
-text-decoration:none;
-
-}
-
-.btn-primary {
-
-margin-top:10px;
+background-color:#002a4d;
 
 }
 
@@ -82,7 +64,7 @@ margin-top:10px;
 display:flex;
 justify-content:space-between;
 font-weight:600;
-margin-top:15px;
+margin-top:20px;
 
 }
 
@@ -91,4 +73,63 @@ margin-top:15px;
 font-style:italic;
 margin-bottom:5px;
 
+}
+
+.social-buttons a {
+
+margin-right:15px;
+font-size:16px;
+text-decoration:none;
+
+}
+
+.social-buttons i {
+
+margin-right:5px;
+
+}
+
+footer {
+
+margin-top:40px;
+padding:20px;
+color:#777;
+
+}
+
+.navbar {
+background-color:#003E74;
+border:none;
+}
+
+.navbar-nav {
+float:none;
+text-align:center;
+}
+
+.navbar-nav > li {
+float:none;
+display:inline-block;
+}
+
+.experience-header {
+display:flex;
+justify-content:space-between;
+font-weight:600;
+margin-top:20px;
+}
+
+.experience-org {
+font-style:italic;
+margin-bottom:5px;
+}
+
+.social-buttons a {
+margin-right:15px;
+font-size:16px;
+text-decoration:none;
+}
+
+.social-buttons i {
+margin-right:6px;
 }
