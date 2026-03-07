@@ -290,30 +290,33 @@ align-items:flex-start;
 gap:40px;
 }
 
-/* LEFT TEXT */
+/* TEXT COLUMN */
 
 .header-text{
 flex:1;
+min-width:0;
 }
 
 /* LOGO */
 
 .header-logo img{
-width:260px;
+width:320px;
+max-width:100%;
 height:auto;
 }
 
-/* LINKS ROW */
+/* SOCIAL LINKS ROW */
 
 .profile-links{
 display:flex;
-flex-wrap:wrap;
-gap:16px;
+flex-direction:row;
+flex-wrap:nowrap;
 align-items:center;
+gap:18px;
 margin-top:10px;
 }
 
-/* LINKS */
+/* SOCIAL LINKS */
 
 .profile-links a{
 text-decoration:none;
@@ -328,6 +331,7 @@ background:#003E74;
 color:white !important;
 padding:7px 14px;
 border-radius:6px;
+white-space:nowrap;
 }
 
 /* BUTTON HOVER */
