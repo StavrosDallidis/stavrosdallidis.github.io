@@ -76,3 +76,19 @@ text-decoration:none;
 margin-top:10px;
 
 }
+
+.experience-header {
+
+display:flex;
+justify-content:space-between;
+font-weight:600;
+margin-top:15px;
+
+}
+
+.experience-org {
+
+font-style:italic;
+margin-bottom:5px;
+
+}
