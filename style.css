@@ -281,3 +281,36 @@ html {
 scroll-behavior:smooth;
 
 }
+/* HEADER LAYOUT */
+
+.header-container{
+
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:40px;
+
+}
+
+/* LEFT SIDE TEXT */
+
+.header-text{
+
+flex:1;
+
+}
+
+/* RIGHT SIDE LOGO */
+
+.header-logo{
+
+flex-shrink:0;
+
+}
+
+.header-logo img{
+
+max-width:240px;
+height:auto;
+
+}
