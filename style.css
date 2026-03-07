@@ -283,34 +283,32 @@ scroll-behavior:smooth;
 }
 /* HEADER LAYOUT */
 
-.header-container{
-
+.header-flex{
 display:flex;
-justify-content:space-between;
 align-items:flex-start;
+justify-content:space-between;
 gap:40px;
-
+flex-wrap:nowrap;
 }
 
-/* LEFT SIDE TEXT */
+/* TEXT AREA */
 
 .header-text{
-
 flex:1;
-
+min-width:0;
 }
 
-/* RIGHT SIDE LOGO */
+/* LOGO AREA */
 
 .header-logo{
-
-flex-shrink:0;
-
+flex:0 0 auto;
 }
 
+/* LOGO SIZE CONTROL */
+
 .header-logo img{
-
-max-width:240px;
+width:180px;
+max-width:100%;
 height:auto;
-
+object-fit:contain;
 }
