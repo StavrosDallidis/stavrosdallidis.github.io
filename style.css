@@ -157,7 +157,7 @@ transition:all 0.25s ease;
 
 .profile-links a:hover {
 
-background:#f2f6fb;
+background:rgba(42, 78, 121, 0.733);
 transform:translateY(-2px);
 
 }
@@ -166,7 +166,7 @@ transform:translateY(-2px);
 
 .cv-button{
 background:#003E74;
-color:white !important;
+color:rgb(255, 255, 255) !important;
 padding:6px 14px;
 border-radius:6px;
 white-space:nowrap;
@@ -177,30 +177,24 @@ gap:6px;
 
 .cv-button:hover {
 
-background:#002b55;
+background:rgb(0, 43, 85);
 
 }
 
 /* SECTION CARDS */
 
-.col-md-8{
+.col-md-8 {
 
-background: rgba(96, 141, 238, 0.5);
-padding:20px 28px;
-border-radius:12px;
-
-backdrop-filter: blur(6px);
--webkit-backdrop-filter: blur(6px);
-
-border:1px solid rgba(0,0,0,0.08);
-
-transition:all 0.25s ease;
+background:rgba(96, 141, 238, 0.5);
+padding:10px 20px;
+border-radius:8px;
+transition:all 0.2s ease;
 
 }
 
 .col-md-8:hover {
 
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
+box-shadow:0 6px 18px rgba(0,0,0,0.25);
 
 }
 
