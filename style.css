@@ -183,12 +183,18 @@ background:#002b55;
 
 /* SECTION CARDS */
 
-.col-md-8 {
+.col-md-8{
 
-background:white;
-padding:10px 20px;
-border-radius:8px;
-transition:all 0.2s ease;
+background: rgba(255,255,255,0.65);
+padding:20px 28px;
+border-radius:12px;
+
+backdrop-filter: blur(6px);
+-webkit-backdrop-filter: blur(6px);
+
+border:1px solid rgba(0,0,0,0.08);
+
+transition:all 0.25s ease;
 
 }
 
