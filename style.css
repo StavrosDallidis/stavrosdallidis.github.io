@@ -445,3 +445,34 @@ margin-top:30px;
 }
 
 <link rel="icon" type="image/png" href="favicon.png">
+
+@media screen and (max-width:768px){
+
+/* make navbar horizontal again */
+
+.navbar-nav{
+display:flex;
+flex-direction:row;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.navbar-nav > li{
+display:inline-block;
+margin:4px;
+}
+
+/* reduce navbar height */
+
+.navbar{
+padding:4px 0;
+}
+
+/* reduce font size */
+
+.navbar-nav > li > a{
+font-size:14px;
+padding:6px 8px;
+}
+
+}
