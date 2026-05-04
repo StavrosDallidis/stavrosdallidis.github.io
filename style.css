@@ -5,21 +5,21 @@
 
 /* ─── CSS Variables ──────────────────────────────────────── */
 :root {
-  --navy:       #003E74;
-  --navy-dk:    #002650;
-  --navy-lt:    #1a5a9a;
-  --accent:     #4E8FC8;
-  --ice:        #E8F2FA;
-  --white:      #ffffff;
-  --off:        #F5F8FC;
-  --ink:        #1a1f2e;
-  --muted:      #6b7280;
-  --border:     rgba(0, 62, 116, 0.12);
-  --radius:     16px;
-  --radius-lg:  24px;
-  --shadow:     0 4px 24px rgba(0, 62, 116, 0.10);
+  --navy:         #003E74;
+  --navy-dk:      #002650;
+  --navy-lt:      #1a5a9a;
+  --accent:       #4E8FC8;
+  --ice:          #E8F2FA;
+  --white:        #ffffff;
+  --off:          #F5F8FC;
+  --ink:          #1a1f2e;
+  --muted:        #6b7280;
+  --border:       rgba(0, 62, 116, 0.12);
+  --radius:       16px;
+  --radius-lg:    24px;
+  --shadow:       0 4px 24px rgba(0, 62, 116, 0.10);
   --shadow-hover: 0 12px 40px rgba(0, 62, 116, 0.18);
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition:   0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── Reset & Base ───────────────────────────────────────── */
@@ -508,6 +508,89 @@ hr.divider {
 }
 
 .memberships li:last-child { border-bottom: none; }
+
+/* ─── Publications ───────────────────────────────────────── */
+.pub-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pub-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #b45309;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  padding: 4px 12px;
+  border-radius: 20px;
+  align-self: flex-start;
+}
+
+.pub-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+.pub-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.pub-authors {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.pub-authors strong {
+  color: var(--navy);
+}
+
+.pub-venue {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.pub-venue i {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.pub-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.pub-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
 /* ─── Certifications ─────────────────────────────────────── */
 .cert-grid {
