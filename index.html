@@ -1,431 +1,508 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stavros Dallidis | Electrical & Computer Engineering</title>
 
-<link rel="stylesheet" href="style.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 
-<link rel="icon" type="image/png" href="favicon.png">
- 
-<title>Stavros Dallidis | Electrical Engineering</title>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="description" content="Stavros Dallidis – Electrical and Computer Engineering student at the University of Cyprus with research interests in microelectronics, radiation-hardened electronics, embedded systems, and ASIC design for space applications.">
-
-<meta name="keywords" content="Stavros Dallidis, Electrical Engineering, University of Cyprus, microelectronics, radiation hardened electronics, embedded systems, ASIC design, satellite electronics, aerospace electronics, avionics">
-
-<meta name="author" content="Stavros Dallidis">
-
-<meta property="og:title" content="Stavros Dallidis | Electrical Engineering">
-<meta property="og:description" content="Electrical and Computer Engineering student at the University of Cyprus focusing on microelectronics and radiation-hardened systems.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://stavrosdallidis.github.io">
-
-<link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link rel="stylesheet" href="style.css">
-
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "Person",
- "name": "Stavros Dallidis",
- "url": "https://stavrosdallidis.github.io",
- "email": "mailto:sdalli01@ucy.ac.cy",
- "sameAs": [
-  "https://github.com/stavrosdallidis",
-  "https://www.linkedin.com/in/stavros-dallidis-016212231/",
-  "https://scholar.google.com/"
- ],
- "jobTitle": "Electrical and Computer Engineering Student",
- "affiliation": {
-   "@type": "Organization",
-   "name": "University of Cyprus"
- },
- "alumniOf": {
-   "@type": "Organization",
-   "name": "University of Cyprus"
- },
- "knowsAbout": [
-  "Microelectronics",
-  "Radiation-hardened electronics",
-  "Embedded systems",
-  "ASIC design",
-  "Satellite electronics"
- ]
-}
-</script>
-
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<nav class="navbar navbar-fixed-top">
-<div class="container">
+<div id="progress-bar"></div>
 
-<ul class="nav navbar-nav">
-
-<li><a href="#about">About</a></li>
-<li><a href="#education">Education</a></li>
-<li><a href="#experience">Experience</a></li>
-<li><a href="#skills">Skills</a></li>
-<li><a href="#certifications">Certifications</a></li>
-<li><a href="#contact">Contact</a></li>
-
-</ul>
-
-</div>
+<!-- ─── NAVBAR ──────────────────────────────────────────── -->
+<nav class="navbar" id="navbar">
+  <a href="#about" class="nav-logo">Stavros Dallidis</a>
+  <div class="nav-links">
+    <a href="#about" class="active">About</a>
+    <a href="#education">Education</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#certifications">Certifications</a>
+    <a href="#contact">Contact</a>
+    <a href="StavrosDallidisCV.pdf" target="_blank" class="cv-nav">
+      <i class="fas fa-file-arrow-down" style="margin-right:5px"></i>CV
+    </a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
 
-<div class="container">
-
-<div class="row header">
-<div class="col-md-8 col-md-offset-2">
-
-<h2 id="about">Stavros Dallidis</h2>
-
-<h4>Electrical and Computer Engineering Student</h4>
-<h5>University of Cyprus</h5>
-
-<p>Academic Email: sdalli01@ucy.ac.cy</p>
-<p>Personal Email: dallidisstavros@gmail.com</p>
-
-<div class="profile-links">
-
-<a href="https://github.com/stavrosdallidis" target="_blank">
-<i class="fab fa-github"></i> GitHub
-</a>
-
-<a href="https://www.linkedin.com/in/stavros-dallidis-016212231/" target="_blank">
-<i class="fab fa-linkedin"></i> LinkedIn
-</a>
-
-<a href="https://scholar.google.com" target="_blank">
-<i class="fas fa-graduation-cap"></i> Google Scholar
-</a>
-
-<a class="cv-button" href="StavrosDallidisCV.pdf" target="_blank">
-<i class="fas fa-file"></i> Download CV
-</a>
-
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#education" onclick="toggleMenu()">Education</a>
+  <a href="#experience" onclick="toggleMenu()">Experience</a>
+  <a href="#skills" onclick="toggleMenu()">Skills</a>
+  <a href="#certifications" onclick="toggleMenu()">Certifications</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a href="StavrosDallidisCV.pdf" target="_blank" onclick="toggleMenu()">Download CV</a>
 </div>
 
-<p class="header-description">
-
-Electrical and Computer Engineering student with research interests in
-microelectronics, radiation-hardened electronics, embedded systems,
-and Application Specific Integrated Circuits design for space applications.
-
-</p>
-
-</div>
-</div>
-
-<hr class="section-divider">
-
-<div class="row section">
-<div class="col-md-8 col-md-offset-2">
-
-<h3 id="education">Education</h3>
-
-<div class="experience-header">
-<span>University of Cyprus</span>
-<span>09/2021 – 06/2026</span>
-</div>
-
-<div class="experience-org">
-BSc Electrical and Computer Engineering
-</div>
-
-<ul>
-<li>Top 10% of class</li>
-<li>Thesis: Design of Application Specific Integrated Circuits for Space Satellite Applications</li>
-</ul>
-
-<div class="experience-header">
-<span>3rd Lyceum of Alexandroupolis</span>
-<span>09/2018 – 06/2021</span>
-</div>
-
-<div class="experience-org">
-Grade: 19.3 / 20 — Distinction
-</div>
-
-</div>
-</div>
-
-<hr class="section-divider">
-
-<div class="row section">
-<div class="col-md-8 col-md-offset-2">
-
-<h3 id="experience">Research & Professional Experience</h3>
-
-<div class="experience-header">
-<span>Undergraduate Researcher</span>
-<span>06/2025 – Present</span>
-</div>
-
-<div class="experience-org">
-Holistic Electronics Research Laboratory (HERL), University of Cyprus, Nicosia, Cyprus
-</div>
-
-<ul>
-<li>Bachelor thesis under Prof. Julius Georgiou</li>
-<li>Characterization of Pragmatic Semiconductor FlexIC thin-film technology</li>
-<li>Design of radiation-hardened circuits for satellite electronics</li>
-<li>Standard cell layout techniques for reliability</li>
-</ul>
-
-<div class="experience-header">
-<span>SMT Manufacturing Engineer</span>
-<span>06/2025 – 08/2025</span>
-</div>
-
-<div class="experience-org">
-Prisma Electronics S.A., Alexandroupolis, Greece
-</div>
-
-<ul>
-<li>Programming pick-and-place machines</li>
-<li>Operating automated inspection systems</li>
-<li>Collaboration on industrial electronics systems</li>
-</ul>
-
-<div class="experience-header">
-<span>Undergraduate Researcher</span>
-<span>07/2024 – 08/2024</span>
-</div>
-
-<div class="experience-org">
-Phaethon Centre of Excellence, University of Cyprus, Nicosia, Cyprus
-</div>
-
-<ul>
-<li>Machine learning framework predicting photovoltaic power output</li>
-<li>Outlier detection in large datasets</li>
-</ul>
-
-<div class="experience-header">
-<span>Undergraduate Researcher</span>
-<span>05/2024 – 07/2024</span>
-</div>
-
-<div class="experience-org">
-Imperial College London – Centre for Bio-Inspired Technology, London, United Kingdom
-</div>
-
-<ul>
-<li>CNN model implemented in C for ESP32 microcontroller</li>
-<li>Embedded AI system for diabetes monitoring</li>
-</ul>
-
-<div class="experience-header">
-<span>Technician</span>
-<span>06/2023 – 08/2023</span>
-</div>
-
-<div class="experience-org">
-Phaethon Centre of Excellence, University of Cyprus, Nicosia, Cyprus
-</div>
-
-<ul>
-<li>Mobile telephony electromagnetic field measurements</li>
-<li>Technical support for research projects</li>
-</ul>
-
-</div>
-</div>
-
-<hr class="section-divider">
-
-<div class="row section">
-<div class="col-md-8 col-md-offset-2">
-
-
-
-<h3 id="skills">Skills</h3>
-
-<p>
-<strong>Programming</strong><br>
-C / Embedded C, Python, Assembly (MIPS32), HTML
-</p>
-
-<p>
-<strong>Engineering Software</strong><br>
-Cadence, Quartus, MATLAB, SOLIDWORKS, LaTeX
-</p>
-
-<p>
-<strong>Languages</strong><br>
-English (C1), Greek (Native)
-</p>
-
-<p>
-<strong>Professional Memberships</strong>
-</p>
-
-<ul>
-<li>IEEE Circuits and Systems Society</li>
-<li>IEEE Aerospace and Electronic Systems Society</li>
-</ul>
-
-</div>
-</div>
-
-<hr class="section-divider">
-
-<div class="row">
-<div class="col-md-8 col-md-offset-2">
-
-<h3 id="certifications">Certifications</h3>
-
-<div class="experience-header">
-<span>Cash Flow</span>
-<span>Feb 2026</span>
-</div>
-<div class="experience-org">
-HP Life
-</div>
-<p>
-<a href="Cash Flow.pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Data Science & Analytics</span>
-<span>Feb 2026</span>
-</div>
-<div class="experience-org">
-HP Life
-</div>
-<p>
-<a href="Data Science & Analytics.pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Basics of Finance</span>
-<span>Feb 2026</span>
-</div>
-<div class="experience-org">
-HP Life
-</div>
-<p>
-<a href="Basics of Finance certificate HP.pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Data Security - Cybersecurity</span>
-<span>Nov 2023</span>
-</div>
-<div class="experience-org">
-University of Patras
-</div>
-<p>
-<a href="ΒΕΒΑΙΩΣΗ_01_CS_4.pdf.pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Circuit Simulation Onramp</span>
-<span>Feb 2023</span>
-</div>
-<div class="experience-org">
-MathWorks
-</div>
-<p>
-<a href="certificate (4).pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Simscape Onramp</span>
-<span>Feb 2023</span>
-</div>
-<div class="experience-org">
-MathWorks
-</div>
-<p>
-<a href="certificate (3).pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Programming in C</span>
-<span>Dec 2023</span>
-</div>
-<div class="experience-org">
-Sololearn
-</div>
-<p>
-<a href="C_intermediate_certificate.pdf" target="_blank">Certificate 1</a> |
-<a href="c certificate.pdf" target="_blank">Certificate 2</a>
-</p>
-
-<div class="experience-header">
-<span>MATLAB Onramp</span>
-<span>Dec 2021</span>
-</div>
-<div class="experience-org">
-MathWorks
-</div>
-<p>
-<a href="certificate.pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Introduction to Symbolic Math with MATLAB</span>
-<span>Dec 2021</span>
-</div>
-<div class="experience-org">
-MathWorks
-</div>
-<p>
-<a href="certificate (1).pdf" target="_blank">View Certificate</a>
-</p>
-
-<div class="experience-header">
-<span>Optimization Onramp</span>
-<span>Dec 2021</span>
-</div>
-<div class="experience-org">
-MathWorks
-</div>
-<p>
-<a href="certificate (2).pdf" target="_blank">View Certificate</a>
-</p>
-
-</div>
-</div>
-
-<hr class="section-divider">
-
-
-<div class="row">
-<div class="col-md-8 col-md-offset-2">
-
-<h3 id="contact">Contact</h3>
-
-<p>Academic Email: sdalli01@ucy.ac.cy</p>
-<p>Personal Email: dallidisstavros@gmail.com</p>
-<p>Mobile: +30 6980143766</p>
-<p>Nicosia, Cyprus</p>
-
-</div>
-</div>
-
-<hr>
-
-<footer class="text-center">
-<p>© Stavros Dallidis 2026</p>
+<main>
+
+  <!-- ─── HERO / ABOUT ──────────────────────────────────── -->
+  <section id="about">
+    <div class="container">
+      <div class="hero-card fade-up">
+        <div>
+          <div class="hero-eyebrow">Electrical &amp; Computer Engineering</div>
+          <h1 class="hero-name">Stavros<br>Dallidis</h1>
+          <div class="hero-title">Undergraduate Researcher &amp; Engineering Student</div>
+          <div class="hero-org">University of Cyprus · HERL Lab</div>
+
+          <div class="hero-emails">
+            <p>Academic: <a href="mailto:sdalli01@ucy.ac.cy">sdalli01@ucy.ac.cy</a></p>
+            <p>Personal: <a href="mailto:dallidisstavros@gmail.com">dallidisstavros@gmail.com</a></p>
+          </div>
+
+          <div class="profile-links">
+            <a href="https://github.com/stavrosdallidis" target="_blank">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/stavros-dallidis-016212231/" target="_blank">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://scholar.google.com" target="_blank">
+              <i class="fas fa-graduation-cap"></i> Scholar
+            </a>
+            <a href="StavrosDallidisCV.pdf" target="_blank" class="cv-btn">
+              <i class="fas fa-file-arrow-down"></i> Download CV
+            </a>
+          </div>
+
+          <p class="hero-bio">
+            Electrical and Computer Engineering student with research interests in
+            microelectronics, radiation-hardened electronics, embedded systems,
+            and Application Specific Integrated Circuit design for space applications.
+          </p>
+        </div>
+
+        <div class="hero-logo">
+          <img src="University%20of%20Cyprus.svg" alt="University of Cyprus">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─── EDUCATION ─────────────────────────────────────── -->
+  <section id="education">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-graduation-cap"></i> Academic Background</div>
+        <h2 class="section-title">Education</h2>
+      </div>
+
+      <div class="card fade-up">
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">University of Cyprus</div>
+            <div class="entry-date">09/2021 – 06/2026</div>
+          </div>
+          <div class="entry-org">BSc Electrical and Computer Engineering</div>
+          <ul class="entry-list">
+            <li>Top 10% of class</li>
+            <li>Thesis: Design of Application Specific Integrated Circuits for Space Satellite Applications</li>
+          </ul>
+        </div>
+
+        <hr class="entry-divider">
+
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">3rd Lyceum of Alexandroupolis</div>
+            <div class="entry-date">09/2018 – 06/2021</div>
+          </div>
+          <div class="entry-org">Grade: 19.3 / 20 — Distinction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─── EXPERIENCE ────────────────────────────────────── -->
+  <section id="experience">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-flask"></i> Research &amp; Work</div>
+        <h2 class="section-title">Research &amp; Professional Experience</h2>
+      </div>
+
+      <div class="card fade-up">
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Undergraduate Researcher</div>
+            <div class="entry-date">06/2025 – Present</div>
+          </div>
+          <div class="entry-org">Holistic Electronics Research Laboratory (HERL) · University of Cyprus, Nicosia</div>
+          <ul class="entry-list">
+            <li>Bachelor thesis under Prof. Julius Georgiou</li>
+            <li>Characterization of Pragmatic Semiconductor FlexIC thin-film technology</li>
+            <li>Design of radiation-hardened circuits for satellite electronics</li>
+            <li>Standard cell layout techniques for reliability</li>
+          </ul>
+        </div>
+
+        <hr class="entry-divider">
+
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">SMT Manufacturing Engineer</div>
+            <div class="entry-date">06/2025 – 08/2025</div>
+          </div>
+          <div class="entry-org">Prisma Electronics S.A. · Alexandroupolis, Greece</div>
+          <ul class="entry-list">
+            <li>Programming pick-and-place machines</li>
+            <li>Operating automated inspection systems</li>
+            <li>Collaboration on industrial electronics systems</li>
+          </ul>
+        </div>
+
+        <hr class="entry-divider">
+
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Undergraduate Researcher</div>
+            <div class="entry-date">07/2024 – 08/2024</div>
+          </div>
+          <div class="entry-org">Phaethon Centre of Excellence · University of Cyprus, Nicosia</div>
+          <ul class="entry-list">
+            <li>Machine learning framework predicting photovoltaic power output</li>
+            <li>Outlier detection in large datasets</li>
+          </ul>
+        </div>
+
+        <hr class="entry-divider">
+
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Undergraduate Researcher</div>
+            <div class="entry-date">05/2024 – 07/2024</div>
+          </div>
+          <div class="entry-org">Imperial College London – Centre for Bio-Inspired Technology · London, UK</div>
+          <ul class="entry-list">
+            <li>CNN model implemented in C for ESP32 microcontroller</li>
+            <li>Embedded AI system for diabetes monitoring</li>
+          </ul>
+        </div>
+
+        <hr class="entry-divider">
+
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Technician</div>
+            <div class="entry-date">06/2023 – 08/2023</div>
+          </div>
+          <div class="entry-org">Phaethon Centre of Excellence · University of Cyprus, Nicosia</div>
+          <ul class="entry-list">
+            <li>Mobile telephony electromagnetic field measurements</li>
+            <li>Technical support for research projects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─── SKILLS ────────────────────────────────────────── -->
+  <section id="skills">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-microchip"></i> Competencies</div>
+        <h2 class="section-title">Skills</h2>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-block fade-up">
+          <h4>Programming</h4>
+          <div class="skill-tags">
+            <span class="skill-tag">C / Embedded C</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Assembly (MIPS32)</span>
+            <span class="skill-tag">HTML</span>
+          </div>
+        </div>
+
+        <div class="skill-block fade-up">
+          <h4>Engineering Software</h4>
+          <div class="skill-tags">
+            <span class="skill-tag">Cadence</span>
+            <span class="skill-tag">Quartus</span>
+            <span class="skill-tag">MATLAB</span>
+            <span class="skill-tag">SOLIDWORKS</span>
+            <span class="skill-tag">LaTeX</span>
+          </div>
+        </div>
+
+        <div class="skill-block fade-up">
+          <h4>Languages</h4>
+          <div class="skill-tags">
+            <span class="skill-tag">Greek — Native</span>
+            <span class="skill-tag">English — C1</span>
+          </div>
+        </div>
+
+        <div class="skill-block fade-up">
+          <h4>Professional Memberships</h4>
+          <ul class="memberships">
+            <li>IEEE Circuits and Systems Society</li>
+            <li>IEEE Aerospace and Electronic Systems Society</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─── CERTIFICATIONS ────────────────────────────────── -->
+  <section id="certifications">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-certificate"></i> Credentials</div>
+        <h2 class="section-title">Certifications</h2>
+      </div>
+
+      <div class="cert-grid">
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">HP Life</div>
+            <div class="cert-name">Cash Flow</div>
+            <div class="cert-date">February 2026</div>
+          </div>
+          <a href="Cash Flow.pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">HP Life</div>
+            <div class="cert-name">Data Science &amp; Analytics</div>
+            <div class="cert-date">February 2026</div>
+          </div>
+          <a href="Data Science &amp; Analytics.pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">HP Life</div>
+            <div class="cert-name">Basics of Finance</div>
+            <div class="cert-date">February 2026</div>
+          </div>
+          <a href="Basics of Finance certificate HP.pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">University of Patras</div>
+            <div class="cert-name">Data Security — Cybersecurity</div>
+            <div class="cert-date">November 2023</div>
+          </div>
+          <a href="ΒΕΒΑΙΩΣΗ_01_CS_4.pdf.pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">MathWorks</div>
+            <div class="cert-name">Circuit Simulation Onramp</div>
+            <div class="cert-date">February 2023</div>
+          </div>
+          <a href="certificate (4).pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">MathWorks</div>
+            <div class="cert-name">Simscape Onramp</div>
+            <div class="cert-date">February 2023</div>
+          </div>
+          <a href="certificate (3).pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">Sololearn</div>
+            <div class="cert-name">Programming in C</div>
+            <div class="cert-date">December 2023</div>
+          </div>
+          <div class="cert-links-row">
+            <a href="C_intermediate_certificate.pdf" target="_blank" class="cert-link">
+              <i class="fas fa-arrow-up-right-from-square"></i> Cert 1
+            </a>
+            <a href="c certificate.pdf" target="_blank" class="cert-link">
+              <i class="fas fa-arrow-up-right-from-square"></i> Cert 2
+            </a>
+          </div>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">MathWorks</div>
+            <div class="cert-name">MATLAB Onramp</div>
+            <div class="cert-date">December 2021</div>
+          </div>
+          <a href="certificate.pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">MathWorks</div>
+            <div class="cert-name">Introduction to Symbolic Math with MATLAB</div>
+            <div class="cert-date">December 2021</div>
+          </div>
+          <a href="certificate (1).pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+        <div class="cert-card fade-up">
+          <div>
+            <div class="cert-issuer">MathWorks</div>
+            <div class="cert-name">Optimization Onramp</div>
+            <div class="cert-date">December 2021</div>
+          </div>
+          <a href="certificate (2).pdf" target="_blank" class="cert-link">
+            <i class="fas fa-arrow-up-right-from-square"></i> View
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─── CONTACT ───────────────────────────────────────── -->
+  <section id="contact">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-envelope"></i> Get in Touch</div>
+        <h2 class="section-title">Contact</h2>
+      </div>
+
+      <div class="contact-grid">
+        <a href="mailto:sdalli01@ucy.ac.cy" class="contact-item fade-up">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div class="contact-info">
+            <label>Academic Email</label>
+            <span>sdalli01@ucy.ac.cy</span>
+          </div>
+        </a>
+
+        <a href="mailto:dallidisstavros@gmail.com" class="contact-item fade-up">
+          <div class="contact-icon"><i class="fab fa-google"></i></div>
+          <div class="contact-info">
+            <label>Personal Email</label>
+            <span>dallidisstavros@gmail.com</span>
+          </div>
+        </a>
+
+        <div class="contact-item fade-up">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <div class="contact-info">
+            <label>Mobile</label>
+            <span>+30 698 014 3766</span>
+          </div>
+        </div>
+
+        <div class="contact-item fade-up">
+          <div class="contact-icon"><i class="fas fa-location-dot"></i></div>
+          <div class="contact-info">
+            <label>Location</label>
+            <span>Nicosia, Cyprus</span>
+          </div>
+        </div>
+
+        <a href="https://github.com/stavrosdallidis" target="_blank" class="contact-item fade-up">
+          <div class="contact-icon"><i class="fab fa-github"></i></div>
+          <div class="contact-info">
+            <label>GitHub</label>
+            <span>stavrosdallidis</span>
+          </div>
+        </a>
+
+        <a href="https://www.linkedin.com/in/stavros-dallidis-016212231/" target="_blank" class="contact-item fade-up">
+          <div class="contact-icon"><i class="fab fa-linkedin"></i></div>
+          <div class="contact-info">
+            <label>LinkedIn</label>
+            <span>Stavros Dallidis</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── FOOTER ────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-links">
+    <a href="https://github.com/stavrosdallidis" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/stavros-dallidis-016212231/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://scholar.google.com" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+    <a href="mailto:sdalli01@ucy.ac.cy" title="Email"><i class="fas fa-envelope"></i></a>
+  </div>
+  <p>&copy; <span>Stavros Dallidis</span> 2026 &middot; Electrical &amp; Computer Engineering &middot; University of Cyprus</p>
 </footer>
 
-</div>
+<script>
+  // Scroll progress bar + navbar shadow + active nav link
+  window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / scrollHeight * 100) + '%';
+    document.getElementById('navbar').classList.toggle('scrolled', scrollTop > 10);
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    const sections = ['about', 'education', 'experience', 'skills', 'certifications', 'contact'];
+    let current = 'about';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 90) current = id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  // Mobile menu toggle
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // Fade-up on scroll into view
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
