@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stavros Dallidis | Electrical & Computer Engineering</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Stavros Dallidis – Electrical and Computer Engineering student at the University of Cyprus with research interests in microelectronics, radiation-hardened electronics, embedded systems, and ASIC design for space applications.">
+  <meta name="keywords" content="Stavros Dallidis, Electrical Engineering, University of Cyprus, microelectronics, radiation hardened electronics, embedded systems, ASIC design, satellite electronics, aerospace electronics, avionics">
+  <meta name="author" content="Stavros Dallidis">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Stavros Dallidis | Electrical Engineering">
+  <meta property="og:description" content="Electrical and Computer Engineering student at the University of Cyprus focusing on microelectronics and radiation-hardened systems.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://stavrosdallidis.github.io">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +39,7 @@
     <a href="#education">Education</a>
     <a href="#experience">Experience</a>
     <a href="#skills">Skills</a>
+    <a href="#publications">Publications</a>
     <a href="#certifications">Certifications</a>
     <a href="#contact">Contact</a>
     <a href="StavrosDallidisCV.pdf" target="_blank" class="cv-nav">
@@ -44,6 +56,7 @@
   <a href="#education" onclick="toggleMenu()">Education</a>
   <a href="#experience" onclick="toggleMenu()">Experience</a>
   <a href="#skills" onclick="toggleMenu()">Skills</a>
+  <a href="#publications" onclick="toggleMenu()">Publications</a>
   <a href="#certifications" onclick="toggleMenu()">Certifications</a>
   <a href="#contact" onclick="toggleMenu()">Contact</a>
   <a href="StavrosDallidisCV.pdf" target="_blank" onclick="toggleMenu()">Download CV</a>
@@ -269,6 +282,35 @@
 
   <hr class="divider">
 
+  <!-- ─── PUBLICATIONS ──────────────────────────────────── -->
+  <section id="publications">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-book-open"></i> Research Output</div>
+        <h2 class="section-title">Publications</h2>
+      </div>
+
+      <div class="card fade-up pub-card">
+        <div class="pub-status">Under Review</div>
+        <div class="pub-title">
+          A Radiation-Aware Active-Matrix a-IGZO IC for Flexible Metasurface Biasing in Low-Earth Orbit
+        </div>
+        <div class="pub-authors">
+          L. Petrou, A. Michaelidis, <strong>S. Dallidis</strong>, and J. Georgiou
+        </div>
+        <div class="pub-venue">
+          <i class="fas fa-microchip"></i>
+          34th IFIP/IEEE International Conference on Very Large-Scale Integration (VLSI-SoC 2026)
+        </div>
+        <div class="pub-meta">
+          <span><i class="fas fa-calendar"></i> Submitted April 22, 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <!-- ─── CERTIFICATIONS ────────────────────────────────── -->
   <section id="certifications">
     <div class="container">
@@ -481,7 +523,7 @@
     document.getElementById('progress-bar').style.width = (scrollTop / scrollHeight * 100) + '%';
     document.getElementById('navbar').classList.toggle('scrolled', scrollTop > 10);
 
-    const sections = ['about', 'education', 'experience', 'skills', 'certifications', 'contact'];
+    const sections = ['about', 'education', 'experience', 'skills', 'publications', 'certifications', 'contact'];
     let current = 'about';
     sections.forEach(id => {
       const el = document.getElementById(id);
