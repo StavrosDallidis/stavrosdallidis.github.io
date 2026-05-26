@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>notebook</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>notebook1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7795,16 +7795,59 @@ a.anchor-link {
 </style>
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<main>Can RSI Trading Beat Buy &amp; Hold?
-A Quantitative Investigation
-The script below tests whether RSI-based trading is a better option than a buy&amp;hold strategy over the course of a month, 60 days and 2 year period.
+<main><h2>Can RSI Trading Beat Buy &amp; Hold?A Quantitative InvestigationThe script below tests whether RSI-based trading is a better option than a buy&amp;hold strategy over the course of a month, 60 days and 2 year period.</h2
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7deb0f8d4decfa12">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 1: Baseline (30/70 thresholds, 1 month)
+
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+
+<h3>Financial Metrics & Concepts (Quick Guide)</h3>
+
+<p><b>RSI (Relative Strength Index)</b><br>
+A technical indicator used to measure the speed and magnitude of price movements.
+It ranges from 0 to 100.
+Typical interpretation:
+<ul>
+<li><b>RSI < 30:</b> Potentially oversold asset → possible buy signal</li>
+<li><b>RSI > 70:</b> Potentially overbought asset → possible sell signal</li>
+</ul>
+This project evaluates whether trading using RSI signals can outperform simply buying and holding an asset.</p>
+
+<p><b>Sharpe Ratio</b><br>
+Measures return relative to risk taken.
+Higher values generally indicate better risk-adjusted performance.
+A strategy with lower returns but much lower risk may have a higher Sharpe Ratio than a more volatile strategy.</p>
+
+<p><b>Alpha</b><br>
+Represents excess return compared to a benchmark strategy.
+In this study, Buy & Hold is used as the benchmark.
+Positive alpha means the trading strategy generated additional value beyond the benchmark.</p>
+
+<p><b>CAGR (Compound Annual Growth Rate)</b><br>
+The average yearly growth rate of an investment assuming profits are reinvested.
+Useful for comparing long-term performance between strategies.</p>
+
+<p><b>Volatility</b><br>
+Measures how much returns fluctuate over time.
+High volatility indicates larger price swings and typically higher investment risk.</p>
+
+<p><b>Win Rate</b><br>
+The percentage of profitable trades out of total trades executed.
+Example:
+If 60 out of 100 trades are profitable, the win rate is 60%.
+A high win rate does not necessarily imply higher profitability.</p>
+
+<p><b>Maximum Drawdown (Max Drawdown)</b><br>
+Measures the largest percentage decline from a portfolio’s peak value to its lowest point before recovery.
+It reflects the worst historical loss experienced by the strategy.</p>
+
+</div>
+
+<p><h2>Experiment 1: Baseline (30/70 thresholds, 1 month)</h2></p>
 Result: RSI marginally outperforms (+5%)
 Question: Is this real or random?</p>
 </div>
@@ -8293,7 +8336,7 @@ BACKTEST COMPLETE!
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 2: Stricter thresholds (20/80)
+<p><h2>Experiment 2: Stricter thresholds (20/80)</h2></p>
 Result: Performance drops, basically tied
 Hypothesis: Fewer trades = less opportunity</p>
 </div>
@@ -8782,8 +8825,8 @@ BACKTEST COMPLETE!
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 3: Longer period (60 days)
-Result: B&amp;H wins by 9%
+<p><h2>Experiment 3: Longer period (60 days)</h2></p>
+<p>Result: B&amp;H wins by 9%
 Insight: RSI advantage was period-specific</p>
 </div>
 </div>
@@ -9273,9 +9316,9 @@ BACKTEST COMPLETE!
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 4: Single asset (SPY only)
-Result: RSI catastrophically underperforms (+1% vs +10%)
-Insight: RSI strategy needed diversification</p>
+<p><h2>Experiment 4: Single asset (SPY only)</h2></p>
+<p></p>Result: RSI catastrophically underperforms (+1% vs +10%)</p>
+<p>Insight: RSI strategy needed diversification</p>
 </div>
 </div>
 </div>
@@ -9737,9 +9780,9 @@ BACKTEST COMPLETE!
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 5: More assets (38 stocks)
-Result: Still B&amp;H wins
-Insight: More assets ≠ better strategy</p>
+<p><h2>Experiment 5: More assets (38 stocks)</h2></p>
+<p></p>Result: Still B&amp;H wins</p>
+<p>Insight: More assets ≠ better strategy</p>
 </div>
 </div>
 </div>
@@ -10312,7 +10355,7 @@ BACKTEST COMPLETE!
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 6: Long-term (2 years)
+<p><h2>Experiment 6: Long-term (2 years)</h2></p>
 Result: B&amp;H wins by 44%</p>
 </div>
 </div>
@@ -10888,7 +10931,7 @@ BACKTEST COMPLETE!
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Experiment 7: 38 assets with a less strict RSI-based strategy (30/70)</p>
+<p><h2>Experiment 7: 38 assets with a less strict RSI-based strategy (30/70)</h2></p>
 </div>
 </div>
 </div>
