@@ -40,6 +40,7 @@
     <a href="#experience">Experience</a>
     <a href="#skills">Skills</a>
     <a href="#publications">Publications</a>
+    <a href="#projects">Projects</a>
     <a href="#certifications">Certifications</a>
     <a href="#contact">Contact</a>
     <a href="StavrosDallidisCV.pdf" target="_blank" class="cv-nav">
@@ -57,6 +58,7 @@
   <a href="#experience" onclick="toggleMenu()">Experience</a>
   <a href="#skills" onclick="toggleMenu()">Skills</a>
   <a href="#publications" onclick="toggleMenu()">Publications</a>
+  <a href="#projects" onclick="toggleMenu()">Projects</a>
   <a href="#certifications" onclick="toggleMenu()">Certifications</a>
   <a href="#contact" onclick="toggleMenu()">Contact</a>
   <a href="StavrosDallidisCV.pdf" target="_blank" onclick="toggleMenu()">Download CV</a>
@@ -311,6 +313,44 @@
 
   <hr class="divider">
 
+  <!-- ─── PROJECTS ──────────────────────────────────────── -->
+  <section id="projects">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label"><i class="fas fa-code"></i> Personal Work</div>
+        <h2 class="section-title">Projects</h2>
+      </div>
+
+      <div class="project-grid">
+
+        <!-- Project 1: RSI Trading Strategy -->
+        <div class="project-card fade-up">
+          <div class="project-tag">Quantitative Finance</div>
+          <div class="project-name">RSI Trading Strategy Analysis</div>
+          <div class="project-desc">
+            A quantitative investigation across 7 experiments testing whether RSI-based 
+            trading can outperform Buy &amp; Hold. Backtesting framework built with Python, 
+            pandas, and statistical analysis tools.
+          </div>
+          <div class="project-tech">
+            <span class="project-tech-tag">Python</span>
+            <span class="project-tech-tag">pandas</span>
+            <span class="project-tech-tag">Backtesting</span>
+          </div>
+          <div class="project-footer">
+            <span class="project-date">May 2026</span>
+            <a href="projects/rsi-strategy/notebook.html" target="_blank" class="project-link">
+              <i class="fas fa-arrow-up-right-from-square"></i> View Project
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <!-- ─── CERTIFICATIONS ────────────────────────────────── -->
   <section id="certifications">
     <div class="container">
@@ -523,7 +563,7 @@
     document.getElementById('progress-bar').style.width = (scrollTop / scrollHeight * 100) + '%';
     document.getElementById('navbar').classList.toggle('scrolled', scrollTop > 10);
 
-    const sections = ['about', 'education', 'experience', 'skills', 'publications', 'certifications', 'contact'];
+    const sections = ['about', 'education', 'experience', 'skills', 'publications', 'projects', 'certifications', 'contact'];
     let current = 'about';
     sections.forEach(id => {
       const el = document.getElementById(id);
