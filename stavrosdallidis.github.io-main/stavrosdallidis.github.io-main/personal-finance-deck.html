@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Finance &amp; Investing — For the Individual Investor</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0a1628;
+  --navy2:#0f2340;
+  --ink:#111826;
+  --slate:#5b6b7f;
+  --line:#dbe1e9;
+  --paper:#ffffff;
+  --bg:#eceff4;
+  --gold:#12368f;      /* imperial blue (primary accent) */
+  --gold2:#1d4ed8;     /* brighter imperial blue */
+  --accent:#1a3a8f;
+  --accent2:#2f6fd0;
+  --green:#1f6d4a;
+  --red:#a32c2c;
+  --shadow:0 24px 60px rgba(10,22,40,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Georgia","Times New Roman",serif;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #f6f8fb 0%, transparent 60%),
+    var(--bg);
+  color:var(--ink);
+  overflow:hidden;
+}
+.app{height:100vh;display:flex;flex-direction:column}
+
+/* Top bar */
+.topbar{
+  height:52px;flex:0 0 52px;
+  background:linear-gradient(180deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;border-bottom:2px solid var(--gold);
+  font-family:"Helvetica Neue",Arial,sans-serif;
+}
+.brand{display:flex;align-items:center;gap:12px;letter-spacing:.04em}
+.brand .mark{
+  width:26px;height:26px;border:1.5px solid var(--gold2);
+  display:flex;align-items:center;justify-content:center;color:var(--gold2);
+  font-weight:700;font-size:13px;border-radius:3px;
+}
+.brand .t{font-size:13px;font-weight:600;text-transform:uppercase}
+.brand .sub{font-size:11px;color:#8aa0bb;text-transform:uppercase;letter-spacing:.12em}
+.topmeta{font-size:11px;color:#9db2ca;letter-spacing:.1em;text-transform:uppercase}
+.topright{display:flex;align-items:center;gap:16px}
+.disclaimer-tag{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--gold2);padding:4px 10px;border-radius:20px;font-weight:700;white-space:nowrap}
+
+/* Stage */
+.stage{flex:1 1 auto;position:relative;display:flex;align-items:center;justify-content:center;padding:22px}
+.slide{
+  position:absolute;inset:22px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:var(--shadow);
+  opacity:0;transform:translateY(14px) scale(.995);
+  transition:opacity .45s ease,transform .45s ease;
+  pointer-events:none;overflow:hidden;display:flex;flex-direction:column;
+}
+.slide.active{opacity:1;transform:none;pointer-events:auto}
+.slide-inner{flex:1;overflow-y:auto;padding:42px 56px}
+.slide-inner::-webkit-scrollbar{width:9px}
+.slide-inner::-webkit-scrollbar-thumb{background:#c7cfd9;border-radius:5px}
+
+/* Slide accent rail */
+.slide::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:6px;
+  background:linear-gradient(180deg,var(--gold) 0%,var(--gold2) 100%);
+}
+.kicker{
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.kicker::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+h1.title{font-size:40px;line-height:1.12;color:var(--navy);font-weight:700;letter-spacing:-.01em}
+h2.title{font-size:30px;line-height:1.15;color:var(--navy);font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.lede{font-size:17px;color:var(--slate);line-height:1.55;margin-top:14px;max-width:60ch}
+p.body{font-size:15.5px;line-height:1.62;color:var(--ink);margin-top:12px;max-width:66ch}
+.muted{color:var(--slate)}
+.hl{color:var(--gold);font-weight:700}
+.hl-a{color:var(--accent);font-weight:700}
+
+/* Cover */
+.cover{display:flex;flex-direction:column;justify-content:center;height:100%;
+  background:
+   linear-gradient(180deg,rgba(10,22,40,.02),rgba(10,22,40,0)),
+   var(--paper);
+  padding:0 64px;position:relative;
+}
+.cover .eyebrow{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;font-weight:700}
+.cover h1{font-size:56px;line-height:1.05;color:var(--navy);margin:18px 0;font-weight:700;letter-spacing:-.02em}
+.cover .sub{font-size:19px;color:var(--slate);max-width:58ch;line-height:1.5}
+.cover .rule{width:120px;height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin:26px 0}
+.cover .foot{position:absolute;bottom:40px;left:64px;right:64px;display:flex;justify-content:space-between;
+  font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+.cover .foot b{color:var(--navy)}
+.watermark{position:absolute;right:-30px;bottom:-40px;font-size:280px;color:rgba(10,22,40,.03);font-weight:700;line-height:1;user-select:none}
+
+/* Grid helpers */
+.grid{display:grid;gap:20px;margin-top:22px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{
+  background:#fbfcfd;border:1px solid var(--line);border-radius:9px;padding:20px 22px;position:relative;
+}
+.card h3{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:700}
+.card p{font-size:14px;line-height:1.55;color:var(--ink)}
+.card .big{font-size:34px;color:var(--navy);font-weight:700;font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em}
+.card.dark{background:linear-gradient(160deg,var(--navy),var(--navy2));border-color:var(--navy2);color:#dfe7f0}
+.card.dark h3{color:var(--gold2)}
+.card.dark p{color:#c4d2e2}
+.card.dark .big{color:#fff}
+.card .quote{font-family:"Georgia",serif;font-style:italic;color:var(--gold);font-size:14.5px;line-height:1.5;margin:8px 0 4px}
+.card.dark .quote{color:var(--gold2)}
+/* clickable contents cards */
+.card.clickable{cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+.card.clickable:hover{border-color:var(--accent2);box-shadow:0 10px 26px rgba(10,22,40,.13);transform:translateY(-2px)}
+.card.clickable:hover h3{color:var(--gold2)}
+.card.clickable::after{content:"\2192";position:absolute;top:16px;right:18px;font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;color:var(--line);font-size:16px;transition:color .15s,transform .15s}
+.card.clickable:hover::after{color:var(--gold2);transform:translateX(3px)}
+
+/* Definition list style */
+.deflist{margin-top:20px;display:flex;flex-direction:column;gap:2px}
+.defrow{display:flex;gap:0;border-bottom:1px solid var(--line);padding:14px 0;align-items:baseline}
+.defrow:last-child{border-bottom:none}
+.defterm{flex:0 0 210px;font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:14px;color:var(--navy);letter-spacing:.01em}
+.defdesc{flex:1;font-size:14.5px;line-height:1.55;color:var(--ink)}
+.defrow .num{color:var(--gold);font-weight:700;margin-right:10px;font-family:"Helvetica Neue",Arial,sans-serif}
+
+/* Callout */
+.callout{margin-top:22px;border-left:4px solid var(--gold);background:#faf6ee;padding:16px 20px;border-radius:0 8px 8px 0}
+.callout.accent{border-color:var(--accent);background:#f0f6fb}
+.callout .lab{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+.callout.accent .lab{color:var(--accent)}
+.callout p{font-size:14.5px;line-height:1.55}
+
+/* Chips / stat strip */
+.statstrip{display:flex;gap:0;margin-top:24px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.stat{flex:1;padding:20px;text-align:center;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat .v{font-family:"Helvetica Neue",Arial,sans-serif;font-size:30px;font-weight:700;color:var(--navy);letter-spacing:-.01em}
+.stat .v.gold{color:var(--gold)}
+.stat .l{font-size:12px;color:var(--slate);margin-top:6px;line-height:1.35}
+
+/* Interactive controls */
+.tool{margin-top:22px;background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:24px;display:grid;gap:20px}
+.tool.split{grid-template-columns:340px 1fr;align-items:stretch}
+.controls{display:flex;flex-direction:column;gap:18px}
+.field label{display:flex;justify-content:space-between;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px;letter-spacing:.02em}
+.field label .val{color:var(--gold);font-weight:700}
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:5px;border-radius:5px;
+  background:linear-gradient(90deg,var(--gold) 0%,var(--gold) var(--fill,50%),#e3e8ee var(--fill,50%));
+  outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--navy);border:3px solid #fff;box-shadow:0 2px 6px rgba(10,22,40,.35);cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--navy);border:3px solid #fff;cursor:pointer}
+.readout{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.readout .rline{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line)}
+.readout .rline:last-child{border-bottom:none}
+.readout .rk{font-size:13.5px;color:var(--slate)}
+.readout .rv{font-family:"Helvetica Neue",Arial,sans-serif;font-size:22px;font-weight:700;color:var(--navy)}
+.readout .rv.gold{color:var(--gold)}
+.readout .rv.green{color:var(--green)}
+.readout .rv.red{color:var(--red)}
+.chartbox{background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px;min-height:230px;position:relative}
+.chartwrap{position:relative;height:250px}
+.chartwrap.tall{height:300px}
+
+/* Quiz */
+.quiz{margin-top:22px;background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:24px}
+.quiz .q{font-size:16px;color:var(--navy);font-weight:600;line-height:1.5;margin-bottom:16px;font-family:"Helvetica Neue",Arial,sans-serif}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  text-align:left;font-family:"Helvetica Neue",Arial,sans-serif;font-size:14.5px;
+  padding:14px 18px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);
+  cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:12px;
+}
+.opt:hover{border-color:var(--accent);background:#f6fafe}
+.opt .k{width:24px;height:24px;flex:0 0 24px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--slate)}
+.opt.correct{border-color:var(--green);background:#eef7f2}
+.opt.correct .k{background:var(--green);color:#fff;border-color:var(--green)}
+.opt.wrong{border-color:var(--red);background:#fbeeee}
+.opt.wrong .k{background:var(--red);color:#fff;border-color:var(--red)}
+.quiz-fb{margin-top:14px;font-size:14px;line-height:1.55;color:var(--slate);min-height:20px}
+.quiz-fb b{color:var(--navy)}
+
+/* relationship diagram */
+.relation{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-top:8px}
+.rnode{background:#fff;border:1px solid var(--line);border-radius:9px;padding:16px 18px;text-align:center}
+.rnode .rt{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;color:var(--navy);font-size:15px}
+.rnode .rd{font-size:12.5px;color:var(--slate);margin-top:6px;line-height:1.4}
+.rarrow{color:var(--gold);font-size:26px;font-weight:700}
+/* linear flow (3 nodes in one row) */
+.flow{display:flex;align-items:stretch;gap:12px;margin-top:20px}
+.flow .rnode{flex:1;display:flex;flex-direction:column;justify-content:center}
+.flow .rarrow{display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+
+/* footer nav */
+.navbar{
+  height:56px;flex:0 0 56px;background:#fff;border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;padding:0 22px;
+  font-family:"Helvetica Neue",Arial,sans-serif;
+}
+.progresswrap{flex:1;margin:0 22px;height:4px;background:#e6eaef;border-radius:3px;overflow:hidden}
+.progressbar{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s}
+.navbtn{
+  display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--navy);
+  background:#f4f6f9;border:1px solid var(--line);border-radius:7px;padding:9px 16px;cursor:pointer;transition:.15s;
+}
+.navbtn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.navbtn:disabled{opacity:.35;cursor:default}
+.navbtn:disabled:hover{background:#f4f6f9;color:var(--navy)}
+.counter{font-size:12px;color:var(--slate);letter-spacing:.1em;min-width:78px;text-align:center}
+.counter b{color:var(--navy)}
+
+/* section divider slide */
+.divider{display:flex;flex-direction:column;justify-content:center;height:100%;padding:0 64px;
+  background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 60%,#123056 100%);color:#fff;position:relative}
+.divider::before{background:linear-gradient(180deg,var(--gold),var(--gold2))}
+.divider .snum{font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;letter-spacing:.3em;color:var(--gold2);text-transform:uppercase}
+.divider h1{font-size:48px;margin:16px 0;line-height:1.08;color:#fff;font-weight:700;letter-spacing:-.01em}
+.divider p{font-size:17px;color:#b8c8db;max-width:56ch;line-height:1.55}
+.divider .dots{margin-top:30px;display:flex;gap:8px}
+.divider .dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}
+.divider .dots span.on{background:var(--gold2)}
+
+/* tiny table */
+table.mini{width:100%;border-collapse:collapse;margin-top:18px;font-family:"Helvetica Neue",Arial,sans-serif}
+table.mini th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);text-align:left;padding:10px 12px;border-bottom:2px solid var(--line)}
+table.mini td{font-size:14px;padding:11px 12px;border-bottom:1px solid var(--line);color:var(--ink)}
+table.mini tr:last-child td{border-bottom:none}
+table.mini td.num{font-family:"Helvetica Neue",Arial,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+table.mini .pos{color:var(--green);font-weight:600}
+table.mini .neg{color:var(--red);font-weight:600}
+.pill{display:inline-block;font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.04em}
+.pill.g{background:#e7f3ec;color:var(--green)}
+.pill.r{background:#fbeaea;color:var(--red)}
+.pill.n{background:#eaf1f8;color:var(--accent)}
+
+.note{font-size:12px;color:var(--slate);margin-top:14px;font-style:italic}
+.src{position:absolute;bottom:14px;right:24px;font-size:10.5px;color:#a9b4c1;font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:.04em}
+
+.toggle-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tg{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;font-weight:600;padding:7px 14px;border:1px solid var(--line);border-radius:20px;background:#fff;color:var(--slate);cursor:pointer;transition:.15s}
+.tg.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+@media (max-width:1080px){
+  .tool.split{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr}
+  .g2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark">&#931;</div>
+      <div>
+        <div class="t">Personal Finance &amp; Investing</div>
+      </div>
+      <div class="sub"> By Stavros DALLIDIS</div>
+    </div>
+    <div class="topright">
+      <div class="disclaimer-tag">Educational only · Not financial advice</div>
+      <div class="topmeta" id="topSection">Introduction</div>
+    </div>
+  </div>
+
+  <div class="stage" id="stage"><!-- slides injected --></div>
+
+  <div class="navbar">
+    <button class="navbtn" id="prevBtn">&#8249; Prev</button>
+    <div class="progresswrap"><div class="progressbar" id="progress"></div></div>
+    <div class="counter"><b id="cur">1</b> / <span id="total">0</span></div>
+    <button class="navbtn" id="nextBtn">Next &#8250;</button>
+  </div>
+</div>
+
+<!-- ============ SLIDE MARKUP ============ -->
+<template id="slides">
+
+<!-- 1. COVER -->
+<section class="slide" data-section="Introduction">
+  <div class="cover">
+    <div class="eyebrow">A Practical Guide</div>
+    <h1>Personal Finance &amp;<br>Investing</h1>
+    <div class="rule"></div>
+    <div class="sub">The core money mechanics every person should understand and master in order to start investing — time value of money, inflation, saving, credit — <span class="hl">plus a full primer on the instruments themselves: stocks, bonds, funds, ETFs and portfolio building.</span> Interactive throughout.</div>
+    <div class="foot">
+      <div>By <b>STAVROS DALLIDIS</b></div>
+      <div>15 Interactive Modules</div>
+    </div>
+    <div class="watermark">%</div>
+  </div>
+</section>
+
+<!-- 2. AGENDA / COURSE MAP -->
+<section class="slide" data-section="Introduction">
+  <div class="slide-inner">
+    <div class="kicker">Course Map</div>
+    <h2 class="title">What will be covered</h2>
+    <p class="lede">This work aims to make investing, personal finance, and key economic concepts more accessible to people who have little or no prior knowledge of these subjects. Through interactive examples, it seeks to simplify complex ideas and provide readers with a hands-on environment where they can explore how different financial decisions and economic scenarios influence their long-term wealth-building journey. Thank you for taking the time to read this work. If you notice any errors, inaccuracies, or areas that could be improved or expanded, please feel free to get in touch. Your feedback is greatly appreciated.</p>
+    <div class="grid g3" id="agendaGrid">
+      <div class="card"><h3>01 · Foundations</h3><p>Financial literacy, the planning process, the financial system, supervision, and the five kinds of risk.</p></div>
+      <div class="card"><h3>02 · Career &amp; Income</h3><p>Your earning power — job vs career, the skills gap, buying-power and tax-equivalent benefits.</p></div>
+      <div class="card"><h3>03 · Time Value of Money</h3><p>Why a euro today beats a euro tomorrow — the single most important idea in finance.</p></div>
+      <div class="card"><h3>04 · Interest &amp; Compounding</h3><p>The "eighth wonder": how the same rate grows wealth or destroys it.</p></div>
+      <div class="card"><h3>05 · Inflation &amp; Money Mgmt</h3><p>The silent tax on cash, nominal vs real, plus balance sheets, cash flow and budgeting.</p></div>
+      <div class="card"><h3>06 · Saving</h3><p>Institutions, account types, payments, deposit protection, and saving toward real goals.</p></div>
+      <div class="card"><h3>07 · Consumer Credit</h3><p>Borrowing wisely, debt ratios, the 28/36 rule, credit scores and the true cost of a loan.</p></div>
+      <div class="card"><h3>08 · Loan Amortization</h3><p>How installment loans and credit cards really work over time.</p></div>
+      <div class="card"><h3>09 · Risk &amp; Return</h3><p>The trade-off at the heart of every investment, and diversification.</p></div>
+      <div class="card"><h3>10 · Investing Basics</h3><p>From saving to investing: the menu of asset classes, the economy, and the market's rules.</p></div>
+      <div class="card"><h3>11 · Stocks</h3><p>Owning a slice of a business — kinds of stock, dividends, total return, exchanges and indices.</p></div>
+      <div class="card"><h3>12 · Bonds</h3><p>Lending for interest — ratings, yields, and the all-important price–rate seesaw.</p></div>
+      <div class="card"><h3>13 · Funds &amp; ETFs</h3><p>Instant diversification, index vs managed, ETFs, dollar-cost averaging and the fee drag.</p></div>
+      <div class="card"><h3>14 · Styles &amp; the Masters</h3><p>Value, growth &amp; technical — plus Graham, Buffett, Lynch and Bogle, and building a portfolio.</p></div>
+      <div class="card"><h3>15 · Bringing it Together</h3><p>Start early, mind the rate, diversify and protect.</p></div>
+    </div>
+    <p class="note" style="text-align:center">Tip — click any module above to jump straight to it.</p>
+    <div class="src">Modules 01–09 adapted from a UCY financial-literacy lecture, 10–14 from Cagan, <em>Investing 101</em></div>
+  </div>
+</section>
+
+<!-- 3. DIVIDER — FOUNDATIONS -->
+<section class="slide" data-section="Foundations">
+  <div class="divider">
+    <div class="snum">Module 01</div>
+    <h1>Foundations</h1>
+    <p>Before instruments and returns: what financial literacy is, how a plan gets built, and the risks that quietly shape every decision.</p>
+    <div class="dots"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- 4. WHAT IS FINANCIAL LITERACY -->
+<section class="slide" data-section="Foundations">
+  <div class="slide-inner">
+    <div class="kicker">Definition</div>
+    <h2 class="title">Financial literacy is more than knowing formulas</h2>
+    <p class="lede">The OECD frames it as the blend of four things that let you use financial services safely and build lasting wellbeing.</p>
+    <div class="grid g2">
+      <div class="card"><h3>Knowledge</h3><p>"I understand how it works." Grasping concepts, tools and principles — e.g. that stocks carry more risk than bonds.</p></div>
+      <div class="card"><h3>Skills</h3><p>"What I can do." Building a budget, comparing loan offers, using digital banking, planning for retirement.</p></div>
+      <div class="card"><h3>Attitudes</h3><p>"How I feel about money." Valuing saving, being uneasy about debt, prizing financial independence.</p></div>
+      <div class="card"><h3>Behaviours</h3><p>"What I actually do." Tracking spending, setting goals, and seeking advice when I need it.</p></div>
+    </div>
+    <div class="callout">
+      <div class="lab">Why it matters</div>
+      <p>In one Eurozone survey, only about <b>1 in 2 people</b> grasped risk diversification and just <b>44.7%</b> understood compound interest — the very concepts that separate good outcomes from bad ones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. THE PLANNING PROCESS -->
+<section class="slide" data-section="Foundations">
+  <div class="slide-inner">
+    <div class="kicker">The Process</div>
+    <h2 class="title">Personal financial planning, in six steps</h2>
+    <p class="lede">Planning is a loop, not a line. You revisit it at least once a year — and whenever life changes.</p>
+    <div class="deflist">
+      <div class="defrow"><div class="defterm"><span class="num">1</span>Assess your position</div><div class="defdesc">Take stock of income, savings, living costs and debt. Know your starting point.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">2</span>Set financial goals</div><div class="defdesc">Decide what you're aiming for — and be honest about the feelings and pressures driving those goals.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">3</span>Identify alternatives</div><div class="defdesc">Continue, expand, change course, or take a wholly new path. "Doing nothing" is itself a risky choice.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">4</span>Evaluate alternatives</div><div class="defdesc">Weigh opportunity cost and risk. Every choice means giving something up — in money or in time.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">5</span>Create &amp; implement a plan</div><div class="defdesc">Turn goals into action: save more, spend less, earn more — and get help where needed.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">6</span>Review &amp; revise</div><div class="defdesc">Conditions change. Re-examine at least annually, and adjust to stay on track.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. FIVE RISKS -->
+<section class="slide" data-section="Foundations">
+  <div class="slide-inner">
+    <div class="kicker">Risk Awareness</div>
+    <h2 class="title">Five risks behind every money decision</h2>
+    <p class="lede">All decisions carry uncertainty. Naming these makes them manageable.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Inflation risk</h3><p>Rising (or falling) prices change your buying power. Wait to buy, and it may cost more.</p></div>
+      <div class="card"><h3>Interest-rate risk</h3><p>Changing rates affect what you pay when you borrow and earn when you save.</p></div>
+      <div class="card"><h3>Income risk</h3><p>A job loss from shifting demand or technology can cut off your cash flow.</p></div>
+      <div class="card"><h3>Personal risk</h3><p>Health, safety, and the hidden costs tied to particular purchases or choices.</p></div>
+      <div class="card"><h3>Liquidity risk</h3><p>Higher-earning assets can be harder to convert to cash without losing value.</p></div>
+      <div class="card dark"><h3>The takeaway</h3><p>You can't remove risk — but you can gather information, diversify, and hold an emergency buffer.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6b. THE FINANCIAL SYSTEM -->
+<section class="slide" data-section="Foundations">
+  <div class="slide-inner">
+    <div class="kicker">The Big Picture</div>
+    <h2 class="title">How money flows through the financial system</h2>
+    <p class="lede">Your personal decisions sit inside a bigger machine. Savers supply funds, borrowers use them, intermediaries and markets connect the two — and regulators keep it honest.</p>
+    <div class="flow">
+      <div class="rnode"><div class="rt">Providers of funds</div><div class="rd">Individuals, businesses, governments — they earn interest &amp; dividends for the funds they supply.</div></div>
+      <div class="rarrow">&#8594;</div>
+      <div class="rnode"><div class="rt">Intermediaries &amp; markets</div><div class="rd">Banks, insurers, investment firms, and the stock, bond, money &amp; commodity markets.</div></div>
+      <div class="rarrow">&#8594;</div>
+      <div class="rnode"><div class="rt">Users of funds</div><div class="rd">Individuals, businesses, governments — they pay interest &amp; dividends for the funds they use.</div></div>
+    </div>
+    <div class="callout"><div class="lab">Economic factors that shape your plan</div><p>Consumer prices, interest rates, money supply, unemployment, GDP and stock indices all feed back into personal decisions. Rising prices erode buying power, while higher rates make borrowing dearer but saving more attractive.</p></div>
+  </div>
+</section>
+
+<!-- 6c. WHO SUPERVISES YOUR MONEY -->
+<section class="slide" data-section="Foundations">
+  <div class="slide-inner">
+    <div class="kicker">Supervision &amp; Protection</div>
+    <h2 class="title">Who watches over your money?</h2>
+    <p class="lede">Different pillars of your finances are overseen by different authorities. Knowing who does what tells you where to turn when something goes wrong. <span class="muted">(EU / Cyprus example.)</span></p>
+    <div class="deflist">
+      <div class="defrow"><div class="defterm">Bank deposits</div><div class="defdesc"><b>Central Bank</b> — supervises commercial banks and payment systems, and runs the deposit guarantee (up to €100,000 per depositor, per bank).</div></div>
+      <div class="defrow"><div class="defterm">Investments</div><div class="defdesc"><b>Securities &amp; Exchange Commission (CySEC)</b> — regulates investment services, brokerages, collective schemes and funds under EU rules.</div></div>
+      <div class="defrow"><div class="defterm">Insurance</div><div class="defdesc"><b>Insurance Control Service</b> (Ministry of Finance) — supervises insurance companies.</div></div>
+      <div class="defrow"><div class="defterm">Pensions</div><div class="defdesc"><b>Ministry of Labour</b> — social-insurance (pillar 1) and occupational pensions (pillar 2), plus private products (pillar 3) via insurers or investment firms.</div></div>
+      <div class="defrow"><div class="defterm">Consumer rights</div><div class="defdesc"><b>Consumer Protection Service</b>, plus an independent <b>Financial Ombudsman</b> that handles complaints against banks.</div></div>
+    </div>
+    <div class="src">Structure mirrors the EU supervisory model, names shown are the Cyprus equivalents</div>
+  </div>
+</section>
+
+<!-- 6d. DIVIDER — CAREER -->
+<section class="slide" data-section="Career & Income">
+  <div class="divider">
+    <div class="snum">Module 02</div>
+    <h1>Career &amp;<br>Income Planning</h1>
+    <p>Your earning power is your largest financial asset. Choosing and developing a career deliberately shapes every number that follows.</p>
+    <div class="dots"><span></span><span class="on"></span><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- 6e. JOB VS CAREER + FACTORS -->
+<section class="slide" data-section="Career & Income">
+  <div class="slide-inner">
+    <div class="kicker">The Foundation of Income</div>
+    <h2 class="title">A job earns money, a career builds it</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>Job</h3><p>A position held mainly to earn money now. Most people hold several over a lifetime.</p></div>
+      <div class="card"><h3>Career</h3><p>A commitment to a profession that requires ongoing education and development — and deliberate planning.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Trade-offs &amp; the skills gap</div><p>Career choices carry opportunity cost and risk versus the alternatives. The <b>skills gap</b> — the mismatch between what employers want and what applicants offer — appears across most sectors. "Employability skills" and social intelligence are what's often missing.</p></div>
+    <p class="body">Two kinds of education compound your earning power: <span class="hl-a">technical skills</span> (specialised training for a specific job) and <span class="hl-a">general skills</span> — transferable abilities, or "social intelligence," picked up at school and through experience.</p>
+  </div>
+</section>
+
+<!-- 6f. GEOGRAPHIC BUYING POWER (interactive) -->
+<section class="slide" data-section="Career & Income">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · Should I Take the Offer Abroad?</div>
+    <h2 class="title">A bigger salary isn't a better salary</h2>
+    <p class="lede">The <span class="hl">geographic buying-power formula</span> adjusts a salary for local cost of living, so you can compare offers fairly across cities or countries.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Current salary <span class="val" id="gbCurv">€25,000</span></label><input type="range" id="gbCur" min="10000" max="120000" step="1000" value="25000"></div>
+        <div class="field"><label>Cost-of-living index — <b>current</b> city <span class="val" id="gbHomev">105</span></label><input type="range" id="gbHome" min="70" max="160" step="1" value="105"></div>
+        <div class="field"><label>Cost-of-living index — <b>new</b> city <span class="val" id="gbNewv">126</span></label><input type="range" id="gbNew" min="70" max="160" step="1" value="126"></div>
+        <div class="field"><label>Salary offered in new city <span class="val" id="gbOfferv">€32,000</span></label><input type="range" id="gbOffer" min="10000" max="150000" step="1000" value="32000"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Salary needed to match today</span><span class="rv gold" id="gbNeeded">€30,000</span></div>
+          <div class="rline"><span class="rk">Offer vs. what you need</span><span class="rv" id="gbVerdict">+€2,000 · worth it</span></div>
+        </div>
+        <div class="note">Formula: needed = current salary × (new index ÷ current index). If the offer beats "needed," you come out ahead.</div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="gbChart"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6g. TAX-EQUIVALENT BENEFITS -->
+<section class="slide" data-section="Career & Income">
+  <div class="slide-inner">
+    <div class="kicker">Total Compensation</div>
+    <h2 class="title">Untaxed benefits are worth more than they look</h2>
+    <p class="lede">A benefit you don't pay tax on is worth more than the same amount in taxable salary. The tax-equivalent value shows the true comparison.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Value of tax-free benefit <span class="val" id="teBenv">€350</span></label><input type="range" id="teBen" min="100" max="3000" step="50" value="350"></div>
+        <div class="field"><label>Your income-tax rate <span class="val" id="teRatev">28%</span></label><input type="range" id="teRate" min="0" max="45" step="1" value="28"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Tax-equivalent salary value</span><span class="rv gold" id="teVal">€486</span></div>
+          <div class="rline"><span class="rk">Effective "bonus" vs cash</span><span class="rv green" id="teBonus">€136</span></div>
+        </div>
+        <div class="callout accent" style="margin-top:4px"><div class="lab">Formula</div><p>Benefit value ÷ (1 − tax rate). A €350 tax-free perk at a 28% tax rate equals <b>€486</b> of taxable pay.</p></div>
+      </div>
+      <div class="chartbox"><div class="chartwrap"><canvas id="teChart"></canvas></div>
+      <div class="note" style="text-align:center">Taxable pay needed to equal the tax-free benefit</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6h. STAYING COMPETITIVE -->
+<section class="slide" data-section="Career & Income">
+  <div class="slide-inner">
+    <div class="kicker">Career Management</div>
+    <h2 class="title">Applying, changing course, staying competitive</h2>
+    <div class="grid g3">
+      <div class="card"><h3>The application</h3><p>A <b>résumé/CV</b> summarises your education, training and experience, a <b>cover letter</b> expresses interest, and the <b>interview</b> seals it.</p></div>
+      <div class="card"><h3>Changing careers</h3><p>Often harder than the first job. Weigh the financial and personal cost against the benefit, and confirm it truly serves your goals.</p></div>
+      <div class="card"><h3>Forced transitions</h3><p>Acknowledge the stress, protect health and sleep, identify emergency funds, cut non-essential spending, and expand your network.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Differentiate yourself</div><p>Grades alone don't set you apart. Add a minor, take courses in adjacent fields, travel and study abroad (Erasmus), meet students from other countries, and keep upgrading skills through self-study and online courses.</p></div>
+  </div>
+</section>
+
+<!-- 7. DIVIDER — TVM -->
+<section class="slide" data-section="Time Value of Money">
+  <div class="divider">
+    <div class="snum">Module 03</div>
+    <h1>The Time Value<br>of Money</h1>
+    <p>A euro today is worth more than a euro tomorrow — because today's euro can be invested and grow. Everything else in finance flows from this.</p>
+    <div class="dots"><span></span><span></span><span class="on"></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- 8. RULE OF 72 (interactive) -->
+<section class="slide" data-section="Time Value of Money">
+  <div class="slide-inner">
+    <div class="kicker">Quick Estimate</div>
+    <h2 class="title">The Rule of 72</h2>
+    <p class="lede">Divide 72 by a rate to estimate the years for money — or prices — to double. A fast mental check before any calculator.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field">
+          <label>Annual rate <span class="val" id="r72v">6%</span></label>
+          <input type="range" id="r72" min="1" max="24" step="0.5" value="6">
+        </div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Years to double (Rule of 72)</span><span class="rv gold" id="r72years">12.0</span></div>
+          <div class="rline"><span class="rk">Exact doubling time</span><span class="rv" id="r72exact">11.9</span></div>
+        </div>
+        <div class="callout accent" style="margin-top:4px">
+          <div class="lab">Cuts both ways</div>
+          <p>At <b id="r72echo">6%</b>, savings double in ~<b id="r72echo2">12</b> years — but so does debt on a credit card. High rates compound against you just as fast.</p>
+        </div>
+      </div>
+      <div class="chartbox">
+        <div class="chartwrap"><canvas id="r72chart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. DIVIDER — INTEREST -->
+<section class="slide" data-section="Interest & Compounding">
+  <div class="divider">
+    <div class="snum">Module 04</div>
+    <h1>Interest &amp;<br>Compounding</h1>
+    <p>The interest rate is simply the price of money. Earn interest on your interest, year after year, and growth turns exponential.</p>
+    <div class="dots"><span></span><span></span><span class="on"></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- 10. SIMPLE vs COMPOUND concept -->
+<section class="slide" data-section="Interest & Compounding">
+  <div class="slide-inner">
+    <div class="kicker">Core Mechanic</div>
+    <h2 class="title">Interest is the price of money</h2>
+    <p class="lede">It's the growth rate of your savings and, equally, the growth rate of your debt. Compounding means earning interest on interest.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Simple interest</h3>
+        <p class="big">€515</p>
+        <p class="muted">€500 at 6% for one year earns €15 — interest only on the original principal.</p>
+      </div>
+      <div class="card dark">
+        <h3>Compound formula</h3>
+        <p class="big" style="font-family:Georgia,serif">F = P (1 + r)<sup>T</sup></p>
+        <p>Final = Principal × (1 + rate) raised to the number of periods. This is exponential — and time is the exponent.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="lab">The famous line</div>
+      <p>Asked for humanity's greatest discovery, the reply was reportedly <b>"compound interest."</b> Whether apocryphal or not, the maths agrees: $1 invested at 8% in 1789 would be worth roughly <b>$48.7 million</b> 230 years later.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11. COMPOUND CALCULATOR (interactive) -->
+<section class="slide" data-section="Interest & Compounding">
+  <div class="slide-inner">
+    <div class="kicker">Calculator</div>
+    <h2 class="title">Compound growth — drive it yourself</h2>
+    <p class="lede">Change the principal, rate and horizon. Watch how the exponent — time — does the heavy lifting.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Initial investment (P) <span class="val" id="ciPv">€10,000</span></label><input type="range" id="ciP" min="1000" max="100000" step="1000" value="10000"></div>
+        <div class="field"><label>Annual return (r) <span class="val" id="ciRv">8%</span></label><input type="range" id="ciR" min="1" max="15" step="0.5" value="8"></div>
+        <div class="field"><label>Years (T) <span class="val" id="ciTv">40</span></label><input type="range" id="ciT" min="1" max="50" step="1" value="40"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Final value</span><span class="rv gold" id="ciFinal">€217,245</span></div>
+          <div class="rline"><span class="rk">Growth on principal</span><span class="rv green" id="ciGain">€207,245</span></div>
+          <div class="rline"><span class="rk">Multiple of principal</span><span class="rv" id="ciMult">21.7×</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="ciChart"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. START EARLY / what-if -->
+<section class="slide" data-section="Interest & Compounding">
+  <div class="slide-inner">
+    <div class="kicker">What-If · Start Early</div>
+    <h2 class="title">The cost of waiting</h2>
+    <p class="lede">Two people invest the same €1,000 at 8% until age 65. The only difference is <span class="hl">when they start.</span> Slide the starting age and watch the gap.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Starting age <span class="val" id="seAgev">25</span></label><input type="range" id="seAge" min="20" max="60" step="1" value="25"></div>
+        <div class="field"><label>Annual return <span class="val" id="seRv">8%</span></label><input type="range" id="seR" min="2" max="12" step="0.5" value="8"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Years invested to 65</span><span class="rv" id="seYears">40</span></div>
+          <div class="rline"><span class="rk">Value at 65 (€1,000 start)</span><span class="rv gold" id="seVal">€21,725</span></div>
+          <div class="rline"><span class="rk">Lost vs starting at 25</span><span class="rv red" id="seLost">€0</span></div>
+        </div>
+        <div class="callout accent" style="margin-top:4px"><div class="lab">Same money, different clock</div><p>Start at 25 instead of 55 and the identical deposit ends up worth roughly <b>ten times</b> as much. The advantage is pure compounding.</p></div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="seChart"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13. HOW RATES AFFECT OTHER THINGS -->
+<section class="slide" data-section="Interest & Compounding">
+  <div class="slide-inner">
+    <div class="kicker">Connections · How One Lever Moves Others</div>
+    <h2 class="title">Interest rates ripple through everything</h2>
+    <p class="lede">Rates aren't set in isolation. A single move by a central bank cascades across saving, borrowing, prices and asset values.</p>
+    <div class="grid g2">
+      <div class="card"><h3>Rates &#8593; &nbsp;&#8594;&nbsp; Borrowing</h3><p>Loans and mortgages get more expensive, and new borrowing slows. Existing variable-rate debt costs more each month.</p></div>
+      <div class="card"><h3>Rates &#8593; &nbsp;&#8594;&nbsp; Saving</h3><p>Deposits and bonds pay more, making saving more attractive and often cooling consumer spending.</p></div>
+      <div class="card"><h3>Inflation &#8593; &nbsp;&#8594;&nbsp; Rates</h3><p>When prices rise too fast, central banks lift rates to slow demand — the classic policy response.</p></div>
+      <div class="card"><h3>Rates &#8593; &nbsp;&#8594;&nbsp; Asset prices</h3><p>Higher rates raise the "discount" on future cash flows, which tends to weigh on stock and property valuations.</p></div>
+    </div>
+    <div class="callout">
+      <div class="lab">Timing rule of thumb</div>
+      <p>When rates are <b>rising</b>: favour long-term loans (lock low) and short-term savings (reprice up). When rates are <b>falling</b>: favour short-term loans (refinance cheaper) and long-term savings (lock high).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14. DIVIDER — INFLATION -->
+<section class="slide" data-section="Inflation">
+  <div class="divider">
+    <div class="snum">Module 05</div>
+    <h1>Inflation</h1>
+    <p>A general rise in prices over time — and a silent tax on any money you hold as cash. The gap between what a number says and what it buys.</p>
+    <div class="dots"><span></span><span></span><span></span><span class="on"></span><span></span></div>
+  </div>
+</section>
+
+<!-- 15. INFLATION concept + nominal vs real -->
+<section class="slide" data-section="Inflation">
+  <div class="slide-inner">
+    <div class="kicker">Nominal vs Real</div>
+    <h2 class="title">The number can stay still while its value shrinks</h2>
+    <p class="lede">Inflation is the rise in the <em>average</em> price level. It quietly erodes what each euro can buy.</p>
+    <div class="relation">
+      <div class="rnode"><div class="rt">Nominal value</div><div class="rd">The figure on the label. €100 stays €100.</div></div>
+      <div class="rarrow">&#8211;&nbsp;inflation&nbsp;&#8594;</div>
+      <div class="rnode"><div class="rt">Real value</div><div class="rd">Adjusted for prices. What €100 can actually buy.</div></div>
+    </div>
+    <div class="statstrip">
+      <div class="stat"><div class="v">&#8722;6%</div><div class="l">Real yield on cash if inflation is 6% and it earns nothing</div></div>
+      <div class="stat"><div class="v gold">18 yrs</div><div class="l">To halve buying power at 4% inflation (Rule of 72)</div></div>
+      <div class="stat"><div class="v">~10%</div><div class="l">Purchasing power lost over 2 years when inflation (8.3%) beats a 2.5% deposit</div></div>
+    </div>
+    <div class="callout"><div class="lab">Key insight</div><p>Cash is <b>not</b> a "safe" asset in real terms. If inflation outruns your interest rate, savers quietly lose purchasing power every year.</p></div>
+  </div>
+</section>
+
+<!-- 16. INFLATION EROSION CALCULATOR -->
+<section class="slide" data-section="Inflation">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · Purchasing Power</div>
+    <h2 class="title">What will your cash actually buy?</h2>
+    <p class="lede">Set an inflation rate and horizon. The nominal amount holds, and its real value melts.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Amount held as cash <span class="val" id="infAmtv">€10,000</span></label><input type="range" id="infAmt" min="1000" max="50000" step="1000" value="10000"></div>
+        <div class="field"><label>Inflation rate <span class="val" id="infRv">3%</span></label><input type="range" id="infR" min="0" max="12" step="0.5" value="3"></div>
+        <div class="field"><label>Years <span class="val" id="infTv">20</span></label><input type="range" id="infT" min="1" max="40" step="1" value="20"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Nominal value (unchanged)</span><span class="rv" id="infNom">€10,000</span></div>
+          <div class="rline"><span class="rk">Real value (today's €)</span><span class="rv red" id="infReal">€5,537</span></div>
+          <div class="rline"><span class="rk">Purchasing power lost</span><span class="rv gold" id="infLoss">44.6%</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="infChart"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17. REAL RETURN / inflation vs interest interplay -->
+<section class="slide" data-section="Inflation">
+  <div class="slide-inner">
+    <div class="kicker">Connections · Real Return</div>
+    <h2 class="title">Interest minus inflation is what counts</h2>
+    <p class="lede">Your <span class="hl">real return</span> ≈ nominal rate − inflation. Compare a savings rate against inflation to see if you're truly getting ahead.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Nominal savings rate <span class="val" id="rrNomv">2.5%</span></label><input type="range" id="rrNom" min="0" max="12" step="0.5" value="2.5"></div>
+        <div class="field"><label>Inflation rate <span class="val" id="rrInfv">8%</span></label><input type="range" id="rrInf" min="0" max="12" step="0.5" value="8"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Real return (approx.)</span><span class="rv" id="rrReal">−5.5%</span></div>
+          <div class="rline"><span class="rk">Verdict</span><span class="rv" id="rrVerdict">Losing ground</span></div>
+        </div>
+        <div class="callout accent" style="margin-top:4px"><div class="lab">Hedges against inflation</div><p>When cash loses, investors look to <b>equities, real estate, inflation-linked bonds (TIPS)</b> and commodities to try to keep real value.</p></div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="rrChart"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17b. MONEY MANAGEMENT: STATEMENTS -->
+<section class="slide" data-section="Money Management">
+  <div class="slide-inner">
+    <div class="kicker">Money Management</div>
+    <h2 class="title">Two statements tell you where you stand</h2>
+    <p class="lede">Good money management rests on two personal documents — a snapshot of what you own, and a record of what flows in and out.</p>
+    <div class="grid g2">
+      <div class="card"><h3>Personal balance sheet</h3><p>A snapshot on a given date. <b>Net worth = Assets − Liabilities.</b> Grow it by saving more, spending less, growing investments, or reducing what you owe.</p></div>
+      <div class="card"><h3>Cash-flow statement</h3><p>Income in minus money out over a period, giving a surplus or deficit. It's the foundation for a realistic spending and saving plan.</p></div>
+    </div>
+    <div class="callout"><div class="lab">A warning sign</div><p><b>Insolvency</b> is when liabilities exceed assets — you can't pay debts as they fall due. Watching both statements over time catches trouble early. When applying for a loan, banks require exactly this data: monthly income and expenses, existing repayments, and your assets.</p></div>
+  </div>
+</section>
+
+<!-- 17c. BUDGETING -->
+<section class="slide" data-section="Money Management">
+  <div class="slide-inner">
+    <div class="kicker">Budgeting</div>
+    <h2 class="title">A budget is a plan you actually follow</h2>
+    <p class="lede">A budget helps you live within your income, spend deliberately, hit your goals, and prepare for emergencies. It only works if it's kept.</p>
+    <div class="deflist">
+      <div class="defrow"><div class="defterm"><span class="num">1</span>Set financial goals</div><div class="defdesc">Define what you're budgeting toward.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">2</span>Estimate income</div><div class="defdesc">Salary, self-employment, investment income, benefits, support.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">3</span>Budget emergency fund &amp; savings</div><div class="defdesc">Pay your future self first — before discretionary spending.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">4</span>Budget fixed expenses</div><div class="defdesc">Rent, insurance, loan payments — the costs you can't easily flex.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">5</span>Budget variable expenses</div><div class="defdesc">Groceries, utilities, leisure — where you have room to adjust.</div></div>
+      <div class="defrow"><div class="defterm"><span class="num">6–7</span>Record &amp; review</div><div class="defdesc">Track actual spending, then compare to plan and revise. A good budget is realistic, flexible and easy to explain.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17d. WHY CYPRUS/EU IS DIFFERENT (real data) -->
+<section class="slide" data-section="Money Management">
+  <div class="slide-inner">
+    <div class="kicker">Real Data · Why Context Matters</div>
+    <h2 class="title">The same behaviour, different national picture</h2>
+    <p class="lede">Household finances differ sharply across the Eurozone. Cyprus is a telling case: high debt, historically low saving, high consumption. <span class="muted">(Source: Eurostat.)</span></p>
+    <div class="statstrip">
+      <div class="stat"><div class="v red">~135%+</div><div class="l">Household debt as % of disposable income — well above the ~80% euro-area average</div></div>
+      <div class="stat"><div class="v gold">Lower</div><div class="l">Household saving rate — historically below the euro-area average</div></div>
+      <div class="stat"><div class="v">Higher</div><div class="l">Consumption as % of GDP — above the euro-area average</div></div>
+    </div>
+    <div class="callout"><div class="lab">And where investment does happen…</div><p>It concentrates in <b>real estate</b> and low-yield <b>bank deposits</b>, without much diversification. Combined with the memory of the 2013 banking crisis and deposit "haircut," this underlines why literacy — emergency funds, diversification, borrowing within the 28/36 rule — matters locally.</p></div>
+  </div>
+</section>
+
+<!-- 18. DIVIDER — SAVING -->
+<section class="slide" data-section="Saving">
+  <div class="divider">
+    <div class="snum">Module 06</div>
+    <h1>Saving</h1>
+    <p>A commitment to your future self. The right account, the right protection, and a clear goal turn spare cash into security.</p>
+    <div class="dots"><span></span><span></span><span></span><span></span><span class="on"></span></div>
+  </div>
+</section>
+
+<!-- 19. EVALUATING SAVINGS PLANS -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">How to Choose</div>
+    <h2 class="title">Six factors when weighing a savings plan</h2>
+    <p class="lede">Every account trades some of these against the others. There's no single "best" — only best-for-your-goal.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Rate of return</h3><p>The percentage your balance grows. Rises with more frequent compounding.</p></div>
+      <div class="card"><h3>Inflation</h3><p>Higher prices erode the buying power of the interest you earn.</p></div>
+      <div class="card"><h3>Taxes</h3><p>Taxable interest reduces your net earnings — check the after-tax yield.</p></div>
+      <div class="card"><h3>Liquidity</h3><p>How easily you can withdraw. Locking money longer usually pays more.</p></div>
+      <div class="card"><h3>Safety</h3><p>Deposit protection and the risk of losing principal or interest.</p></div>
+      <div class="card"><h3>Restrictions &amp; fees</h3><p>Minimum-balance rules and charges that quietly eat returns.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Deposit protection</div><p>Bank deposits are typically guaranteed up to <b>€100,000 per depositor, per bank</b>. But money-market <em>funds</em> are investments, not deposits — and are <b>not</b> covered by that guarantee.</p></div>
+  </div>
+</section>
+
+<!-- 20. AFTER-TAX YIELD + GOAL SAVING -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · Net Yield</div>
+    <h2 class="title">The rate on the sign isn't the rate you keep</h2>
+    <p class="lede">Taxes and inflation both take a bite. Here's what a headline savings rate really leaves you.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Headline (gross) rate <span class="val" id="nyRv">3%</span></label><input type="range" id="nyR" min="0" max="10" step="0.25" value="3"></div>
+        <div class="field"><label>Tax on interest <span class="val" id="nyTaxv">19.65%</span></label><input type="range" id="nyTax" min="0" max="40" step="0.35" value="19.65"></div>
+        <div class="field"><label>Inflation <span class="val" id="nyInfv">2%</span></label><input type="range" id="nyInf" min="0" max="10" step="0.25" value="2"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">After-tax nominal yield</span><span class="rv" id="nyNet">2.41%</span></div>
+          <div class="rline"><span class="rk">Real yield (after tax &amp; inflation)</span><span class="rv" id="nyReal">0.41%</span></div>
+        </div>
+        <div class="note">Example tax reflects a 17% deposit levy + 2.65% health contribution ≈ 19.65% — adjust for your jurisdiction.</div>
+      </div>
+      <div class="chartbox"><div class="chartwrap"><canvas id="nyChart"></canvas></div>
+        <div class="note" style="text-align:center;margin-top:8px">Where a 3% headline rate actually goes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 21. GOAL-BASED SAVING (education / down payment) -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">What-If · Saving for a Goal</div>
+    <h2 class="title">How much do I need to set aside?</h2>
+    <p class="lede">Work backwards from a target. A higher return — or an earlier start — dramatically cuts what you must save.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Target amount <span class="val" id="gTv">€80,000</span></label><input type="range" id="gT" min="10000" max="250000" step="5000" value="80000"></div>
+        <div class="field"><label>Years to goal <span class="val" id="gYv">10</span></label><input type="range" id="gY" min="1" max="30" step="1" value="10"></div>
+        <div class="field"><label>Expected annual return <span class="val" id="gRv">5%</span></label><input type="range" id="gR" min="0" max="13" step="0.5" value="5"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Required each year</span><span class="rv gold" id="gAnnual">€6,361</span></div>
+          <div class="rline"><span class="rk">Required each month</span><span class="rv" id="gMonthly">€530</span></div>
+          <div class="rline"><span class="rk">Total you contribute</span><span class="rv" id="gContrib">€63,610</span></div>
+          <div class="rline"><span class="rk">Growth does the rest</span><span class="rv green" id="gGrowth">€16,390</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="gChart"></canvas></div></div>
+    </div>
+    <div class="src">Ordinary annuity — level contributions at the end of each year</div>
+  </div>
+</section>
+
+<!-- 21b. TYPES OF FINANCIAL INSTITUTIONS -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Where to Keep &amp; Grow Money</div>
+    <h2 class="title">The main types of financial institution</h2>
+    <p class="lede">Not all providers are the same. Deposit-takers protect your cash, while investment firms offer growth but not a deposit guarantee.</p>
+    <div class="grid g2">
+      <div class="card"><h3>Commercial banks</h3><p>Full-service: savings, loans, payments. Organised as companies, with your deposits covered by the state guarantee scheme.</p></div>
+      <div class="card"><h3>Credit unions</h3><p>Member-owned, non-profit cooperatives. Studies show they often charge lower fees and lower loan rates, with higher satisfaction.</p></div>
+      <div class="card"><h3>Life-insurance companies</h3><p>Provide financial security for dependents, and increasingly also offer savings, investment and retirement-planning products.</p></div>
+      <div class="card"><h3>Investment companies (funds)</h3><p>Mutual funds and money-market funds combine saving and investing. <b>Not</b> deposits — so <b>not</b> covered by the deposit guarantee.</p></div>
+    </div>
+    <div class="callout accent"><div class="lab">Also worth knowing</div><p>Mortgage companies lend specifically for home purchase. Newer players include online-only banks and peer-to-peer (P2P) lending networks.</p></div>
+  </div>
+</section>
+
+<!-- 21c. SAVINGS VEHICLES -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Savings Vehicles</div>
+    <h2 class="title">Four common ways to hold savings</h2>
+    <div class="deflist">
+      <div class="defrow"><div class="defterm">Savings account</div><div class="defdesc">Low or zero minimum balance, withdraw any time. Credit unions call these "share accounts." Maximum liquidity, modest return.</div></div>
+      <div class="defrow"><div class="defterm">Certificate of deposit (CD)</div><div class="defdesc">Lock money for a set term for a higher rate, but early withdrawal triggers a penalty. A "ladder" of CDs maturing at different dates balances yield and access.</div></div>
+      <div class="defrow"><div class="defterm">Money-market account</div><div class="defdesc">Requires a minimum balance, pays market rates. At a bank it's a covered <b>deposit</b>, whereas a money-market <b>fund</b> is an investment and is not covered.</div></div>
+      <div class="defrow"><div class="defterm">Payment / current account</div><div class="defdesc">For day-to-day transactions — direct debits, salary, card purchases. Watch maintenance, inactivity, transaction and transfer fees.</div></div>
+    </div>
+    <div class="callout"><div class="lab">Opportunity cost is everywhere</div><p>A higher long-term rate usually costs you liquidity. A "free" current account requiring a €500 no-interest minimum quietly costs you the interest that €500 could have earned.</p></div>
+  </div>
+</section>
+
+<!-- 21d. DIGITAL BANKING & PAYMENTS -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Financial Services &amp; Payments</div>
+    <h2 class="title">Banking has moved from the queue to the app</h2>
+    <p class="lede">The way we access money has changed — from teller lines to a phone tap, from posted cheques to a photographed deposit.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Payments &amp; transfers</h3><p>Online payments, moving funds between accounts, person-to-person transfers, and tap-to-pay purchases.</p></div>
+      <div class="card"><h3>Deposits</h3><p>Direct deposit of pay, transfers from other accounts, and remote "photo" cheque deposits.</p></div>
+      <div class="card"><h3>Other services</h3><p>Balance alerts, loan applications, rate comparisons, and buying, selling or monitoring investments.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>The upside</h3><p>Convenience, time saved, and instant access to information — 24/7 via app, website or ATM, plus debit cards that spend your own money.</p></div>
+      <div class="card"><h3>The trade-offs</h3><p>Privacy and data-security concerns, the ease of overspending, costly fees, and exposure to online fraud. Convenience must be weighed against cost.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 21e. OTHER PAYMENT METHODS -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Payment Methods</div>
+    <h2 class="title">Beyond cash and card</h2>
+    <p class="lede">Certain transactions call for guaranteed or specialised payment instruments. It pays to know which is which.</p>
+    <div class="deflist">
+      <div class="defrow"><div class="defterm">Certified cheque</div><div class="defdesc">A personal cheque the bank guarantees, with the amount removed from your balance when certified.</div></div>
+      <div class="defrow"><div class="defterm">Cashier's cheque</div><div class="defdesc">Drawn on the bank itself — you pay the amount plus a fee. Treated as very secure by the recipient.</div></div>
+      <div class="defrow"><div class="defterm">Money order</div><div class="defdesc">Bought from a bank, post office or store for smaller guaranteed payments.</div></div>
+      <div class="defrow"><div class="defterm">Money-transfer services</div><div class="defdesc">Fast, convenient global transfers — e.g. Wise, Western Union, MoneyGram, Xoom.</div></div>
+    </div>
+    <div class="callout accent"><div class="lab">Stay alert to conditions</div><p>Rates and fees move with the economy. Track interest-rate trends before locking money away, and read the fee schedule before you open any account.</p></div>
+  </div>
+</section>
+
+<!-- 21f. DEPOSIT GUARANTEE (interactive) -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · Deposit Protection</div>
+    <h2 class="title">How much of a failed bank's deposit is protected?</h2>
+    <p class="lede">The guarantee covers up to <span class="hl">€100,000 per depositor, per bank</span>. Joint accounts split between holders, and separate banks each get their own limit. Try the classic cases.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Deposit in Bank A <span class="val" id="dgAv">€90,000</span></label><input type="range" id="dgA" min="0" max="300000" step="5000" value="90000"></div>
+        <div class="field"><label>Deposit in Bank B <span class="val" id="dgBv">€170,000</span></label><input type="range" id="dgB" min="0" max="300000" step="5000" value="170000"></div>
+        <div class="field"><label>Account holders (split equally) <span class="val" id="dgHv">1</span></label><input type="range" id="dgH" min="1" max="2" step="1" value="1"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Protected in Bank A</span><span class="rv green" id="dgProtA">€90,000</span></div>
+          <div class="rline"><span class="rk">Protected in Bank B</span><span class="rv green" id="dgProtB">€100,000</span></div>
+          <div class="rline"><span class="rk">Total protected</span><span class="rv gold" id="dgTotal">€190,000</span></div>
+          <div class="rline"><span class="rk">At risk (uncovered)</span><span class="rv red" id="dgRisk">€70,000</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="dgChart"></canvas></div>
+      <div class="note" style="text-align:center">Green = guaranteed · Red = above the €100k limit</div></div>
+    </div>
+    <div class="callout" style="margin-top:16px"><div class="lab">Remember 2013</div><p>During the Cyprus banking crisis, institutions collapsed and many depositors lost part of their savings in a "haircut." The lesson: spread large balances across banks and never assume cash is risk-free.</p></div>
+  </div>
+</section>
+
+<!-- 21g. EMERGENCY FUND & COMMON MISTAKES -->
+<section class="slide" data-section="Saving">
+  <div class="slide-inner">
+    <div class="kicker">Lessons from Common Mistakes</div>
+    <h2 class="title">Why an emergency fund comes first</h2>
+    <p class="lede">Before investing for growth, set aside accessible cash for the unexpected. It is what keeps one bad month from undoing months of good decisions.</p>
+    <div class="grid g2">
+      <div class="card"><h3>What an emergency fund does</h3><p>A car repair, a medical bill, or a sudden job loss can hit at any time. A buffer of accessible cash — with an emphasis on <b>access</b> — means you never have to abandon your plans or reach for expensive credit.</p></div>
+      <div class="card dark"><h3>The rule</h3><p>Don't let emotions drive money decisions. Budget for the unexpected, not just for the fun, and keep the buffer liquid so you can actually use it when it counts.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Common money-management mistakes</div><p>Overspending on impulse and heavy credit use, too few liquid assets for current bills, using savings or borrowing to cover everyday living costs, and failing to put money into a savings or investment plan that builds future income.</p></div>
+  </div>
+</section>
+
+<!-- 22. DIVIDER — CREDIT -->
+<section class="slide" data-section="Consumer Credit">
+  <div class="divider">
+    <div class="snum">Module 07</div>
+    <h1>Consumer Credit</h1>
+    <p>Borrowing is a tool — powerful when used deliberately, dangerous when not. Know the cost, the ratios, and your own capacity to repay.</p>
+    <div class="dots"><span></span><span></span><span></span><span></span><span class="on"></span></div>
+  </div>
+</section>
+
+<!-- 23. CREDIT pros/cons + debt ratios -->
+<section class="slide" data-section="Consumer Credit">
+  <div class="slide-inner">
+    <div class="kicker">Balance Sheet Discipline</div>
+    <h2 class="title">Credit's two faces — and two guardrail ratios</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>What credit gives you</h3><p>Immediate access to goods, a cushion for emergencies, safety over cash, purchase protections and rewards — plus a record of financial stability.</p></div>
+      <div class="card"><h3>What credit costs you</h3><p>Temptation to overspend, interest charges, and — if repayment fails — lost income, lost assets and a damaged reputation. Credit does <b>not</b> raise your total purchasing power.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card dark"><h3>Debt-payments-to-income</h3><p class="big">&lt; 20%</p><p>Monthly non-mortgage debt payments ÷ net monthly income. Keep it under one-fifth.</p></div>
+      <div class="card dark"><h3>Debt-to-net-worth</h3><p class="big">&lt; 1.0</p><p>Total liabilities ÷ net worth (excluding home &amp; mortgage). Below one keeps you solvent.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 23b. WHAT CREDIT IS + ALTERNATIVES -->
+<section class="slide" data-section="Consumer Credit">
+  <div class="slide-inner">
+    <div class="kicker">Definitions &amp; Trade-offs</div>
+    <h2 class="title">What credit is — and three ways to finance a purchase</h2>
+    <p class="body"><span class="hl-a">Credit</span> is an agreement to receive cash, goods or services now and repay in the future. <span class="hl-a">Consumer credit</span> is using credit for personal needs (other than a mortgage). You borrow for education, cars, everyday spending, a business, or a home.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Use savings</h3><p>But drawing them down shrinks your emergency cushion.</p></div>
+      <div class="card"><h3>Use current income</h3><p>But spending on luxuries now reduces future wellbeing.</p></div>
+      <div class="card"><h3>Borrow against future income</h3><p>But that commits tomorrow's money and reduces future flexibility.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Before borrowing, ask yourself</div><p>Do I have the cash for a down-payment? Must I dip into savings? Does it fit my budget? Could I use the money better elsewhere? Can I delay the purchase — what's the opportunity cost? And what is the monetary <em>and</em> emotional cost of this debt?</p></div>
+  </div>
+</section>
+
+<!-- 23c. WHAT THE BANK ASSESSES -->
+<section class="slide" data-section="Consumer Credit">
+  <div class="slide-inner">
+    <div class="kicker">The Lender's View</div>
+    <h2 class="title">What a bank checks before it lends</h2>
+    <p class="lede">Under central-bank rules, lenders build a Personal Financial Statement and must disclose the loan's key terms up front.</p>
+    <div class="grid g2">
+      <div class="card"><h3>What they collect from you</h3><p>Monthly household income and expenses, current repayments on existing facilities (cards, car loans, mortgages, overdrafts), and your assets — property and movable wealth.</p></div>
+      <div class="card"><h3>What they must disclose to you</h3><p>Currency, term and type of loan, the nominal rate and whether it's fixed or variable, collateral, the APRC (total cost), the number and size of payments, a repayment schedule, early-repayment rules and penalties, and the consequences of default.</p></div>
+    </div>
+    <div class="callout accent"><div class="lab">Guarantor beware</div><p>Co-signing makes you liable for the whole debt. Studies suggest <b>three in four guarantors</b> are eventually called to pay some or all of a loan they guaranteed. It can also block your own future borrowing.</p></div>
+  </div>
+</section>
+
+<!-- 23d. 28/36 RULE + CREDIT SCORE FACTORS -->
+<section class="slide" data-section="Consumer Credit">
+  <div class="slide-inner">
+    <div class="kicker">Capacity to Repay</div>
+    <h2 class="title">The 28/36 rule and what moves your score</h2>
+    <p class="lede">A widely used affordability guideline caps how much of your income should go to debt.</p>
+    <div class="grid g2">
+      <div class="card dark"><h3>28% — housing</h3><p>No more than 28% of gross income on total housing costs (mortgage, taxes, insurance).</p></div>
+      <div class="card dark"><h3>36% — total debt</h3><p>No more than 36% of gross income on <b>all</b> debt payments combined.</p></div>
+    </div>
+    <p class="body" style="margin-top:18px">Lenders also build their own <span class="hl-a">credit score</span> from your data: income, outstanding balances, any late or missed payments, net worth and liquidity. A strong score earns you the best terms — including a lower rate.</p>
+    <div class="callout"><div class="lab">Protecting your score</div><p>Borrow within your capacity, honour every contract, and check your record (e.g. via a credit registry). In some markets, non-performing loans and arrears are flagged directly to future lenders.</p></div>
+  </div>
+</section>
+
+<!-- 24. CREDIT SCORE → INTEREST RATE -->
+<section class="slide" data-section="Consumer Credit">
+  <div class="slide-inner">
+    <div class="kicker">Connections · Why Your Score Matters</div>
+    <h2 class="title">A better credit score buys a lower rate</h2>
+    <p class="lede">Lenders price risk. The higher your creditworthiness, the cheaper your money — and the effect compounds over a loan's life.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Credit score <span class="val" id="csScorev">720</span></label><input type="range" id="csScore" min="350" max="850" step="10" value="720"></div>
+        <div class="field"><label>Loan amount <span class="val" id="csAmtv">€20,000</span></label><input type="range" id="csAmt" min="5000" max="80000" step="1000" value="20000"></div>
+        <div class="field"><label>Term (years) <span class="val" id="csYrv">5</span></label><input type="range" id="csYr" min="1" max="10" step="1" value="5"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Estimated APR for this score</span><span class="rv gold" id="csApr">6.5%</span></div>
+          <div class="rline"><span class="rk">Monthly payment</span><span class="rv" id="csPmt">€391</span></div>
+          <div class="rline"><span class="rk">Total interest paid</span><span class="rv red" id="csInt">€3,479</span></div>
+        </div>
+        <div class="callout accent" style="margin-top:4px"><div class="lab">The score curve</div><p>Below ~550, rates climb steeply — you may only borrow with collateral. Above ~750, you unlock the best terms available.</p></div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="csChart"></canvas></div></div>
+    </div>
+    <div class="src">Illustrative APR curve for demonstration — actual pricing varies by lender and market</div>
+  </div>
+</section>
+
+<!-- 25. DIVIDER — AMORTIZATION -->
+<section class="slide" data-section="Loan Amortization">
+  <div class="divider">
+    <div class="snum">Module 08</div>
+    <h1>Loan<br>Amortization</h1>
+    <p>How installment loans really unwind — and why credit cards, left to the minimum payment, can follow you for decades.</p>
+    <div class="dots"><span class="on"></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- 26. AMORTIZATION CALCULATOR -->
+<section class="slide" data-section="Loan Amortization">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · Installment Loan</div>
+    <h2 class="title">Where each payment goes</h2>
+    <p class="lede">Early on, most of your payment is interest. As the balance falls, more goes to principal. Longer terms lower the payment but raise the total cost.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Loan amount <span class="val" id="amAmtv">€80,000</span></label><input type="range" id="amAmt" min="5000" max="150000" step="5000" value="80000"></div>
+        <div class="field"><label>Interest rate <span class="val" id="amRv">7%</span></label><input type="range" id="amR" min="1" max="20" step="0.5" value="7"></div>
+        <div class="field"><label>Term (years) <span class="val" id="amYrv">5</span></label><input type="range" id="amYr" min="1" max="30" step="1" value="5"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Annual payment</span><span class="rv gold" id="amPmt">€19,511</span></div>
+          <div class="rline"><span class="rk">Total repaid</span><span class="rv" id="amTotal">€97,556</span></div>
+          <div class="rline"><span class="rk">Total interest</span><span class="rv red" id="amInt">€17,556</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="amChart"></canvas></div>
+      <div class="note" style="text-align:center">Principal vs interest in each yearly payment</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 27. CREDIT CARD MINIMUM TRAP -->
+<section class="slide" data-section="Loan Amortization">
+  <div class="slide-inner">
+    <div class="kicker">What-If · The Minimum-Payment Trap</div>
+    <h2 class="title">A credit card is revolving debt, not an installment loan</h2>
+    <p class="lede">Pay only the interest and the balance <span class="hl">never falls</span>. See how long real payoff takes — and how much interest you hand over.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Balance <span class="val" id="ccBalv">€5,000</span></label><input type="range" id="ccBal" min="500" max="15000" step="500" value="5000"></div>
+        <div class="field"><label>APR <span class="val" id="ccAprv">18%</span></label><input type="range" id="ccApr" min="8" max="30" step="1" value="18"></div>
+        <div class="field"><label>Fixed monthly payment <span class="val" id="ccPayv">€150</span></label><input type="range" id="ccPay" min="50" max="600" step="10" value="150"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Time to clear the balance</span><span class="rv gold" id="ccTime">3 yr 11 mo</span></div>
+          <div class="rline"><span class="rk">Total interest paid</span><span class="rv red" id="ccInt">€1,038</span></div>
+          <div class="rline"><span class="rk">Status</span><span class="rv" id="ccStatus">On track</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="ccChart"></canvas></div>
+      <div class="note" style="text-align:center">Falling balance over time — or a flat line, if you only cover interest</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 28. DIVIDER — RISK & RETURN -->
+<section class="slide" data-section="Risk & Return">
+  <div class="divider">
+    <div class="snum">Module 09</div>
+    <h1>Risk &amp; Return</h1>
+    <p>Higher expected returns come with higher uncertainty. Over long horizons, the choice of asset class is decisive — and diversification is the one free lunch.</p>
+    <div class="dots"><span></span><span class="on"></span><span></span></div>
+  </div>
+</section>
+
+<!-- 29. ASSET CLASS COMPARISON -->
+<section class="slide" data-section="Risk & Return">
+  <div class="slide-inner">
+    <div class="kicker">What-If · Asset Class Choice</div>
+    <h2 class="title">The same €100,000, four different journeys</h2>
+    <p class="lede">Illustrative long-run average returns. Over 40 years, small differences in rate produce vast differences in outcome — that's compounding at work.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Amount invested <span class="val" id="acAmtv">€100,000</span></label><input type="range" id="acAmt" min="10000" max="200000" step="10000" value="100000"></div>
+        <div class="field"><label>Horizon (years) <span class="val" id="acYrv">40</span></label><input type="range" id="acYr" min="5" max="50" step="1" value="40"></div>
+        <table class="mini" style="margin-top:10px">
+          <thead><tr><th>Asset class</th><th style="text-align:right">Avg. return</th><th style="text-align:right">Final value</th></tr></thead>
+          <tbody>
+            <tr><td>Savings account</td><td class="num">1.5%</td><td class="num" id="acSav">€181,402</td></tr>
+            <tr><td>Treasury bill</td><td class="num">3.5%</td><td class="num" id="acTbill">€395,926</td></tr>
+            <tr><td>Corporate bond</td><td class="num">6.0%</td><td class="num" id="acBond">€1,028,572</td></tr>
+            <tr><td>Stocks</td><td class="num">13.0%</td><td class="num pos" id="acStock">€13,278,155</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="acChart"></canvas></div>
+      <div class="note" style="text-align:center">Log-style spread — note the stock bar dwarfs the rest</div></div>
+    </div>
+    <div class="src">Hypothetical average returns for illustration; past performance is not indicative of future results</div>
+  </div>
+</section>
+
+<!-- 30. DIVERSIFICATION concept + quiz -->
+<section class="slide" data-section="Risk & Return">
+  <div class="slide-inner">
+    <div class="kicker">Principle · The Only Free Lunch</div>
+    <h2 class="title">Diversification reduces risk without cutting expected return</h2>
+    <p class="lede">Spreading money across assets that don't move together smooths the ride. Concentrating in one bet — a single stock, one property, or cash alone — is the mistake surveys find most common.</p>
+    <div class="quiz" data-quiz="1">
+      <div class="q">You have €1,000 in a savings account earning 1%, while inflation runs at 2% — both annual. In one year, what will your money buy?</div>
+      <div class="opts">
+        <button class="opt" data-correct="false"><span class="k">A</span> More than today</button>
+        <button class="opt" data-correct="false"><span class="k">B</span> Exactly the same</button>
+        <button class="opt" data-correct="true"><span class="k">C</span> Less than today</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- ===============  INVESTING SECTION (Investing 101)  ========= -->
+<!-- ============================================================= -->
+
+<!-- INV-1. DIVIDER — INVESTING BASICS -->
+<section class="slide" data-section="Investing Basics">
+  <div class="divider">
+    <div class="snum">Module 10</div>
+    <h1>Investing<br>Basics</h1>
+    <p>Saving is step one, and investing is getting that money to make more money. Meet the instruments, the marketplace, and the ground rules before you buy anything.</p>
+    <div class="dots"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- INV-2. WHAT INVESTING IS + THE MENU -->
+<section class="slide" data-section="Investing Basics">
+  <div class="slide-inner">
+    <div class="kicker">From Saving to Investing</div>
+    <h2 class="title">Investing is getting your money to make more money</h2>
+    <p class="lede">That's the whole idea, in one line. The catch: growth comes with risk, and every asset class behaves differently. Your job is to match them to your goals.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Stocks (equities)</h3><p>A share of ownership in a company. The biggest long-run returns — and the biggest swings.</p></div>
+      <div class="card"><h3>Bonds</h3><p>A loan to a government or company that pays interest. Steadier, a counterweight to stocks.</p></div>
+      <div class="card"><h3>Mutual funds</h3><p>A professionally managed basket of many securities — instant diversification for a small sum.</p></div>
+      <div class="card"><h3>ETFs</h3><p>Index-tracking funds that trade like a stock, usually at very low cost.</p></div>
+      <div class="card"><h3>Real estate</h3><p>Property directly, or via REITs — income plus a hedge against inflation.</p></div>
+      <div class="card"><h3>Commodities &amp; metals</h3><p>Oil, wheat, gold — raw materials and precious metals, often held for diversification.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Why not just save?</div><p>Cash slowly loses to inflation. Investing aims to <b>beat</b> it — accepting ups and downs in exchange for higher long-run growth. Currencies and cash equivalents round out the menu, but the six above are where most portfolios live.</p></div>
+  </div>
+</section>
+
+<!-- INV-3. THE ECONOMY & YOU -->
+<section class="slide" data-section="Investing Basics">
+  <div class="slide-inner">
+    <div class="kicker">Basic Economics</div>
+    <h2 class="title">Investments don't grow in a vacuum</h2>
+    <p class="lede">Consumer spending makes up most of GDP. When the economy grows, companies prosper and investments tend to follow. Savvy investors watch where it's heading — not just where it is.</p>
+    <div class="grid g3">
+      <div class="card"><h3>The economic cycle</h3><p>Downturn &#8594; recession &#8594; upturn &#8594; recovery, then round again. Different sectors lead at each stage ("sector rotation").</p></div>
+      <div class="card"><h3>Leading indicators</h3><p>GDP, the consumer price index (CPI), unemployment, job growth and housing starts give clues to what's coming next.</p></div>
+      <div class="card"><h3>Rates &amp; the central bank</h3><p>The Fed (or ECB) sets the tone. Lower rates lift stocks, while higher rates cool spending and can push share prices down.</p></div>
+    </div>
+    <div class="callout"><div class="lab">The rate connection (recall Module 04)</div><p>Cut rates &#8594; money supply up &#8594; stocks look more attractive. Hike rates &#8594; bonds pay more and future company cash flows get discounted harder &#8594; share prices can fall. It all links back to the price of money.</p></div>
+  </div>
+</section>
+
+<!-- INV-4. WATCHDOGS & HOMEWORK -->
+<section class="slide" data-section="Investing Basics">
+  <div class="slide-inner">
+    <div class="kicker">Rules of the Game</div>
+    <h2 class="title">Regulators keep it fair — your job is the homework</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>The market watchdog</h3><p>The <b>SEC</b> in the US (CySEC / ESMA in Europe) enforces disclosure and licensing and polices <b>insider trading</b> — dealing on confidential, non-public information is illegal. Every listed company must file audited financials.</p></div>
+      <div class="card"><h3>Do your homework</h3><p>Read the annual report past the glossy photos, use a research checklist, and <b>never</b> act on a "hot tip." An educated investor is a patient, relaxed investor.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>Fundamental analysis</h3><p>Study the <b>company</b> — earnings, assets, book value, competitive position. Common among long-term, buy-and-hold investors.</p></div>
+      <div class="card"><h3>Technical analysis</h3><p>Study the <b>price</b> — charts, patterns and volume. Used by shorter-term traders. Many pros combine both.</p></div>
+    </div>
+    <div class="src">Cagan, Investing 101 — Ch. 1 (Basic Economics) &amp; company fundamentals</div>
+  </div>
+</section>
+
+<!-- INV-5. DIVIDER — STOCKS -->
+<section class="slide" data-section="Stocks">
+  <div class="divider">
+    <div class="snum">Module 11</div>
+    <h1>Stocks</h1>
+    <p>Buying a stock means owning a slice of a real business. As Buffett puts it: if you wouldn't want to own the whole company, don't own a piece of it.</p>
+    <div class="dots"><span></span><span class="on"></span><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- INV-6. WHAT A STOCK IS + KINDS -->
+<section class="slide" data-section="Stocks">
+  <div class="slide-inner">
+    <div class="kicker">Equities</div>
+    <h2 class="title">A share is part-ownership of a company</h2>
+    <p class="lede">That's why stocks are called <em>equities</em>. <b>Common stock</b> = ownership plus a vote. <b>Preferred stock</b> = a fixed dividend and payment priority, more bond-like, usually without a vote.</p>
+    <table class="mini">
+      <thead><tr><th>Market-cap tier</th><th>Rough size</th><th>Character</th></tr></thead>
+      <tbody>
+        <tr><td>Large cap</td><td>&#8805; $10bn</td><td>Established, steadier, slower growth</td></tr>
+        <tr><td>Mid cap</td><td>$2–10bn</td><td>Balance of growth and stability</td></tr>
+        <tr><td>Small cap</td><td>$300m–2bn</td><td>Higher growth potential, more volatile</td></tr>
+        <tr><td>Micro cap</td><td>&lt; $300m</td><td>Speculative, highest risk</td></tr>
+      </tbody>
+    </table>
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card"><h3>Blue-chip</h3><p>Big, prestigious, long-established leaders. Conservative core holdings.</p></div>
+      <div class="card"><h3>Growth</h3><p>Fast-growing, earnings reinvested rather than paid out. Shine in bull markets.</p></div>
+      <div class="card"><h3>Income</h3><p>Pay steady, meaningful dividends — favoured for cash flow.</p></div>
+      <div class="card"><h3>Value</h3><p>Cheap versus earnings/assets. Tend to hold up better in bear markets.</p></div>
+      <div class="card"><h3>Cyclical</h3><p>Rise and fall with the economy (e.g. airlines, autos).</p></div>
+      <div class="card"><h3>Defensive</h3><p>Stable through the cycle — food, drugs, utilities.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Beware penny stocks</div><p>Shares selling for ≤ $5, often with little revenue and scant public information. High potential for loss — and a favourite of "hot tip" scams. For most people, not worth the risk.</p></div>
+  </div>
+</section>
+
+<!-- INV-7. DIVIDENDS & TOTAL RETURN (interactive) -->
+<section class="slide" data-section="Stocks">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · Total Return</div>
+    <h2 class="title">Price change is only half the story</h2>
+    <p class="lede">A dividend is a share of profits paid to owners. <span class="hl">Total return = (price change + dividends) ÷ starting price.</span> Growth stocks reinvest, income stocks pay you. Both count.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Buy price <span class="val" id="trBuyv">€45</span></label><input type="range" id="trBuy" min="10" max="200" step="1" value="45"></div>
+        <div class="field"><label>Price after 12 months <span class="val" id="trSellv">€48</span></label><input type="range" id="trSell" min="5" max="260" step="1" value="48"></div>
+        <div class="field"><label>Dividends received <span class="val" id="trDivv">€1.50</span></label><input type="range" id="trDiv" min="0" max="20" step="0.5" value="1.5"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Capital gain</span><span class="rv" id="trCap">+6.7%</span></div>
+          <div class="rline"><span class="rk">Dividend yield</span><span class="rv" id="trYield">3.3%</span></div>
+          <div class="rline"><span class="rk">Total return</span><span class="rv gold" id="trTot">+10.0%</span></div>
+        </div>
+        <div class="note">Book example: buy €45, end €48 (+€3), €1.50 dividend &#8594; (3 + 1.5) ÷ 45 = 10%.</div>
+      </div>
+      <div class="chartbox"><div class="chartwrap"><canvas id="trChart"></canvas></div>
+      <div class="note" style="text-align:center">What made up your return</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INV-8. EXCHANGES & INDICES -->
+<section class="slide" data-section="Stocks">
+  <div class="slide-inner">
+    <div class="kicker">The Marketplace</div>
+    <h2 class="title">Where shares trade — and how we measure the market</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>NYSE — "the Big Board"</h3><p>The oldest US exchange, an auction market, home to big, established blue chips like Walmart and Coca-Cola.</p></div>
+      <div class="card"><h3>NASDAQ</h3><p>The first electronic market, a network of dealer "market makers." Heavy in tech and growth stocks, and hosts the most IPOs.</p></div>
+    </div>
+    <table class="mini">
+      <thead><tr><th>Index</th><th>Covers</th><th>How it's weighted</th></tr></thead>
+      <tbody>
+        <tr><td>Dow Jones (DJIA)</td><td>30 blue-chip giants</td><td>By share price</td></tr>
+        <tr><td>S&amp;P 500</td><td>500 large caps — the pro benchmark</td><td>By market value (cap-weighted)</td></tr>
+        <tr><td>Russell 2000</td><td>2,000 small caps</td><td>By market value</td></tr>
+        <tr><td>NASDAQ-100</td><td>Largest non-financial NASDAQ firms</td><td>By market value</td></tr>
+      </tbody>
+    </table>
+    <div class="callout accent"><div class="lab">IPO</div><p>An <b>initial public offering</b> is a company's first sale of shares to the public, to raise capital. New issues are volatile — it's often wise to wait until the price settles before buying.</p></div>
+  </div>
+</section>
+
+<!-- INV-9. DIVIDER — BONDS -->
+<section class="slide" data-section="Bonds">
+  <div class="divider">
+    <div class="snum">Module 12</div>
+    <h1>Bonds</h1>
+    <p>A bond is a loan you make to a government or company, repaid with interest. The world's bond market is even bigger than its stock market.</p>
+    <div class="dots"><span></span><span></span><span class="on"></span><span></span><span></span></div>
+  </div>
+</section>
+
+<!-- INV-10. WHAT BONDS ARE + WHY BUY -->
+<section class="slide" data-section="Bonds">
+  <div class="slide-inner">
+    <div class="kicker">Fixed Income</div>
+    <h2 class="title">Lending money for interest</h2>
+    <p class="lede">You buy a bond at its <b>par (face) value</b> — often €1,000 — collect a set <b>coupon</b>, and get your principal back at <b>maturity</b>. Short (≤5 yrs), intermediate (7–10), or long (20–30).</p>
+    <div class="grid g2">
+      <div class="card"><h3>Why investors buy bonds</h3><p>They behave differently from stocks (diversification), pay a scheduled stream of income, return your principal at maturity, and some carry tax perks — e.g. municipal-bond interest is often tax-free.</p></div>
+      <div class="card"><h3>The risks</h3><p><b>Credit/default risk</b> (the issuer can't pay), <b>interest-rate risk</b> (the price falls if you must sell after rates rise), and <b>inflation risk</b> (fixed payments buy less over time).</p></div>
+    </div>
+    <div class="callout"><div class="lab">Stock vs bond, in one line</div><p>A shareholder <b>owns</b> part of the company and rides its fortunes up and down. A bondholder has <b>lent</b> to it — collecting fixed interest and principal regardless of how well it does, unless it goes bankrupt.</p></div>
+  </div>
+</section>
+
+<!-- INV-11. THE BOND SEESAW (interactive) -->
+<section class="slide" data-section="Bonds">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · The Bond Seesaw</div>
+    <h2 class="title">Bond prices move opposite to interest rates</h2>
+    <p class="lede">Own a bond paying 6% and market rates rise to 8%? Yours is worth <span class="hl">less</span> — nobody pays full price for a lower coupon. Rates fall to 4%? Yours is worth <span class="hl">more</span>.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Your bond's coupon (fixed at issue) <span class="val" id="bsCouponv">6%</span></label><input type="range" id="bsCoupon" min="1" max="10" step="0.5" value="6"></div>
+        <div class="field"><label>Prevailing market rate now <span class="val" id="bsMktv">6%</span></label><input type="range" id="bsMkt" min="1" max="12" step="0.5" value="6"></div>
+        <div class="field"><label>Years to maturity <span class="val" id="bsYrsv">10</span></label><input type="range" id="bsYrs" min="1" max="30" step="1" value="10"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Approx. price (€1,000 face)</span><span class="rv gold" id="bsPrice">€1,000</span></div>
+          <div class="rline"><span class="rk">Premium / discount vs par</span><span class="rv" id="bsPrem">At par</span></div>
+        </div>
+        <div class="note">Price = present value of the coupons + face value, discounted at the current market rate.</div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="bsChart"></canvas></div>
+      <div class="note" style="text-align:center">Price of your bond as the market rate changes</div></div>
+    </div>
+    <div class="callout accent" style="margin-top:16px"><div class="lab">Ratings — a credit score for the issuer</div><p>S&amp;P and Moody's grade bonds: <b>AAA / AA / A / BBB</b> are investment grade, <b>BB / B</b> are questionable, and below B is <b>junk (high-yield)</b> — bigger yield, bigger default risk.</p></div>
+  </div>
+</section>
+
+<!-- INV-12. BOND TYPES -->
+<section class="slide" data-section="Bonds">
+  <div class="slide-inner">
+    <div class="kicker">The Bond Menu</div>
+    <h2 class="title">Five families of bonds</h2>
+    <div class="deflist">
+      <div class="defrow"><div class="defterm">Government (Treasuries)</div><div class="defdesc">Bills (≤1 yr), notes (2–10 yrs), bonds (30 yrs). Backed by the state — the safest, with interest often free of local tax. The benchmark "risk-free" rate.</div></div>
+      <div class="defrow"><div class="defterm">Municipal ("munis")</div><div class="defdesc">Issued by cities/regions to fund public projects. Interest is frequently exempt from income tax — attractive to higher earners.</div></div>
+      <div class="defrow"><div class="defterm">Corporate</div><div class="defdesc">Issued by companies. Higher yields than government debt, but they carry default risk and the income is fully taxable.</div></div>
+      <div class="defrow"><div class="defterm">Junk / high-yield</div><div class="defdesc">Below investment grade. The biggest yields — and the biggest chance of default. Best held via a diversified fund.</div></div>
+      <div class="defrow"><div class="defterm">Zero-coupon</div><div class="defdesc">Pay no periodic interest. Bought at a deep discount and redeemed at full face value — pure compounding in bond form.</div></div>
+    </div>
+    <div class="callout"><div class="lab">Laddering</div><p>Hold bonds maturing at staggered dates to balance yield with access and blunt interest-rate risk. Rule of thumb: keep the core high-quality — treasuries, munis and high-grade corporates.</p></div>
+  </div>
+</section>
+
+<!-- INV-13. DIVIDER — FUNDS & ETFs -->
+<section class="slide" data-section="Funds & ETFs">
+  <div class="divider">
+    <div class="snum">Module 13</div>
+    <h1>Funds &amp; ETFs</h1>
+    <p>Don't want to pick single securities? Pool your money with thousands of others and own a whole basket at once — with professional management or at rock-bottom cost.</p>
+    <div class="dots"><span></span><span></span><span></span><span class="on"></span><span></span></div>
+  </div>
+</section>
+
+<!-- INV-14. MUTUAL FUNDS -->
+<section class="slide" data-section="Funds & ETFs">
+  <div class="slide-inner">
+    <div class="kicker">Pooled Investing</div>
+    <h2 class="title">Hire a manager, own a basket</h2>
+    <p class="lede">A mutual fund pools many investors' money into one professionally managed portfolio. You can start with as little as €25–50 and instantly hold dozens or hundreds of securities.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Diversification</h3><p>Own 20 to 1,000+ securities at once. One loser can't sink you — the single biggest reason funds exist.</p></div>
+      <div class="card"><h3>Professional management</h3><p>An expert picks and monitors the holdings — for a fee. Handy if you don't have the time or inclination.</p></div>
+      <div class="card"><h3>Liquidity &amp; access</h3><p>Buy or sell at the day's <b>NAV</b> (net asset value). Cheap entry, easy exit, low minimums.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Mind the fees (and a fun fact)</div><p>Watch the <b>expense ratio</b> — annual costs run from under 0.25% to over 2.5%, quietly compounding against you. Prefer <b>no-load</b> funds (no sales commission). And a reassuring tidbit: not one US mutual fund has gone bankrupt since 1940. Fund flavours include index, growth, income, balanced, sector, international and bond.</p></div>
+  </div>
+</section>
+
+<!-- INV-15. INDEX VS MANAGED + FEE DRAG (interactive) -->
+<section class="slide" data-section="Funds & ETFs">
+  <div class="slide-inner">
+    <div class="kicker">Calculator · The Fee Drag</div>
+    <h2 class="title">Costs are the one return-killer you control</h2>
+    <p class="lede">Vanguard's Jack Bogle argued a <span class="hl">low-cost index fund beats ~70% of managed funds</span> over time — largely because fees compound against you. See the gap for yourself.</p>
+    <div class="tool split">
+      <div class="controls">
+        <div class="field"><label>Amount invested <span class="val" id="fdAmtv">€50,000</span></label><input type="range" id="fdAmt" min="10000" max="200000" step="5000" value="50000"></div>
+        <div class="field"><label>Return before fees <span class="val" id="fdRv">8%</span></label><input type="range" id="fdR" min="2" max="12" step="0.5" value="8"></div>
+        <div class="field"><label>Years <span class="val" id="fdYrv">30</span></label><input type="range" id="fdYr" min="5" max="40" step="1" value="30"></div>
+        <div class="field"><label>Managed-fund expense ratio <span class="val" id="fdFeev">1.0%</span></label><input type="range" id="fdFee" min="0" max="2.5" step="0.05" value="1.0"></div>
+        <div class="readout">
+          <div class="rline"><span class="rk">Your managed fund ends at</span><span class="rv" id="fdNet">€385,000</span></div>
+          <div class="rline"><span class="rk">A 0.1% index fund ends at</span><span class="rv gold" id="fdIdx">€490,000</span></div>
+          <div class="rline"><span class="rk">Lost to the fee gap</span><span class="rv red" id="fdLost">€105,000</span></div>
+        </div>
+      </div>
+      <div class="chartbox"><div class="chartwrap tall"><canvas id="fdChart"></canvas></div>
+      <div class="note" style="text-align:center">Same market return — only the fee differs</div></div>
+    </div>
+    <div class="callout accent" style="margin-top:16px"><div class="lab">Why it's so big</div><p>0.1% vs 1.0% sounds trivial. Over decades that ~0.9% a year compounds into <b>tens of percent</b> of your final pot — handed to the fund, not to you.</p></div>
+  </div>
+</section>
+
+<!-- INV-16. ETFs + DOLLAR-COST AVERAGING -->
+<section class="slide" data-section="Funds & ETFs">
+  <div class="slide-inner">
+    <div class="kicker">ETFs &amp; a Smart Habit</div>
+    <h2 class="title">Index funds you can trade like a stock</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>What an ETF is</h3><p>An exchange-traded fund tracks an index but trades all day like a share. <b>SPY</b> tracks the S&amp;P 500, <b>QQQ</b> the NASDAQ-100. Low expense ratios, tax-efficient, and fully transparent holdings.</p></div>
+      <div class="card"><h3>ETF vs mutual fund</h3><p>ETF: trade any time, no minimum — but a brokerage commission each trade, so best for larger or lump-sum buys. Mutual fund: priced once daily, often commission-free, great for small regular contributions.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Dollar-cost averaging — the habit that beats timing</div><p>Invest a <b>fixed sum on a set schedule</b>, whatever the price. You automatically buy more shares when prices are low and fewer when high, which lowers your average cost and removes the temptation to time the market. It's exactly how workplace pension and 401(k) contributions already work.</p></div>
+  </div>
+</section>
+
+<!-- INV-17. DIVIDER — STYLES & THE MASTERS -->
+<section class="slide" data-section="Styles & the Masters">
+  <div class="divider">
+    <div class="snum">Module 14</div>
+    <h1>Styles &amp;<br>the Masters</h1>
+    <p>Different philosophies, one goal: use money to make more money. Then four investors whose ideas are worth carrying with you.</p>
+    <div class="dots"><span></span><span></span><span></span><span></span><span class="on"></span></div>
+  </div>
+</section>
+
+<!-- INV-18. THREE WAYS TO PICK -->
+<section class="slide" data-section="Styles & the Masters">
+  <div class="slide-inner">
+    <div class="kicker">Investing Styles</div>
+    <h2 class="title">Value, growth, or the charts</h2>
+    <p class="lede">Broadly, there are three ways people choose what to buy — plus one that isn't really investing at all.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Value</h3><p>Buy solid companies trading below their worth — cheap versus earnings, assets or book value. Patience for the price to catch up. (Graham, Buffett.)</p></div>
+      <div class="card"><h3>Growth</h3><p>Buy fast-growing companies and pay up for future expansion. Watch valuations — momentum can reverse hard.</p></div>
+      <div class="card"><h3>Technical</h3><p>Ignore the business, trade price and volume patterns on charts and candlesticks. Short-term and chart-driven.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Day trading is not investing</div><p>Roughly <b>80% of people who try day trading quit</b>, usually having lost money. Speed, commissions and taxes stack against you. For almost everyone, patient buy-and-hold wins.</p></div>
+  </div>
+</section>
+
+<!-- INV-19. THE MASTERS -->
+<section class="slide" data-section="Styles & the Masters">
+  <div class="slide-inner">
+    <div class="kicker">Advice from the Pros</div>
+    <h2 class="title">Four investors worth studying</h2>
+    <div class="grid g2">
+      <div class="card"><h3>Benjamin Graham — 1894–1976</h3><p class="quote">"The intelligent investor sells to optimists and buys from pessimists."</p><p>Father of value investing. Insist on a <b>margin of safety</b>, and treat the market as a moody partner — "Mr. Market" — whose bad offers you can simply ignore.</p></div>
+      <div class="card dark"><h3>Warren Buffett — 1930–</h3><p class="quote">"Price is what you pay. Value is what you get."</p><p>Graham's most famous student. Buy what you understand. A <b>wonderful company at a fair price</b> beats a fair company at a wonderful price.</p></div>
+      <div class="card dark"><h3>Peter Lynch — 1944–</h3><p class="quote">"Invest in what you know."</p><p>Ran Fidelity's Magellan fund to legendary returns. You don't need to be right every time — a few big winners ("<b>ten-baggers</b>") carry the portfolio.</p></div>
+      <div class="card"><h3>Jack Bogle — 1929–2019</h3><p class="quote">"Keep it simple."</p><p>Founded index investing. <b>Minimise costs</b>, don't try to time the market, and own low-cost index funds for the long run.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- INV-20. BUILD & RUN YOUR PORTFOLIO (+ quiz) -->
+<section class="slide" data-section="Styles & the Masters">
+  <div class="slide-inner">
+    <div class="kicker">Your Portfolio</div>
+    <h2 class="title">Goals, risk, diversification, allocation</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card"><h3>Set measurable goals</h3><p>Not "save more" but "€X by age Y." Allow for inflation (~3% a year), keep an emergency buffer, and start now — time is your biggest ally.</p></div>
+      <div class="card"><h3>Know your risk tolerance</h3><p>Age, dependents, debt and your "ulcer factor" all set how much volatility you can hold. If your investments cost you sleep, something's off.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card dark"><h3>The 100−age rule</h3><p>A starting point: hold <b>(100 − your age)%</b> in stocks, the rest in bonds and cash. A 30-year-old &#8594; ~70% stocks. Not gospel — just a sensible anchor.</p></div>
+      <div class="card dark"><h3>Shift with your horizon</h3><p>Young / long horizon: ~70% equities · 25% bonds · 5% cash. Near retirement: ~50% bonds · 20% equities · 30% cash — capital preservation moves to the front.</p></div>
+    </div>
+    <div class="callout"><div class="lab">Time in the market, not timing the market</div><p>Buy-and-hold beats trying to jump in and out. Miss just the <b>12 best months</b> out of 348 and a 10.3% long-run return collapses to 5.4%. Diversify, keep costs low, and stay invested.</p></div>
+    <div class="quiz" data-quiz="3" style="margin-top:22px">
+      <div class="q">You invest €500 every month, whatever the market does. In a month when prices fall, your fixed €500…</div>
+      <div class="opts">
+        <button class="opt" data-correct="false"><span class="k">A</span> buys fewer shares</button>
+        <button class="opt" data-correct="true"><span class="k">B</span> buys more shares</button>
+        <button class="opt" data-correct="false"><span class="k">C</span> buys the same number</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 31. DIVIDER — PUTTING IT TOGETHER -->
+<section class="slide" data-section="Bringing It Together">
+  <div class="divider">
+    <div class="snum">Module 15</div>
+    <h1>Bringing It<br>Together</h1>
+    <p>Every module points to the same three habits. Master these and the rest is detail.</p>
+    <div class="dots"><span></span><span></span><span class="on"></span></div>
+  </div>
+</section>
+
+<!-- 32. THREE LESSONS + quiz -->
+<section class="slide" data-section="Bringing It Together">
+  <div class="slide-inner">
+    <div class="kicker">The Three Lessons</div>
+    <h2 class="title">What the maths keeps telling us</h2>
+    <div class="grid g3">
+      <div class="card"><h3>01 · Start early</h3><p>Time is the exponent in the compound formula. An extra decade in the market can multiply the outcome — the single biggest lever you control.</p></div>
+      <div class="card"><h3>02 · Mind the rate</h3><p>Small differences in return — or in the rate on your debt, or in fund fees — become enormous over time. Chase low borrowing costs, low fees, and reasonable returns.</p></div>
+      <div class="card"><h3>03 · Diversify &amp; protect</h3><p>Spread risk across assets that don't move together, keep an emergency fund, insure the essentials, and never let cash quietly erode to inflation.</p></div>
+    </div>
+    <div class="quiz" data-quiz="2" style="margin-top:24px">
+      <div class="q">You owe €1,000 on a card at 20% APR and pay nothing. Roughly how long until the amount you owe doubles?</div>
+      <div class="opts">
+        <button class="opt" data-correct="false"><span class="k">A</span> Less than 2 years</button>
+        <button class="opt" data-correct="true"><span class="k">B</span> Between 2 and 5 years</button>
+        <button class="opt" data-correct="false"><span class="k">C</span> At least 10 years</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 32b. DISCLAIMER -->
+<section class="slide" data-section="Important Notice">
+  <div class="slide-inner">
+    <div class="kicker">Important Notice</div>
+    <h2 class="title">Educational material — not financial advice</h2>
+    <p class="lede">This deck is designed to build financial literacy. It is <span class="hl">not</span> personalised financial, investment, tax or legal advice, and nothing here is a recommendation to buy, sell or hold any product.</p>
+    <div class="grid g2">
+      <div class="card"><h3>Illustrative figures</h3><p>All rates, returns, tax percentages and worked examples are for illustration only. Past performance does not indicate future results, and every calculator uses simplified assumptions.</p></div>
+      <div class="card"><h3>Your situation is unique</h3><p>The right choice depends on your goals, circumstances and risk tolerance. Rules, tax rates and protections also vary by country and change over time.</p></div>
+      <div class="card"><h3>Jurisdiction-specific detail</h3><p>The €100,000 deposit guarantee, supervisory bodies and tax rates reflect an EU / Cyprus context. Market examples in the investing modules (SEC, NYSE/NASDAQ, US indices) are illustrative international references — your local market and rules may differ.</p></div>
+      <div class="card dark"><h3>Before you act</h3><p>Consult a qualified, licensed professional — a financial adviser, accountant or lawyer — and verify current figures before making any decision.</p></div>
+    </div>
+    <div class="callout"><div class="lab">In short</div><p>Use these tools to <b>understand</b> the mechanics of money and to ask better questions — not as a substitute for professional advice tailored to you.</p></div>
+  </div>
+</section>
+
+<!-- 33. CLOSING -->
+<section class="slide" data-section="Bringing It Together">
+  <div class="cover">
+    <div class="eyebrow">Close</div>
+    <h1 style="font-size:48px">Your money,<br>on purpose.</h1>
+    <div class="rule"></div>
+    <div class="sub">Financial planning is a loop: assess, set goals, act, and review. The tools in this deck — from budgeting to bonds — are the same ones professionals use. Now they're yours to run.</div>
+    <div class="grid g3" style="margin-top:34px;max-width:900px">
+      <div class="card"><h3>Keep an emergency fund</h3><p>Accessible cash for the unexpected — before you invest for growth.</p></div>
+      <div class="card"><h3>Save before you spend</h3><p>Pay your future self first, then budget what remains.</p></div>
+      <div class="card"><h3>Diversify for the long run</h3><p>Let compounding, low costs and time carry the weight.</p></div>
+    </div>
+    <div class="foot"><div>Personal Finance &amp; Investing · Individual Investor Series</div><div>Interactive edition</div></div>
+    <div class="watermark">&#8721;</div>
+  </div>
+</section>
+
+</template>
+
+<script>
+/* ============ CORE NAV ============ */
+const tpl = document.getElementById('slides').content;
+const stage = document.getElementById('stage');
+const slides = [];
+tpl.querySelectorAll('.slide').forEach((s)=>{ const el=s.cloneNode(true); stage.appendChild(el); slides.push(el); });
+let idx=0;
+const total=slides.length;
+document.getElementById('total').textContent=total;
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+const progress=document.getElementById('progress');
+const cur=document.getElementById('cur');
+const topSection=document.getElementById('topSection');
+
+function show(n){
+  idx=Math.max(0,Math.min(total-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+  cur.textContent=idx+1;
+  progress.style.width=((idx)/(total-1)*100)+'%';
+  prevBtn.disabled=idx===0;
+  nextBtn.disabled=idx===total-1;
+  topSection.textContent=slides[idx].dataset.section||'';
+  initFor(idx);
+}
+prevBtn.onclick=()=>show(idx-1);
+nextBtn.onclick=()=>show(idx+1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){show(idx+1);}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){show(idx-1);}
+});
+
+/* ============ FORMAT HELPERS ============ */
+const eur = n => '€'+Math.round(n).toLocaleString('en-US');
+const eur2 = n => '€'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+const pct = n => (Math.round(n*100)/100)+'%';
+function fillTrack(el){
+  const min=+el.min, max=+el.max, v=+el.value;
+  el.style.setProperty('--fill',((v-min)/(max-min)*100)+'%');
+}
+document.querySelectorAll('input[type=range]').forEach(fillTrack);
+document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',()=>fillTrack(el)));
+
+/* PMT for an ordinary annuity that reaches FV with 0 PV */
+function pmtForFV(fv, r, n){ if(r===0) return fv/n; return fv * r / (Math.pow(1+r,n)-1); }
+/* Loan payment (amortizing) */
+function loanPmt(P, r, n){ if(r===0) return P/n; return P*r/(1-Math.pow(1+r,-n)); }
+
+/* ============ CHART DEFAULTS ============ */
+if(window.Chart){
+  Chart.defaults.font.family="'Helvetica Neue',Arial,sans-serif";
+  Chart.defaults.font.size=11;
+  Chart.defaults.color='#5b6b7f';
+}
+const NAVY='#0a1628', GOLD='#12368f', GOLD2='#1d4ed8', ACC='#2f6fd0', GREEN='#1f6d4a', RED='#a32c2c', SLATE='#94a2b6';
+function baseOpts(extra={}){
+  return Object.assign({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:NAVY,padding:10,titleFont:{size:11},bodyFont:{size:12}}},
+    scales:{
+      x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:9}},
+      y:{grid:{color:'#eef1f5'},ticks:{callback:v=>'€'+(v>=1000?(v/1000)+'k':v)}}
+    }
+  }, extra);
+}
+function initFor(i){ /* charts self-init on load below */ }
+
+/* -------- Rule of 72 -------- */
+(function(){
+  const r=document.getElementById('r72'); if(!r) return;
+  const v=document.getElementById('r72v'), yrs=document.getElementById('r72years'),
+        ex=document.getElementById('r72exact'), e1=document.getElementById('r72echo'), e2=document.getElementById('r72echo2');
+  let chart;
+  function draw(){
+    const rate=+r.value;
+    v.textContent=rate+'%';
+    const y72=72/rate; yrs.textContent=y72.toFixed(1);
+    const exact=Math.log(2)/Math.log(1+rate/100); ex.textContent=exact.toFixed(1);
+    e1.textContent=rate+'%'; e2.textContent=y72.toFixed(0);
+    fillTrack(r);
+    const labels=[], data=[];
+    for(let t=0;t<=Math.ceil(y72*1.5);t++){labels.push(t);data.push(100*Math.pow(1+rate/100,t));}
+    if(!chart){
+      chart=new Chart(document.getElementById('r72chart'),{
+        type:'line',
+        data:{labels,datasets:[{data,borderColor:GOLD,backgroundColor:'rgba(29,78,216,.10)',fill:true,tension:.3,pointRadius:0,borderWidth:2.5}]},
+        options:baseOpts({plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>eur(c.parsed.y)}}},scales:{x:{grid:{display:false},title:{display:true,text:'Years'}},y:{ticks:{callback:v=>'€'+Math.round(v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=data; chart.update('none'); }
+  }
+  r.addEventListener('input',draw); draw();
+})();
+
+/* -------- Compound calculator -------- */
+(function(){
+  const P=document.getElementById('ciP'); if(!P) return;
+  const R=document.getElementById('ciR'), T=document.getElementById('ciT');
+  const Pv=document.getElementById('ciPv'),Rv=document.getElementById('ciRv'),Tv=document.getElementById('ciTv');
+  const fin=document.getElementById('ciFinal'),gain=document.getElementById('ciGain'),mult=document.getElementById('ciMult');
+  let chart;
+  function draw(){
+    const p=+P.value,r=+R.value/100,t=+T.value;
+    Pv.textContent=eur(p);Rv.textContent=(+R.value)+'%';Tv.textContent=t;
+    [P,R,T].forEach(fillTrack);
+    const f=p*Math.pow(1+r,t);
+    fin.textContent=eur(f);gain.textContent=eur(f-p);mult.textContent=(f/p).toFixed(1)+'×';
+    const labels=[],princ=[],grow=[];
+    for(let y=0;y<=t;y++){const val=p*Math.pow(1+r,y);labels.push(y);princ.push(p);grow.push(val-p);}
+    if(!chart){
+      chart=new Chart(document.getElementById('ciChart'),{
+        type:'bar',
+        data:{labels,datasets:[
+          {label:'Principal',data:princ,backgroundColor:NAVY,stack:'s',borderRadius:2},
+          {label:'Compound growth',data:grow,backgroundColor:GOLD,stack:'s',borderRadius:2}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{stacked:true,grid:{display:false},ticks:{maxTicksLimit:12},title:{display:true,text:'Years'}},y:{stacked:true,ticks:{callback:v=>'€'+(v>=1000?(v/1000)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=princ; chart.data.datasets[1].data=grow; chart.update('none'); }
+  }
+  [P,R,T].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Start early -------- */
+(function(){
+  const A=document.getElementById('seAge'); if(!A) return;
+  const R=document.getElementById('seR');
+  const Av=document.getElementById('seAgev'),Rv=document.getElementById('seRv');
+  const yr=document.getElementById('seYears'),val=document.getElementById('seVal'),lost=document.getElementById('seLost');
+  let chart;
+  function fv(age,r){return 1000*Math.pow(1+r,65-age);}
+  function draw(){
+    const age=+A.value,r=+R.value/100;
+    Av.textContent=age;Rv.textContent=(+R.value)+'%';
+    [A,R].forEach(fillTrack);
+    const years=65-age; yr.textContent=years;
+    const v=fv(age,r); val.textContent=eur(v);
+    const best=fv(25,r); lost.textContent= age<=25?'€0':eur(best-v);
+    const labels=[],data=[];
+    for(let a=20;a<=60;a+=5){labels.push(a);data.push(fv(a,r));}
+    const ptColors=labels.map(a=>a===Math.round(age/5)*5?GOLD:SLATE);
+    if(!chart){
+      chart=new Chart(document.getElementById('seChart'),{
+        type:'bar',
+        data:{labels,datasets:[{label:'Value at 65',data,backgroundColor:ptColors,borderRadius:3}]},
+        options:baseOpts({plugins:{tooltip:{callbacks:{title:c=>'Start at '+c[0].label,label:c=>eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Starting age'}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=data; chart.data.datasets[0].backgroundColor=ptColors; chart.update('none'); }
+  }
+  [A,R].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Inflation erosion -------- */
+(function(){
+  const Amt=document.getElementById('infAmt'); if(!Amt) return;
+  const R=document.getElementById('infR'),T=document.getElementById('infT');
+  const Av=document.getElementById('infAmtv'),Rv=document.getElementById('infRv'),Tv=document.getElementById('infTv');
+  const nom=document.getElementById('infNom'),real=document.getElementById('infReal'),loss=document.getElementById('infLoss');
+  let chart;
+  function draw(){
+    const a=+Amt.value,r=+R.value/100,t=+T.value;
+    Av.textContent=eur(a);Rv.textContent=(+R.value)+'%';Tv.textContent=t;
+    [Amt,R,T].forEach(fillTrack);
+    const rv=a/Math.pow(1+r,t);
+    nom.textContent=eur(a);real.textContent=eur(rv);
+    loss.textContent=(r===0?0:((1-rv/a)*100)).toFixed(1)+'%';
+    const labels=[],nomD=[],realD=[];
+    for(let y=0;y<=t;y++){labels.push(y);nomD.push(a);realD.push(a/Math.pow(1+r,y));}
+    if(!chart){
+      chart=new Chart(document.getElementById('infChart'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Nominal value',data:nomD,borderColor:ACC,borderWidth:2,pointRadius:0,borderDash:[6,4]},
+          {label:'Real value (buying power)',data:realD,borderColor:RED,backgroundColor:'rgba(163,44,44,.08)',fill:true,borderWidth:2.5,pointRadius:0,tension:.25}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Years'}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=nomD; chart.data.datasets[1].data=realD; chart.update('none'); }
+  }
+  [Amt,R,T].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Real return interplay -------- */
+(function(){
+  const N=document.getElementById('rrNom'); if(!N) return;
+  const I=document.getElementById('rrInf');
+  const Nv=document.getElementById('rrNomv'),Iv=document.getElementById('rrInfv');
+  const real=document.getElementById('rrReal'),verd=document.getElementById('rrVerdict');
+  let chart;
+  function draw(){
+    const n=+N.value,i=+I.value;
+    Nv.textContent=n+'%';Iv.textContent=i+'%';
+    [N,I].forEach(fillTrack);
+    const rr=((1+n/100)/(1+i/100)-1)*100;
+    real.textContent=(rr>=0?'+':'')+rr.toFixed(1)+'%';
+    real.className='rv '+(rr>=0?'green':'red');
+    verd.textContent= rr>0.2?'Getting ahead': rr<-0.2?'Losing ground':'Roughly flat';
+    verd.className='rv '+(rr>0.2?'green':rr<-0.2?'red':'');
+    const labels=[],nomD=[],realD=[];
+    for(let y=0;y<=20;y++){labels.push(y);nomD.push(10000*Math.pow(1+n/100,y));realD.push(10000*Math.pow(1+rr/100,y));}
+    if(!chart){
+      chart=new Chart(document.getElementById('rrChart'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Nominal balance',data:nomD,borderColor:ACC,borderWidth:2,pointRadius:0,borderDash:[6,4]},
+          {label:'Real (inflation-adjusted)',data:realD,borderColor:GOLD,backgroundColor:'rgba(29,78,216,.08)',fill:true,borderWidth:2.5,pointRadius:0,tension:.2}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Years (€10,000 saved)'}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.datasets[0].data=nomD; chart.data.datasets[1].data=realD; chart.update('none'); }
+  }
+  [N,I].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Net yield doughnut -------- */
+(function(){
+  const R=document.getElementById('nyR'); if(!R) return;
+  const Tax=document.getElementById('nyTax'),Inf=document.getElementById('nyInf');
+  const Rv=document.getElementById('nyRv'),Tv=document.getElementById('nyTaxv'),Iv=document.getElementById('nyInfv');
+  const net=document.getElementById('nyNet'),real=document.getElementById('nyReal');
+  let chart;
+  function draw(){
+    const r=+R.value,tax=+Tax.value/100,inf=+Inf.value;
+    Rv.textContent=r+'%';Tv.textContent=(+Tax.value)+'%';Iv.textContent=inf+'%';
+    [R,Tax,Inf].forEach(fillTrack);
+    const afterTax=r*(1-tax);
+    const realY=afterTax-inf;
+    net.textContent=afterTax.toFixed(2)+'%';
+    real.textContent=(realY>=0?'+':'')+realY.toFixed(2)+'%';
+    real.className='rv '+(realY>=0?'green':'red');
+    const taxPart=r*tax, keep=Math.max(afterTax-inf,0);
+    const data=[keep, Math.min(inf,afterTax), taxPart];
+    const labels=['You keep (real)','Lost to inflation','Lost to tax'];
+    if(!chart){
+      chart=new Chart(document.getElementById('nyChart'),{
+        type:'doughnut',
+        data:{labels,datasets:[{data,backgroundColor:[GREEN,GOLD,SLATE],borderColor:'#fff',borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+          plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},padding:12}},
+            tooltip:{callbacks:{label:c=>c.label+': '+c.parsed.toFixed(2)+' pts'}}}}
+      });
+    } else { chart.data.datasets[0].data=data; chart.update('none'); }
+  }
+  [R,Tax,Inf].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Goal saving -------- */
+(function(){
+  const T=document.getElementById('gT'); if(!T) return;
+  const Y=document.getElementById('gY'),R=document.getElementById('gR');
+  const Tv=document.getElementById('gTv'),Yv=document.getElementById('gYv'),Rv=document.getElementById('gRv');
+  const ann=document.getElementById('gAnnual'),mon=document.getElementById('gMonthly'),con=document.getElementById('gContrib'),gro=document.getElementById('gGrowth');
+  let chart;
+  function draw(){
+    const fv=+T.value,n=+Y.value,r=+R.value/100;
+    Tv.textContent=eur(fv);Yv.textContent=n;Rv.textContent=(+R.value)+'%';
+    [T,Y,R].forEach(fillTrack);
+    const pmt=pmtForFV(fv,r,n);
+    ann.textContent=eur(pmt);mon.textContent=eur(pmt/12);
+    const contrib=pmt*n; con.textContent=eur(contrib); gro.textContent=eur(fv-contrib);
+    const labels=[],bal=[],contribArr=[];
+    let b=0,c=0;
+    labels.push(0);bal.push(0);contribArr.push(0);
+    for(let y=1;y<=n;y++){ b=b*(1+r)+pmt; c+=pmt; labels.push(y);bal.push(b);contribArr.push(c);}
+    if(!chart){
+      chart=new Chart(document.getElementById('gChart'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Total contributed',data:contribArr,borderColor:SLATE,borderWidth:2,pointRadius:0,borderDash:[5,4],fill:false},
+          {label:'Balance (with growth)',data:bal,borderColor:GOLD,backgroundColor:'rgba(29,78,216,.10)',fill:true,borderWidth:2.5,pointRadius:0,tension:.2}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Years'}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=contribArr; chart.data.datasets[1].data=bal; chart.update('none'); }
+  }
+  [T,Y,R].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Credit score -> rate -------- */
+(function(){
+  const S=document.getElementById('csScore'); if(!S) return;
+  const A=document.getElementById('csAmt'),Yr=document.getElementById('csYr');
+  const Sv=document.getElementById('csScorev'),Av=document.getElementById('csAmtv'),Yv=document.getElementById('csYrv');
+  const apr=document.getElementById('csApr'),pmt=document.getElementById('csPmt'),intt=document.getElementById('csInt');
+  let chart;
+  function aprFor(score){ const t=(score-350)/(850-350); return 2 + (22)*Math.pow(1-t,1.6); }
+  function draw(){
+    const score=+S.value,amt=+A.value,yr=+Yr.value;
+    Sv.textContent=score;Av.textContent=eur(amt);Yv.textContent=yr;
+    [S,A,Yr].forEach(fillTrack);
+    const rate=aprFor(score);
+    apr.textContent=rate.toFixed(1)+'%';
+    const mr=rate/100/12,n=yr*12;
+    const monthly=mr===0?amt/n:amt*mr/(1-Math.pow(1+mr,-n));
+    pmt.textContent=eur(monthly);
+    intt.textContent=eur(monthly*n-amt);
+    const labels=[],data=[],cols=[];
+    for(let sc=350;sc<=850;sc+=50){labels.push(sc);const rr=aprFor(sc);data.push(rr);cols.push(Math.abs(sc-Math.round(score/50)*50)<25?GOLD:SLATE);}
+    if(!chart){
+      chart=new Chart(document.getElementById('csChart'),{
+        type:'bar',
+        data:{labels,datasets:[{label:'APR',data,backgroundColor:cols,borderRadius:3}]},
+        options:baseOpts({plugins:{tooltip:{callbacks:{title:c=>'Score '+c[0].label,label:c=>'APR '+c.parsed.y.toFixed(1)+'%'}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Credit score'}},y:{ticks:{callback:v=>v+'%'},title:{display:true,text:'Interest rate'}}}})
+      });
+    } else { chart.data.datasets[0].data=data; chart.data.datasets[0].backgroundColor=cols; chart.update('none'); }
+  }
+  [S,A,Yr].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Amortization -------- */
+(function(){
+  const A=document.getElementById('amAmt'); if(!A) return;
+  const R=document.getElementById('amR'),Yr=document.getElementById('amYr');
+  const Av=document.getElementById('amAmtv'),Rv=document.getElementById('amRv'),Yv=document.getElementById('amYrv');
+  const pmt=document.getElementById('amPmt'),tot=document.getElementById('amTotal'),intt=document.getElementById('amInt');
+  let chart;
+  function draw(){
+    const P=+A.value,r=+R.value/100,n=+Yr.value;
+    Av.textContent=eur(P);Rv.textContent=(+R.value)+'%';Yv.textContent=n;
+    [A,R,Yr].forEach(fillTrack);
+    const pay=loanPmt(P,r,n);
+    pmt.textContent=eur(pay);tot.textContent=eur(pay*n);intt.textContent=eur(pay*n-P);
+    let bal=P; const labels=[],princ=[],inter=[];
+    for(let y=1;y<=n;y++){const iPart=bal*r;const pPart=pay-iPart;labels.push(y);inter.push(iPart);princ.push(pPart);bal-=pPart;}
+    if(!chart){
+      chart=new Chart(document.getElementById('amChart'),{
+        type:'bar',
+        data:{labels,datasets:[
+          {label:'Principal',data:princ,backgroundColor:NAVY,stack:'s',borderRadius:2},
+          {label:'Interest',data:inter,backgroundColor:RED,stack:'s',borderRadius:2}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{stacked:true,grid:{display:false},ticks:{maxTicksLimit:15},title:{display:true,text:'Payment #'}},y:{stacked:true,ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=princ; chart.data.datasets[1].data=inter; chart.update('none'); }
+  }
+  [A,R,Yr].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Credit card minimum trap -------- */
+(function(){
+  const B=document.getElementById('ccBal'); if(!B) return;
+  const Apr=document.getElementById('ccApr'),Pay=document.getElementById('ccPay');
+  const Bv=document.getElementById('ccBalv'),Av=document.getElementById('ccAprv'),Pv=document.getElementById('ccPayv');
+  const time=document.getElementById('ccTime'),intt=document.getElementById('ccInt'),stat=document.getElementById('ccStatus');
+  let chart;
+  function draw(){
+    const bal0=+B.value,apr=+Apr.value/100,pay=+Pay.value;
+    Bv.textContent=eur(bal0);Av.textContent=(+Apr.value)+'%';Pv.textContent=eur(pay);
+    [B,Apr,Pay].forEach(fillTrack);
+    const mr=apr/12;
+    const firstInterest=bal0*mr;
+    const labels=[],bals=[];
+    let bal=bal0,months=0,totalInt=0;
+    labels.push(0);bals.push(bal);
+    if(pay<=firstInterest){
+      time.textContent='Never';intt.textContent='∞';
+      stat.textContent='Balance never falls';stat.className='rv red';
+      for(let m=1;m<=60;m++){bal=bal+bal*mr-pay;labels.push(m);bals.push(Math.max(bal,0));}
+    } else {
+      while(bal>0 && months<600){const i=bal*mr;totalInt+=i;bal=bal+i-pay;months++;labels.push(months);bals.push(Math.max(bal,0));}
+      const yy=Math.floor(months/12),mm=months%12;
+      time.textContent=(yy>0?yy+' yr ':'')+mm+' mo';
+      intt.textContent=eur(totalInt);
+      stat.textContent= months>120?'Very slow payoff':'On track'; stat.className='rv '+(months>120?'red':'');
+    }
+    if(!chart){
+      chart=new Chart(document.getElementById('ccChart'),{
+        type:'line',
+        data:{labels,datasets:[{label:'Balance',data:bals,borderColor:RED,backgroundColor:'rgba(163,44,44,.10)',fill:true,borderWidth:2.5,pointRadius:0,tension:.15}]},
+        options:baseOpts({plugins:{tooltip:{callbacks:{title:c=>'Month '+c[0].label,label:c=>eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Months'},ticks:{maxTicksLimit:10}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(1)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=bals; chart.update('none'); }
+  }
+  [B,Apr,Pay].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Asset classes -------- */
+(function(){
+  const A=document.getElementById('acAmt'); if(!A) return;
+  const Yr=document.getElementById('acYr');
+  const Av=document.getElementById('acAmtv'),Yv=document.getElementById('acYrv');
+  const cells={sav:document.getElementById('acSav'),tb:document.getElementById('acTbill'),bond:document.getElementById('acBond'),stock:document.getElementById('acStock')};
+  const rates={sav:0.015,tb:0.035,bond:0.06,stock:0.13};
+  let chart;
+  function draw(){
+    const amt=+A.value,n=+Yr.value;
+    Av.textContent=eur(amt);Yv.textContent=n;
+    [A,Yr].forEach(fillTrack);
+    const vals={};
+    for(const k in rates){vals[k]=amt*Math.pow(1+rates[k],n);}
+    cells.sav.textContent=eur(vals.sav);cells.tb.textContent=eur(vals.tb);cells.bond.textContent=eur(vals.bond);cells.stock.textContent=eur(vals.stock);
+    const labels=['Savings 1.5%','T-Bill 3.5%','Corp Bond 6%','Stocks 13%'];
+    const data=[vals.sav,vals.tb,vals.bond,vals.stock];
+    if(!chart){
+      chart=new Chart(document.getElementById('acChart'),{
+        type:'bar',
+        data:{labels,datasets:[{data,backgroundColor:[SLATE,ACC,GOLD,GREEN],borderRadius:4}]},
+        options:baseOpts({plugins:{tooltip:{callbacks:{label:c=>eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{type:'logarithmic',ticks:{callback:v=>{const s=[1e3,1e4,1e5,1e6,1e7];return s.includes(v)?'€'+(v>=1e6?(v/1e6)+'m':(v/1e3)+'k'):''}}}}})
+      });
+    } else { chart.data.datasets[0].data=data; chart.update('none'); }
+  }
+  [A,Yr].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Total return (Stocks) -------- */
+(function(){
+  const Buy=document.getElementById('trBuy'); if(!Buy) return;
+  const Sell=document.getElementById('trSell'),Div=document.getElementById('trDiv');
+  const Bv=document.getElementById('trBuyv'),Sv=document.getElementById('trSellv'),Dv=document.getElementById('trDivv');
+  const cap=document.getElementById('trCap'),yld=document.getElementById('trYield'),tot=document.getElementById('trTot');
+  let chart;
+  function draw(){
+    const buy=+Buy.value,sell=+Sell.value,div=+Div.value;
+    Bv.textContent=eur(buy);Sv.textContent=eur(sell);Dv.textContent='€'+div.toFixed(2);
+    [Buy,Sell,Div].forEach(fillTrack);
+    const capPct=(sell-buy)/buy*100;
+    const yldPct=div/buy*100;
+    const totPct=capPct+yldPct;
+    cap.textContent=(capPct>=0?'+':'')+capPct.toFixed(1)+'%'; cap.className='rv '+(capPct>=0?'green':'red');
+    yld.textContent=yldPct.toFixed(1)+'%';
+    tot.textContent=(totPct>=0?'+':'')+totPct.toFixed(1)+'%'; tot.className='rv gold';
+    const gain=Math.max(sell-buy,0), loss=Math.max(buy-sell,0);
+    let data,labels,cols;
+    if(sell>=buy){ data=[gain,div]; labels=['Price gain','Dividends']; cols=[ACC,GOLD]; }
+    else { data=[loss,div]; labels=['Price loss','Dividends']; cols=[RED,GOLD]; }
+    if(!chart){
+      chart=new Chart(document.getElementById('trChart'),{
+        type:'doughnut',
+        data:{labels,datasets:[{data,backgroundColor:cols,borderColor:'#fff',borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+          plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},padding:12}},
+            tooltip:{callbacks:{label:c=>c.label+': €'+c.parsed.toFixed(2)+' per share'}}}}
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=data; chart.data.datasets[0].backgroundColor=cols; chart.update('none'); }
+  }
+  [Buy,Sell,Div].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Bond seesaw (price vs rate) -------- */
+(function(){
+  const C=document.getElementById('bsCoupon'); if(!C) return;
+  const M=document.getElementById('bsMkt'),Y=document.getElementById('bsYrs');
+  const Cv=document.getElementById('bsCouponv'),Mv=document.getElementById('bsMktv'),Yv=document.getElementById('bsYrsv');
+  const priceEl=document.getElementById('bsPrice'),premEl=document.getElementById('bsPrem');
+  const FACE=1000;
+  let chart;
+  function priceAt(couponR, mktR, n){
+    const coupon=FACE*couponR;
+    if(mktR===0) return coupon*n + FACE;
+    return coupon*(1-Math.pow(1+mktR,-n))/mktR + FACE*Math.pow(1+mktR,-n);
+  }
+  function draw(){
+    const c=+C.value/100, m=+M.value/100, n=+Y.value;
+    Cv.textContent=(+C.value)+'%';Mv.textContent=(+M.value)+'%';Yv.textContent=n;
+    [C,M,Y].forEach(fillTrack);
+    const price=priceAt(c,m,n);
+    priceEl.textContent=eur(price);
+    const diff=price-FACE;
+    if(Math.abs(diff)<1){ premEl.textContent='At par'; premEl.className='rv'; }
+    else if(diff>0){ premEl.textContent='+'+eur(diff)+' · premium'; premEl.className='rv green'; }
+    else { premEl.textContent='−'+eur(-diff)+' · discount'; premEl.className='rv red'; }
+    const labels=[],data=[];
+    for(let mr=1;mr<=12;mr+=0.5){ labels.push(mr+'%'); data.push(priceAt(c,mr/100,n)); }
+    if(!chart){
+      chart=new Chart(document.getElementById('bsChart'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Price of your bond',data,borderColor:GOLD,backgroundColor:'rgba(29,78,216,.10)',fill:true,borderWidth:2.5,pointRadius:0,tension:.2},
+          {label:'Par (€1,000)',data:labels.map(()=>FACE),borderColor:SLATE,borderWidth:1.5,pointRadius:0,borderDash:[5,4],fill:false}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{title:c=>'Market rate '+c[0].label,label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Prevailing market rate'}},y:{ticks:{callback:v=>'€'+Math.round(v)}}}})
+      });
+    } else { chart.data.datasets[0].data=data; chart.data.datasets[1].data=labels.map(()=>FACE); chart.update('none'); }
+  }
+  [C,M,Y].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Fee drag (index vs managed) -------- */
+(function(){
+  const Amt=document.getElementById('fdAmt'); if(!Amt) return;
+  const R=document.getElementById('fdR'),Yr=document.getElementById('fdYr'),Fee=document.getElementById('fdFee');
+  const Av=document.getElementById('fdAmtv'),Rv=document.getElementById('fdRv'),Yv=document.getElementById('fdYrv'),Fv=document.getElementById('fdFeev');
+  const netEl=document.getElementById('fdNet'),idxEl=document.getElementById('fdIdx'),lostEl=document.getElementById('fdLost');
+  const IDXFEE=0.001;
+  let chart;
+  function draw(){
+    const amt=+Amt.value, r=+R.value/100, n=+Yr.value, fee=+Fee.value/100;
+    Av.textContent=eur(amt);Rv.textContent=(+R.value)+'%';Yv.textContent=n;Fv.textContent=(+Fee.value).toFixed(2)+'%';
+    [Amt,R,Yr,Fee].forEach(fillTrack);
+    const managedNet=r-fee, idxNet=r-IDXFEE;
+    const managedFinal=amt*Math.pow(1+managedNet,n);
+    const idxFinal=amt*Math.pow(1+idxNet,n);
+    netEl.textContent=eur(managedFinal);
+    idxEl.textContent=eur(idxFinal);
+    lostEl.textContent=eur(idxFinal-managedFinal);
+    const labels=[],grossD=[],mgD=[],idxD=[];
+    for(let y=0;y<=n;y++){ labels.push(y); grossD.push(amt*Math.pow(1+r,y)); idxD.push(amt*Math.pow(1+idxNet,y)); mgD.push(amt*Math.pow(1+managedNet,y)); }
+    if(!chart){
+      chart=new Chart(document.getElementById('fdChart'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'No fees (gross)',data:grossD,borderColor:SLATE,borderWidth:1.5,pointRadius:0,borderDash:[5,4],fill:false},
+          {label:'Index fund (0.1%)',data:idxD,borderColor:GOLD,backgroundColor:'rgba(29,78,216,.08)',fill:false,borderWidth:2.5,pointRadius:0,tension:.2},
+          {label:'Managed fund',data:mgD,borderColor:RED,borderWidth:2.5,pointRadius:0,tension:.2,fill:false}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},title:{display:true,text:'Years'}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.labels=labels; chart.data.datasets[0].data=grossD; chart.data.datasets[1].data=idxD; chart.data.datasets[2].data=mgD; chart.update('none'); }
+  }
+  [Amt,R,Yr,Fee].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Quizzes -------- */
+document.querySelectorAll('.quiz').forEach(q=>{
+  const fb=q.querySelector('.quiz-fb');
+  const feedbacks={
+    '1':{ok:'Correct. 1% growth can\'t keep up with 2% inflation — real buying power falls by roughly 1% a year.',
+          no:'Not quite. Because inflation (2%) outruns the 1% interest, your money buys <b>less</b> than today.'},
+    '2':{ok:'Right. Rule of 72: 72 ÷ 20 ≈ 3.6 years for the debt to double if you pay nothing.',
+          no:'Reconsider — Rule of 72 gives 72 ÷ 20 ≈ 3.6 years, so it doubles in <b>2–5 years</b>.'},
+    '3':{ok:'Correct. A fixed sum buys <b>more</b> shares when prices are low — that\'s dollar-cost averaging lowering your average cost.',
+          no:'Not quite. With a fixed €500, a lower price means each share is cheaper, so you buy <b>more</b> shares — the heart of dollar-cost averaging.'}
+  };
+  const key=q.dataset.quiz;
+  q.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(q.dataset.done) return;
+      q.dataset.done='1';
+      const correct=btn.dataset.correct==='true';
+      q.querySelectorAll('.opt').forEach(o=>{ if(o.dataset.correct==='true')o.classList.add('correct'); });
+      if(!correct) btn.classList.add('wrong');
+      fb.innerHTML=correct?feedbacks[key].ok:feedbacks[key].no;
+    });
+  });
+});
+
+/* -------- Geographic buying power -------- */
+(function(){
+  const Cur=document.getElementById('gbCur'); if(!Cur) return;
+  const Home=document.getElementById('gbHome'),New=document.getElementById('gbNew'),Offer=document.getElementById('gbOffer');
+  const Cv=document.getElementById('gbCurv'),Hv=document.getElementById('gbHomev'),Nv=document.getElementById('gbNewv'),Ov=document.getElementById('gbOfferv');
+  const needEl=document.getElementById('gbNeeded'),verd=document.getElementById('gbVerdict');
+  let chart;
+  function draw(){
+    const cur=+Cur.value,home=+Home.value,nw=+New.value,offer=+Offer.value;
+    Cv.textContent=eur(cur);Hv.textContent=home;Nv.textContent=nw;Ov.textContent=eur(offer);
+    [Cur,Home,New,Offer].forEach(fillTrack);
+    const needed=cur*nw/home;
+    needEl.textContent=eur(needed);
+    const diff=offer-needed;
+    verd.textContent=(diff>=0?'+':'−')+eur(Math.abs(diff))+' · '+(diff>=0?'worth it':'worse off');
+    verd.className='rv '+(diff>=0?'green':'red');
+    const labels=['Current salary','Needed to match','Offer'];
+    const data=[cur,needed,offer];
+    const cols=[SLATE,GOLD,diff>=0?GREEN:RED];
+    if(!chart){
+      chart=new Chart(document.getElementById('gbChart'),{
+        type:'bar',
+        data:{labels,datasets:[{data,backgroundColor:cols,borderRadius:4}]},
+        options:baseOpts({plugins:{tooltip:{callbacks:{label:c=>eur(c.parsed.y)}}},
+          scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.datasets[0].data=data; chart.data.datasets[0].backgroundColor=cols; chart.update('none'); }
+  }
+  [Cur,Home,New,Offer].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Tax-equivalent benefit -------- */
+(function(){
+  const Ben=document.getElementById('teBen'); if(!Ben) return;
+  const Rate=document.getElementById('teRate');
+  const Bv=document.getElementById('teBenv'),Rv=document.getElementById('teRatev');
+  const val=document.getElementById('teVal'),bonus=document.getElementById('teBonus');
+  let chart;
+  function draw(){
+    const ben=+Ben.value,rate=+Rate.value/100;
+    Bv.textContent=eur(ben);Rv.textContent=(+Rate.value)+'%';
+    [Ben,Rate].forEach(fillTrack);
+    const eq= rate>=1? ben : ben/(1-rate);
+    val.textContent=eur(eq);bonus.textContent=eur(eq-ben);
+    const data=[ben, eq-ben];
+    if(!chart){
+      chart=new Chart(document.getElementById('teChart'),{
+        type:'doughnut',
+        data:{labels:['Benefit value','Extra tax you\'d owe on cash'],datasets:[{data,backgroundColor:[GREEN,GOLD],borderColor:'#fff',borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+          plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},padding:12}},
+            tooltip:{callbacks:{label:c=>c.label+': '+eur(c.parsed)}}}}
+      });
+    } else { chart.data.datasets[0].data=data; chart.update('none'); }
+  }
+  [Ben,Rate].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Deposit guarantee -------- */
+(function(){
+  const A=document.getElementById('dgA'); if(!A) return;
+  const B=document.getElementById('dgB'),H=document.getElementById('dgH');
+  const Av=document.getElementById('dgAv'),Bv=document.getElementById('dgBv'),Hv=document.getElementById('dgHv');
+  const pA=document.getElementById('dgProtA'),pB=document.getElementById('dgProtB'),tot=document.getElementById('dgTotal'),risk=document.getElementById('dgRisk');
+  const LIMIT=100000;
+  let chart;
+  function draw(){
+    const a=+A.value,b=+B.value,h=+H.value;
+    Av.textContent=eur(a);Bv.textContent=eur(b);Hv.textContent=h;
+    [A,B,H].forEach(fillTrack);
+    const protA=Math.min(a/h,LIMIT)*h;
+    const protB=Math.min(b/h,LIMIT)*h;
+    const totalProt=protA+protB, atRisk=(a+b)-totalProt;
+    pA.textContent=eur(protA);pB.textContent=eur(protB);tot.textContent=eur(totalProt);risk.textContent=eur(atRisk);
+    if(!chart){
+      chart=new Chart(document.getElementById('dgChart'),{
+        type:'bar',
+        data:{labels:['Bank A','Bank B'],datasets:[
+          {label:'Protected',data:[protA,protB],backgroundColor:GREEN,stack:'s',borderRadius:2},
+          {label:'At risk',data:[a-protA,b-protB],backgroundColor:RED,stack:'s',borderRadius:2}
+        ]},
+        options:baseOpts({plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+eur(c.parsed.y)}}},
+          scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>'€'+(v>=1000?(v/1000).toFixed(0)+'k':v)}}}})
+      });
+    } else { chart.data.datasets[0].data=[protA,protB]; chart.data.datasets[1].data=[a-protA,b-protB]; chart.update('none'); }
+  }
+  [A,B,H].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* -------- Clickable contents / table of contents -------- */
+(function(){
+  const agenda = slides.find(s=>s.querySelector('#agendaGrid'));
+  if(!agenda) return;
+  const cards = Array.prototype.slice.call(agenda.querySelectorAll('#agendaGrid .card'));
+  const dividers = slides.filter(s=>s.querySelector('.divider'));
+  cards.forEach((card,i)=>{
+    const targetSlide = dividers[i];
+    if(!targetSlide) return;
+    card.classList.add('clickable');
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    const go=()=>{ const t=slides.indexOf(targetSlide); if(t>=0) show(t); };
+    card.addEventListener('click',go);
+    card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
+})();
+
+show(0);
+</script>
+</body>
+</html>
+
