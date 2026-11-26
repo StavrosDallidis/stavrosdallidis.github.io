@@ -82,9 +82,11 @@ details{margin-top:6px}summary{cursor:pointer;color:var(--nav);font-weight:500}m
 <div class="bar">
 <label>Currency <select id="cur"><option>EUR</option><option>USD</option></select></label>
 <label>Benchmark <select id="bm"></select></label>
+<label>Enter holdings as <select id="mode"><option value="pct">% of portfolio</option><option value="val">Value</option></select></label>
+<label id="sizel">Portfolio size <input id="size" type="number" min="0" step="1000" style="width:130px"></label>
 </div>
 <div class="scroll">
-<table class="stack" id="ht"><thead><tr><th>Ticker</th><th>Name</th><th>Type</th><th class="n">Value</th><th class="n">% of portfolio</th><th></th></tr></thead><tbody></tbody></table>
+<table class="stack" id="ht"><thead><tr><th>Ticker</th><th>Name</th><th>Type</th><th class="n" id="vh">Weight %</th><th class="n">% of portfolio</th><th></th></tr></thead><tbody></tbody></table>
 </div>
 <div class="bar">
 <button id="add">Add holding</button>
@@ -93,7 +95,7 @@ details{margin-top:6px}summary{cursor:pointer;color:var(--nav);font-weight:500}m
 <button id="clear">Clear all</button>
 </div>
 <div id="status" class="mute"></div>
-<p class="mute" id="samplenote">Sample portfolio loaded. Replace the tickers and values with your own. Enter the market value of each holding; use ticker CASH for cash.</p>
+<p class="mute" id="samplenote">Sample portfolio loaded. Replace the tickers and values with your own. Enter each holding as a % of your portfolio (or switch to values); use ticker CASH for cash. Portfolio size is only used to show amounts and fee costs.</p>
 </section>
 
 <section class="box">
@@ -171,19 +173,25 @@ WSML:['iShares MSCI World Small Cap UCITS ETF',.35,'wsc'],IUSN:['iShares MSCI Wo
 AGGH:['iShares Core Global Aggregate Bond UCITS ETF (EUR Hedged)',.1,'bond'],VAGF:['Vanguard Global Aggregate Bond UCITS ETF (EUR Hedged)',.1,'bond'],IEAG:['iShares Core Euro Aggregate Bond UCITS ETF',.09,'bond'],VGEA:['Vanguard EUR Eurozone Government Bond UCITS ETF',.07,'bond'],AGG:['iShares Core US Aggregate Bond ETF',.03,'bond'],BND:['Vanguard Total Bond Market ETF',.03,'bond'],TLT:['iShares 20+ Year Treasury Bond ETF',.15,'bond'],
 SGLN:['iShares Physical Gold ETC',.12,'gold'],IGLN:['iShares Physical Gold ETC',.12,'gold'],GLD:['SPDR Gold Shares',.4,'gold']};
 const BMS=['acwi','world','sp500','europe'];
-const SAMPLE=[['VWCE',30000],['CSPX',15000],['EIMI',5000],['AAPL',4000],['NVDA',3000],['AGGH',8000],['CASH',5000]];
+const SAMPLE=[['VWCE',40],['CSPX',20],['EIMI',8],['AAPL',6],['NVDA',4],['AGGH',12],['CASH',10]];
 
 const $=id=>document.getElementById(id);
+const sumP=()=>H.reduce((s,h)=>s+(+h.p||0),0);
+function mkSample(){return SAMPLE.map(([tk,w])=>({t:tk,v:w*SIZE/100,p:w,ty:'auto'}))}
+const valOf=h=>MODE==='pct'?(sumP()>0?(+h.p||0)/sumP()*SIZE:0):Math.max(0,+h.v||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k,d){try{const v=localStorage.getItem('xray.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('xray.'+k,JSON.stringify(v))}catch(e){}}};
 const pct=(x,d=1)=>(x==null||!isFinite(x))?'—':x.toFixed(d);
 const sum=a=>a.reduce((s,x)=>s+(x||0),0);
 const norm=a=>{const s=sum(a);return s>0?a.map(x=>x/s*100):a.map(()=>0)};
 
+let MODE=ls.get('mode','pct'),SIZE=ls.get('size',10000);
 let H=ls.get('holdings',null);
 let usedSample=!H;
-if(!H)H=SAMPLE.map(([t,v])=>({t,v,ty:'auto'}));
+if(!H)H=mkSample();
 let CUSTOM=ls.get('custom',{});
+H.forEach(h=>{if(h.p==null)h.p=0});
+if(H.every(h=>!h.p)&&H.some(h=>+h.v)){const t=sum(H.map(h=>+h.v||0));H.forEach(h=>h.p=t?Math.round((+h.v||0)/t*1000)/10:0)}
 let fx=1.10, fxLive=false, mcp=null, mcpTried=false;
 const INFO={};
 $('bm').innerHTML=BMS.map(k=>`<option value="${k}">${esc(IX[k].n)}</option>`).join('');
@@ -198,7 +206,7 @@ const fmtV=v=>curSym()+Math.round(v).toLocaleString('en-US');
 const base=t=>{t=t.trim().toUpperCase();return ALIAS[t]||t};
 const etfKey=t=>{const b=base(t).split('.')[0];return CUSTOM[base(t)]?base(t):CUSTOM[b]?b:EF[base(t)]?base(t):EF[b]?b:null};
 
-function saveAll(){ls.set('holdings',H);ls.set('cur',$('cur').value);ls.set('bm',$('bm').value);ls.set('prof',{age:$('age').value,hor:$('hor').value,risk:$('risk').value,goal:$('goal').value,home:$('home').value})}
+function saveAll(){ls.set('mode',MODE);ls.set('size',SIZE);ls.set('holdings',H);ls.set('cur',$('cur').value);ls.set('bm',$('bm').value);ls.set('prof',{age:$('age').value,hor:$('hor').value,risk:$('risk').value,goal:$('goal').value,home:$('home').value})}
 
 // ---------- classification ----------
 function staticInfo(h){
@@ -267,7 +275,7 @@ function infoFor(h){
 
 // ---------- analysis ----------
 function analyse(){
-  const rows=H.map(h=>({h,i:infoFor(h),v:Math.max(0,+h.v||0)})).filter(r=>r.i.kind!=='empty');
+  const rows=H.map(h=>({h,i:infoFor(h),v:valOf(h)})).filter(r=>r.i.kind!=='empty');
   const tot=sum(rows.map(r=>r.v));
   const A={cash:0,us:0,nonus:0,bond:0,other:0};
   const sec=Array(11).fill(0),reg=Array(10).fill(0),sty=Array(9).fill(0),mc=Array(5).fill(0);
@@ -410,13 +418,13 @@ function considerations(R){
 function renderHoldings(){
   const R=analyse(),T=R.tot;
   const tb=$('ht').tBodies[0];
-  tb.innerHTML=H.map((h,ix)=>{const i=infoFor(h),v=+h.v||0;
+  tb.innerHTML=H.map((h,ix)=>{const i=infoFor(h),v=valOf(h);
     const kind={etf:i.custom?'ETF (CSV)':'ETF',stock:i.manual?'Stock (manual)':'Stock',bond:'Bond fund',cash:'Cash',other:'Other',pending:'…',unk:'Not classified',unketf:'ETF (no data)',empty:''}[i.kind]||'';
     let note='';
     if((i.kind==='unk'||i.kind==='unketf')&&!h.man)note=`<div class="mute err">${i.err||''}</div>`;
     const cls=((i.kind==='unk')||(h.man))?`<div class="cls">Classify: <select data-m="sec" data-i="${ix}">${SEC.map((s,j)=>`<option value="${j}"${h.man&&+h.man.sec===j?' selected':''}>${s[1]}</option>`).join('')}</select><select data-m="cty" data-i="${ix}">${COUNTRIES.map(c=>`<option${h.man&&h.man.cty===c?' selected':''}>${c}</option>`).join('')}</select><select data-m="sz" data-i="${ix}">${['Giant','Large','Mid','Small','Micro'].map((s,j)=>`<option value="${j}"${h.man&&+h.man.sz===j?' selected':''}>${s}</option>`).join('')}</select><select data-m="st" data-i="${ix}">${['Value','Blend','Growth'].map((s,j)=>`<option value="${j}"${h.man&&+h.man.st===j?' selected':''}>${s}</option>`).join('')}</select>${h.man?`<button class="x" data-unm="${ix}">Undo</button>`:`<button class="x" data-setm="${ix}">Apply</button>`}</div>`:'';
-    return`<tr><td><input class="tk" data-t="${ix}" value="${esc(h.t)}" aria-label="Ticker" autocomplete="off"></td><td>${esc(i.name||'')}${note}${cls}</td><td><select data-ty="${ix}" aria-label="Type"><option value="auto"${h.ty==='auto'?' selected':''}>${esc(kind||'Auto')}</option><option value="cash"${h.ty==='cash'?' selected':''}>Cash</option><option value="bond"${h.ty==='bond'?' selected':''}>Bond</option><option value="other"${h.ty==='other'?' selected':''}>Other</option></select></td><td class="n"><input class="val" data-v="${ix}" type="number" min="0" step="100" value="${esc(h.v)}" aria-label="Value"></td><td class="n">${T?pct(v/T*100,2):'—'}</td><td><button class="x" data-del="${ix}" aria-label="Remove">Remove</button></td></tr>`}).join('')+
-    `<tr class="tot"><td>Total</td><td></td><td></td><td class="n">${fmtV(T)}</td><td class="n">100.00</td><td></td></tr>`;
+    return`<tr><td><input class="tk" data-t="${ix}" value="${esc(h.t)}" aria-label="Ticker" autocomplete="off"></td><td>${esc(i.name||'')}${note}${cls}</td><td><select data-ty="${ix}" aria-label="Type"><option value="auto"${h.ty==='auto'?' selected':''}>${esc(kind||'Auto')}</option><option value="cash"${h.ty==='cash'?' selected':''}>Cash</option><option value="bond"${h.ty==='bond'?' selected':''}>Bond</option><option value="other"${h.ty==='other'?' selected':''}>Other</option></select></td><td class="n"><input class="val" data-v="${ix}" type="number" min="0" step="${MODE==='pct'?0.1:100}" value="${esc(MODE==='pct'?h.p:h.v)}" aria-label="${MODE==='pct'?'Weight %':'Value'}"></td><td class="n">${T?pct(v/T*100,2):'—'}</td><td><button class="x" data-del="${ix}" aria-label="Remove">Remove</button></td></tr>`}).join('')+
+    (MODE==='pct'?`<tr class="tot"><td>Total</td><td>${Math.abs(sumP()-100)>0.5&&sumP()>0?`<span class="err">Weights add up to ${pct(sumP(),1)}%; they are scaled to 100%.</span>`:''}</td><td></td><td class="n">${pct(sumP(),1)}%</td><td class="n">100.00</td><td></td></tr>`:`<tr class="tot"><td>Total</td><td></td><td></td><td class="n">${fmtV(T)}</td><td class="n">100.00</td><td></td></tr>`);
   return R;
 }
 
@@ -480,7 +488,7 @@ function renderCustom(){
 const tb=$('ht').tBodies[0];
 tb.addEventListener('change',e=>{const d=e.target.dataset;
   if(d.t!=null){H[+d.t].t=e.target.value.trim().toUpperCase();H[+d.t].man=null;saveAll();renderHoldings()}
-  if(d.v!=null){H[+d.v].v=+e.target.value||0;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+  if(d.v!=null){if(MODE==='pct')H[+d.v].p=+e.target.value||0;else H[+d.v].v=+e.target.value||0;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
   if(d.ty!=null){H[+d.ty].ty=e.target.value;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
   if(d.m!=null&&H[+d.i].man){H[+d.i].man[d.m]=e.target.value;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
 });
@@ -489,11 +497,11 @@ tb.addEventListener('click',e=>{const d=e.target.dataset;
   if(d.setm!=null){const i=+d.setm,g=m=>tb.querySelector(`[data-m="${m}"][data-i="${i}"]`).value;H[i].man={sec:g('sec'),cty:g('cty'),sz:g('sz'),st:g('st')};saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
   if(d.unm!=null){H[+d.unm].man=null;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
 });
-$('add').onclick=()=>{H.push({t:'',v:0,ty:'auto'});renderHoldings();const ins=tb.querySelectorAll('input.tk');ins[ins.length-1]?.focus()};
+$('add').onclick=()=>{H.push({t:'',v:0,p:0,ty:'auto'});renderHoldings();const ins=tb.querySelectorAll('input.tk');ins[ins.length-1]?.focus()};
 $('run').onclick=run;
-$('sample').onclick=()=>{H=SAMPLE.map(([t,v])=>({t,v,ty:'auto'}));$('samplenote').hidden=false;saveAll();run()};
-$('clear').onclick=()=>{H=[{t:'',v:0,ty:'auto'}];$('samplenote').hidden=true;saveAll();renderHoldings();$('report').innerHTML=''};
-$('cur').onchange=()=>{const to=$('cur').value,from=ls.get('cur','EUR');if(to!==from){const f=to==='USD'?fx:1/fx;H.forEach(h=>h.v=Math.round((+h.v||0)*f))}saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)};
+$('sample').onclick=()=>{H=mkSample();$('samplenote').hidden=false;saveAll();run()};
+$('clear').onclick=()=>{H=[{t:'',v:0,p:0,ty:'auto'}];$('samplenote').hidden=true;saveAll();renderHoldings();$('report').innerHTML=''};
+$('cur').onchange=()=>{const to=$('cur').value,from=ls.get('cur','EUR');if(to!==from){const f=to==='USD'?fx:1/fx;H.forEach(h=>h.v=Math.round((+h.v||0)*f));SIZE=Math.round(SIZE*f);$('size').value=SIZE}saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)};
 $('bm').onchange=()=>{saveAll();if($('report').innerHTML)renderReport(analyse())};
 for(const k of ['age','hor','risk','goal','home'])$(k).addEventListener('change',()=>{saveAll();if($('report').innerHTML)renderReport(analyse())});
 $('cfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const tk=base($('ctk').value||'');
@@ -504,6 +512,13 @@ $('cfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const tk=ba
   e.target.value=''};
 $('clist').addEventListener('click',e=>{const k=e.target.dataset.rmc;if(k){delete CUSTOM[k];ls.set('custom',CUSTOM);renderCustom();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}});
 
+function syncMode(){$('mode').value=MODE;$('size').value=SIZE;$('sizel').hidden=MODE!=='pct';$('vh').textContent=MODE==='pct'?'Weight %':'Value'}
+$('mode').onchange=()=>{const to=$('mode').value;if(to===MODE)return;
+  if(to==='pct'){const t=sum(H.map(h=>Math.max(0,+h.v||0)));if(t>0){H.forEach(h=>h.p=Math.round((+h.v||0)/t*1000)/10);SIZE=Math.round(t)}}
+  else{const sp=sumP();H.forEach(h=>h.v=sp>0?Math.round((+h.p||0)/sp*SIZE):0)}
+  MODE=to;syncMode();saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)};
+$('size').onchange=()=>{SIZE=Math.max(0,+$('size').value||0);saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)};
+syncMode();
 renderCustom();
 const R0=renderHoldings();renderReport(R0);
 run();
