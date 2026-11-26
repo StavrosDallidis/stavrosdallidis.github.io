@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio X-Ray</title>
+<link rel="icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a sober fund-research report, matched to stavrosdallidis.github.io
+   IDEA: the classic one-page portfolio X-Ray report: ruled tables, pie, 3x3 style box
+   PICTURE: asset-allocation pie + style box at the top of the report
+   COLOUR and TYPE: site navy #003E74, accent #4E8FC8, ice #E8F2FA, amber for bonds/warnings; DM Sans + DM Serif Display
+   LAYOUT: input grid on top, report in two ruled columns, full-width tables below */
+:root{color-scheme:light dark;--bg:light-dark(#F5F8FC,#0d1626);--card:light-dark(#fff,#132038);--ink:light-dark(#1a1f2e,#e6edf6);--mute:light-dark(#6b7280,#9aa8bb);--rule:light-dark(rgba(0,62,116,.12),rgba(140,180,230,.18));--head:light-dark(#E8F2FA,#1a2c4a);--nav:light-dark(#003E74,#7fb2e6);--navdk:#002650;--acc:#4E8FC8;--warn:light-dark(#92400e,#f5b25a);--ok:light-dark(#1a6a3a,#7fd19b)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 'DM Sans',Arial,sans-serif;overflow-x:clip}
+header{background:linear-gradient(135deg,#002650,#003E74 60%,#1a5a9a);color:#fff;padding:28px max(4vw,16px) 24px}
+header h1{margin:0;font:400 clamp(30px,5vw,42px)/1.1 'DM Serif Display',Georgia,serif}
+header p{margin:6px 0 0;color:#E8F2FA;font-size:15px;max-width:70ch}
+main{max-width:1240px;margin:0 auto;padding:16px max(3vw,12px) 40px}
+h2{font:400 22px/1.2 'DM Serif Display',Georgia,serif;color:var(--nav);margin:0 0 10px;padding:0 0 8px;border-bottom:2px solid var(--acc)}
+h3{font-size:14px;margin:14px 0 4px}
+.box{background:var(--card);border:1px solid var(--rule);border-radius:16px;box-shadow:0 4px 24px rgba(0,62,116,.08);padding:18px clamp(14px,2.5vw,24px);margin-bottom:22px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:5px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:middle}
+th{background:var(--head);color:var(--nav);font-weight:600;font-size:13px}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.sub td:first-child{padding-left:22px}
+tr.grp td{font-weight:bold}
+tr.tot td{font-weight:bold;border-top:2px solid var(--nav)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 22px}
+@media(max-width:820px){.grid2{grid-template-columns:minmax(0,1fr)}}
+input,select,button{font:inherit;font-size:16px;color:inherit;background:var(--bg);border:1px solid var(--rule);border-radius:10px;padding:7px 10px;min-height:42px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--nav);outline-offset:1px}
+button{cursor:pointer;background:var(--head)}
+button.pri{background:#003E74;color:#fff;border-color:#003E74;font-weight:600}button.pri:hover{background:#002650}button{color:var(--nav);font-weight:500}
+button.x{min-height:36px;padding:4px 10px}
+.tk{width:110px;text-transform:uppercase}.val{width:130px;text-align:right}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.bar label{display:flex;gap:6px;align-items:center}
+.mute{color:var(--mute);font-size:13px}
+.err{color:var(--warn)}.okc{color:var(--ok)}
+.meter{height:10px;border-radius:5px;background:var(--nav);display:inline-block;vertical-align:middle}
+.meter.b{background:var(--acc);opacity:.45}
+.pie{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;align-items:center}
+@media(max-width:420px){.pie{grid-template-columns:minmax(0,1fr)}.pie svg{max-width:170px}}
+.sw{display:inline-block;width:11px;height:11px;margin-right:6px;vertical-align:-1px}
+.sbox{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start}
+.sgrid{display:grid;grid-template-columns:repeat(3,58px) auto;grid-template-rows:auto repeat(3,52px);gap:0}
+.sgrid div{display:flex;align-items:center;justify-content:center;font-size:13px}
+.sgrid .c{border:1px solid light-dark(#c9dcef,#2a4168);font-variant-numeric:tabular-nums}
+.sgrid .lab{font-size:11px;color:var(--mute);padding:2px 6px}
+.cls{background:var(--head);border-radius:10px;padding:8px;margin:4px 0 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.cls select{font-size:14px;min-height:34px;padding:4px}
+ul.tips{margin:0;padding:0;list-style:none}
+ul.tips li{padding:9px 0 9px 26px;border-bottom:1px solid var(--rule);position:relative}
+ul.tips li::before{content:"";position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--mute)}
+ul.tips li::before{background:var(--acc)}ul.tips li.w::before{background:#f59e0b}ul.tips li.g::before{background:var(--ok)}
+ul.tips b{display:block}
+.prof{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.prof label{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--mute)}
+.scroll{overflow-x:auto}
+details{margin-top:6px}summary{cursor:pointer;color:var(--nav);font-weight:500}main>p.mute{padding:0 6px}
+#status{min-height:20px}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:8px;border-bottom:1px solid var(--rule)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mute)}.stack td:empty{display:none}.tk,.val{width:100%}}
+@media(prefers-reduced-motion:no-preference){.meter{transition:width .4s}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header>
+<a href="index.html#projects" style="color:#E8F2FA;font-size:14px;text-decoration:none">← Stavros Dallidis</a>
+<h1>Portfolio X-Ray</h1>
+<p>Look through every stock and ETF you hold: asset mix, style, sectors, regions, valuation, overlap and costs.</p>
+</header>
+<main>
+
+<section class="box">
+<h2>Portfolio</h2>
+<div class="bar">
+<label>Currency <select id="cur"><option>EUR</option><option>USD</option></select></label>
+<label>Benchmark <select id="bm"></select></label>
+</div>
+<div class="scroll">
+<table class="stack" id="ht"><thead><tr><th>Ticker</th><th>Name</th><th>Type</th><th class="n">Value</th><th class="n">% of portfolio</th><th></th></tr></thead><tbody></tbody></table>
+</div>
+<div class="bar">
+<button id="add">Add holding</button>
+<button class="pri" id="run">Show X-Ray</button>
+<button id="sample">Load sample</button>
+<button id="clear">Clear all</button>
+</div>
+<div id="status" class="mute"></div>
+<p class="mute" id="samplenote">Sample portfolio loaded. Replace the tickers and values with your own. Enter the market value of each holding; use ticker CASH for cash.</p>
+</section>
+
+<section class="box">
+<h2>Investor profile</h2>
+<div class="prof">
+<label>Age<input id="age" type="number" min="16" max="100" value="24"></label>
+<label>Investment horizon (years)<input id="hor" type="number" min="1" max="60" value="20"></label>
+<label>Risk tolerance<select id="risk"><option value="c">Conservative</option><option value="m">Moderate</option><option value="a" selected>Aggressive</option></select></label>
+<label>Goal<select id="goal"><option value="g" selected>Long-term growth</option><option value="i">Income</option><option value="p">Capital preservation</option></select></label>
+<label>Home region<select id="home"><option value="eu" selected>Europe</option><option value="us">United States</option><option value="uk">United Kingdom</option></select></label>
+</div>
+</section>
+
+<div id="report"></div>
+
+<section class="box">
+<h2>ETF holdings files</h2>
+<p class="mute">Built-in ETF data are approximate (index-level, as of mid-2026) and cover only the top 10 holdings. For an exact look-through, download the holdings CSV from the issuer's site (iShares, Vanguard, Xtrackers, Amundi…) and load it here. It replaces the built-in data for that ticker in this browser.</p>
+<div class="bar">
+<label>Ticker <input id="ctk" class="tk" placeholder="e.g. IWDA"></label>
+<label>TER % <input id="cter" type="number" step="0.01" min="0" style="width:90px" placeholder="0.20"></label>
+<input id="cfile" type="file" accept=".csv,.txt">
+</div>
+<div id="cmsg" class="mute"></div>
+<div id="clist"></div>
+<details><summary>Supported ETFs with built-in data</summary><p class="mute" id="etflist"></p></details>
+</section>
+
+<p class="mute">Live stock data: Financial Modeling Prep. ETF data: approximate index-level figures; check the issuer factsheet before acting on them. Educational tool, not personal financial advice.</p>
+</main>
+
+<script>
+{
+// ── CONFIG: paste your Cloudflare Worker address here (no trailing slash) ──
+const WORKER_URL='https://portfolio-xray.dallidisstavros.workers.dev';
+const SEC=[['BM','Basic Materials'],['CC','Consumer Cyclical'],['FS','Financial Services'],['RE','Real Estate'],['CS','Communication Services'],['EN','Energy'],['IN','Industrials'],['TE','Technology'],['CD','Consumer Defensive'],['HC','Healthcare'],['UT','Utilities']];
+const SUPER=[['Cyclical',[0,1,2,3]],['Sensitive',[4,5,6,7]],['Defensive',[8,9,10]]];
+const REG=[['na','North America'],['latam','Latin America'],['uk','United Kingdom'],['eurdev','Europe Developed'],['euremg','Europe Emerging'],['afme','Africa/Middle East'],['japan','Japan'],['aus','Australasia'],['asiadev','Asia Developed'],['asiaemg','Asia Emerging']];
+const GREG=[['Americas',[0,1]],['Greater Europe',[2,3,4,5]],['Greater Asia',[6,7,8,9]]];
+const DEVREG=[0,2,3,6,7,8];
+const MCAP=['Giant','Large','Medium','Small','Micro'];
+const STATS=[['pe','Price/Earnings (TTM)','h'],['pb','Price/Book','h'],['ps','Price/Sales','h'],['pcf','Price/Cash Flow','h'],['yld','Dividend Yield %','a'],['roa','Return on Assets %','a'],['roe','Return on Equity %','a']];
+const C2R={US:0,CA:0,MX:1,BR:1,AR:1,CL:1,CO:1,PE:1,GB:2,UK:2,JE:2,GG:2,DE:3,FR:3,NL:3,CH:3,SE:3,DK:3,NO:3,FI:3,IT:3,ES:3,PT:3,BE:3,AT:3,IE:3,LU:3,PL:4,TR:4,CZ:4,HU:4,GR:4,RU:4,IL:5,SA:5,AE:5,QA:5,KW:5,ZA:5,EG:5,JP:6,AU:7,NZ:7,HK:8,SG:8,TW:8,KR:8,CN:9,IN:9,ID:9,TH:9,MY:9,PH:9,VN:9,BM:0,KY:9};
+const CNAME={'united states':'US',usa:'US','united states of america':'US',canada:'CA',mexico:'MX',brazil:'BR',chile:'CL',colombia:'CO',peru:'PE',argentina:'AR','united kingdom':'GB',uk:'GB','great britain':'GB',germany:'DE',france:'FR',netherlands:'NL',switzerland:'CH',sweden:'SE',denmark:'DK',norway:'NO',finland:'FI',italy:'IT',spain:'ES',portugal:'PT',belgium:'BE',austria:'AT',ireland:'IE',luxembourg:'LU',poland:'PL',turkey:'TR',turkiye:'TR','czech republic':'CZ',hungary:'HU',greece:'GR',israel:'IL','saudi arabia':'SA','united arab emirates':'AE',qatar:'QA',kuwait:'KW','south africa':'ZA',egypt:'EG',japan:'JP',australia:'AU','new zealand':'NZ','hong kong':'HK',singapore:'SG',taiwan:'TW',korea:'KR','korea (south)':'KR','south korea':'KR','republic of korea':'KR',china:'CN',india:'IN',indonesia:'ID',thailand:'TH',malaysia:'MY',philippines:'PH',vietnam:'VN'};
+const COUNTRIES=['US','CA','GB','DE','FR','NL','CH','SE','DK','NO','FI','IT','ES','PT','BE','AT','IE','PL','GR','IL','JP','AU','HK','SG','TW','KR','CN','IN','BR','MX','ZA','SA'];
+// [name, sector index, country]
+const ST={NVDA:['NVIDIA',7,'US'],MSFT:['Microsoft',7,'US'],AAPL:['Apple',7,'US'],AMZN:['Amazon.com',1,'US'],GOOGL:['Alphabet (A+C)',4,'US'],META:['Meta Platforms',4,'US'],AVGO:['Broadcom',7,'US'],TSLA:['Tesla',1,'US'],'BRK.B':['Berkshire Hathaway',2,'US'],JPM:['JPMorgan Chase',2,'US'],NFLX:['Netflix',4,'US'],COST:['Costco',8,'US'],LLY:['Eli Lilly',9,'US'],TSM:['Taiwan Semiconductor',7,'TW'],'0700.HK':['Tencent',4,'CN'],'005930.KS':['Samsung Electronics',7,'KR'],BABA:['Alibaba',1,'CN'],'000660.KS':['SK Hynix',7,'KR'],HDB:['HDFC Bank',2,'IN'],'RELIANCE.NS':['Reliance Industries',5,'IN'],'1810.HK':['Xiaomi',7,'CN'],'0939.HK':['China Construction Bank',2,'CN'],PDD:['PDD Holdings',1,'CN'],ASML:['ASML Holding',7,'NL'],SAP:['SAP',7,'DE'],NOVN:['Novartis',9,'CH'],ROG:['Roche',9,'CH'],NESN:['Nestlé',8,'CH'],AZN:['AstraZeneca',9,'GB'],HSBA:['HSBC',2,'GB'],SHEL:['Shell',5,'GB'],SIE:['Siemens',6,'DE'],MC:['LVMH',1,'FR'],ALV:['Allianz',2,'DE'],SU:['Schneider Electric',6,'FR'],TTE:['TotalEnergies',5,'FR'],SAN:['Banco Santander',2,'ES'],DTE:['Deutsche Telekom',4,'DE'],AIR:['Airbus',6,'FR'],ULVR:['Unilever',8,'GB'],RR:['Rolls-Royce',6,'GB'],BATS:['British American Tobacco',8,'GB'],REL:['RELX',6,'GB'],BP:['BP',5,'GB'],GSK:['GSK',9,'GB'],BARC:['Barclays',2,'GB'],'7203.T':['Toyota Motor',1,'JP'],'8306.T':['Mitsubishi UFJ Financial',2,'JP'],'6758.T':['Sony Group',7,'JP'],'6501.T':['Hitachi',6,'JP'],'8316.T':['Sumitomo Mitsui Financial',2,'JP'],'8411.T':['Mizuho Financial',2,'JP'],'8035.T':['Tokyo Electron',7,'JP'],'6861.T':['Keyence',7,'JP'],'8058.T':['Mitsubishi Corp',6,'JP'],'6098.T':['Recruit Holdings',6,'JP'],XOM:['Exxon Mobil',5,'US'],JNJ:['Johnson & Johnson',9,'US'],PG:['Procter & Gamble',8,'US'],HD:['Home Depot',1,'US'],ABBV:['AbbVie',9,'US'],BAC:['Bank of America',2,'US'],CVX:['Chevron',5,'US']};
+const ALIAS={GOOG:'GOOGL','BRK-B':'BRK.B'};
+// index-level data: sec(11) reg(10) style(9: LV LB LG MV MB MG SV SB SG) mcap(5) stats top10
+const IX={
+sp500:{n:'S&P 500',us:99.5,sec:[1.8,10.6,13.2,2.0,10.4,3.0,7.6,34.0,4.8,9.4,2.4],reg:[99.6,0,.2,.2,0,0,0,0,0,0],sty:[12,28,44,5,7,3.5,.2,.2,.1],mc:[52,33,14.5,.5,0],s:{pe:23.5,pb:4.9,ps:3.3,pcf:17.5,yld:1.15,roa:9.8,roe:31},top:[['NVDA',7.6],['AAPL',6.6],['MSFT',6.4],['GOOGL',4.1],['AMZN',3.9],['META',2.8],['AVGO',2.7],['TSLA',2.1],['BRK.B',1.6],['JPM',1.4]]},
+ndx:{n:'Nasdaq-100',us:97,sec:[1.2,13.5,.6,.2,15.5,.5,4.3,51.5,5,5.2,1.4],reg:[97.5,.6,.4,1.2,0,0,0,0,0,.3],sty:[4,17,65,1,4,8.5,0,.2,.3],mc:[70,24,6,0,0],s:{pe:30,pb:7.8,ps:5.2,pcf:22,yld:.6,roa:12,roe:33},top:[['NVDA',9.2],['AAPL',8.3],['MSFT',8.1],['GOOGL',6],['AMZN',5.4],['AVGO',5],['META',3.6],['TSLA',3.1],['NFLX',2.4],['COST',2.3]]},
+ustot:{n:'US Total Market',us:99,sec:[2.2,10.8,13.5,2.7,9.6,3.1,9.2,32,4.6,9.6,2.5],reg:[99.3,.1,.2,.3,0,.1,0,0,0,0],sty:[11,25,39,5.5,7.5,5,2.5,2.5,2],mc:[45,30,17,6,2],s:{pe:22.5,pb:4.4,ps:3,pcf:16.5,yld:1.2,roa:9,roe:29},top:[['NVDA',6.5],['AAPL',5.7],['MSFT',5.6],['GOOGL',3.6],['AMZN',3.4],['META',2.4],['AVGO',2.3],['TSLA',1.8],['BRK.B',1.4],['JPM',1.2]]},
+world:{n:'MSCI World',us:72,sec:[3.3,10.4,16,2.2,8.2,3.6,10.8,26.8,5.6,9.6,2.8],reg:[75.4,0,3.4,12.6,0,.2,5.4,1.8,1.2,0],sty:[17,27,33,6.5,8.5,6,.8,.7,.5],mc:[44,34,20,2,0],s:{pe:21,pb:3.6,ps:2.6,pcf:15,yld:1.6,roa:8.5,roe:26},top:[['NVDA',5.4],['AAPL',4.7],['MSFT',4.6],['GOOGL',2.9],['AMZN',2.8],['META',2],['AVGO',1.9],['TSLA',1.5],['JPM',1],['LLY',1]]},
+acwi:{n:'Global (FTSE All-World / MSCI ACWI)',us:62.5,sec:[3.7,10.6,17,2.3,8.4,3.8,10.5,27.2,5.4,8.9,2.9],reg:[65.5,.8,3.2,12,.3,1.6,5.3,1.8,4.8,4.6],sty:[18,27,31,7,8,6,1,1,1],mc:[45,33,19,3,0],s:{pe:20,pb:3.2,ps:2.4,pcf:14,yld:1.8,roa:8,roe:24},top:[['NVDA',4.9],['AAPL',4.1],['MSFT',4],['GOOGL',2.6],['AMZN',2.4],['AVGO',1.7],['META',1.7],['TSM',1.3],['TSLA',1.3],['JPM',.9]]},
+em:{n:'MSCI Emerging Markets',us:.5,sec:[6,12.5,23,1.4,10,4.3,7,26,4.5,3.3,2.5],reg:[0,7.5,0,0,1.2,9.5,0,0,30.5,51.3],sty:[25,30,22,8,7,5,1,1,1],mc:[48,32,17,3,0],s:{pe:14.5,pb:2,ps:1.6,pcf:9.5,yld:2.5,roa:6,roe:15},top:[['TSM',10.5],['0700.HK',4.6],['005930.KS',3.8],['BABA',3],['000660.KS',2.2],['HDB',1.4],['1810.HK',1.2],['RELIANCE.NS',1.1],['0939.HK',.9],['PDD',.8]]},
+europe:{n:'MSCI Europe',us:0,sec:[5.5,9,22.5,1.2,4.2,5,17.5,8,8.5,13.5,4.5],reg:[0,0,22.5,77,.3,.2,0,0,0,0],sty:[30,32,20,5,6,4,1,1,1],mc:[38,40,20,2,0],s:{pe:15,pb:2.1,ps:1.5,pcf:10,yld:3.1,roa:5,roe:14},top:[['ASML',2.8],['HSBA',2.1],['AZN',2],['NOVN',1.9],['ROG',1.9],['SAP',1.8],['NESN',1.7],['SHEL',1.6],['SIE',1.6],['MC',1.1]]},
+es50:{n:'EURO STOXX 50',us:0,sec:[4,15,23,0,5,4,17.5,16,6,5,4.5],reg:[0,0,0,100,0,0,0,0,0,0],sty:[28,40,26,2,2,2,0,0,0],mc:[60,38,2,0,0],s:{pe:15.5,pb:2.1,ps:1.6,pcf:10.5,yld:3,roa:5,roe:14},top:[['ASML',8],['SAP',5.4],['SIE',4.6],['ALV',3.7],['MC',3.6],['SAN',3.5],['SU',3.3],['DTE',3.1],['TTE',3.1],['AIR',3]]},
+ftse100:{n:'FTSE 100',us:0,sec:[7,7,23,1,3.5,11.5,12,1.5,15,12.5,4],reg:[0,0,97,3,0,0,0,0,0,0],sty:[34,36,18,4,5,3,0,0,0],mc:[30,45,23,2,0],s:{pe:13.5,pb:2,ps:1.4,pcf:9,yld:3.4,roa:5,roe:15},top:[['HSBA',8.2],['AZN',8],['SHEL',7.3],['ULVR',5],['RR',3.6],['BATS',3.6],['BP',3],['REL',2.8],['GSK',2.8],['BARC',2.5]]},
+japan:{n:'MSCI Japan',us:0,sec:[5,18,16,2.5,7,.8,23,14,5.5,6.5,1.2],reg:[0,0,0,0,0,0,100,0,0,0],sty:[32,30,15,9,8,5,.4,.3,.3],mc:[28,44,27,1,0],s:{pe:15.5,pb:1.6,ps:1.2,pcf:10,yld:2.2,roa:4.5,roe:10.5},top:[['8306.T',3.9],['7203.T',3.8],['6758.T',3.2],['6501.T',2.9],['8316.T',2.4],['8411.T',1.6],['8035.T',1.6],['6098.T',1.6],['6861.T',1.5],['8058.T',1.5]]},
+wsc:{n:'MSCI World Small Cap',us:59,sec:[7,12,15,8,3,4.5,19.5,11,4.5,10.5,3],reg:[62,.2,4.5,13,0,1,10.5,3.5,5.3,0],sty:[0,0,0,4,5,4,30,30,27],mc:[0,0,13,57,30],s:{pe:16,pb:1.8,ps:1.1,pcf:10,yld:1.9,roa:3.5,roe:10},top:[]},
+r2000:{n:'Russell 2000',us:97.5,sec:[4.5,10,17,6.5,2.5,5,17.5,13.5,3.5,17,3],reg:[98,.5,.3,1,0,.2,0,0,0,0],sty:[0,0,0,2,3,3,30,32,30],mc:[0,0,8,55,37],s:{pe:17,pb:2,ps:1.2,pcf:11,yld:1.3,roa:2,roe:7},top:[]},
+hdy:{n:'FTSE All-World High Dividend Yield',us:40,sec:[5.5,7,25,3.5,7,7.5,10,10,10,9.5,6],reg:[44,1.5,7,22,.3,2.5,6,4,7,5.7],sty:[38,34,10,7,6,2,1,1,1],mc:[44,36,18,2,0],s:{pe:15,pb:2.3,ps:1.7,pcf:10.5,yld:3.2,roa:6,roe:17},top:[['AVGO',3.6],['JPM',2.6],['TSM',1.8],['XOM',1.6],['JNJ',1.5],['ABBV',1.3],['PG',1.3],['HD',1.2],['BAC',1],['CVX',.9]]}
+};
+// ticker: [name, TER %, index key | 'bond' | 'gold']
+const EF={VWCE:['Vanguard FTSE All-World UCITS ETF (Acc)',.19,'acwi'],VWRA:['Vanguard FTSE All-World UCITS ETF (Acc)',.19,'acwi'],VWRL:['Vanguard FTSE All-World UCITS ETF (Dist)',.19,'acwi'],SSAC:['iShares MSCI ACWI UCITS ETF (Acc)',.2,'acwi'],IUSQ:['iShares MSCI ACWI UCITS ETF (Acc)',.2,'acwi'],ACWI:['iShares MSCI ACWI ETF',.32,'acwi'],VT:['Vanguard Total World Stock ETF',.06,'acwi'],
+IWDA:['iShares Core MSCI World UCITS ETF (Acc)',.2,'world'],SWDA:['iShares Core MSCI World UCITS ETF (Acc)',.2,'world'],EUNL:['iShares Core MSCI World UCITS ETF (Acc)',.2,'world'],XDWD:['Xtrackers MSCI World UCITS ETF 1C',.19,'world'],SPPW:['SPDR MSCI World UCITS ETF',.12,'world'],URTH:['iShares MSCI World ETF',.24,'world'],
+CSPX:['iShares Core S&P 500 UCITS ETF (Acc)',.07,'sp500'],SXR8:['iShares Core S&P 500 UCITS ETF (Acc)',.07,'sp500'],VUSA:['Vanguard S&P 500 UCITS ETF (Dist)',.07,'sp500'],VUAA:['Vanguard S&P 500 UCITS ETF (Acc)',.07,'sp500'],SPYL:['SPDR S&P 500 UCITS ETF (Acc)',.03,'sp500'],SPY:['SPDR S&P 500 ETF Trust',.0945,'sp500'],VOO:['Vanguard S&P 500 ETF',.03,'sp500'],IVV:['iShares Core S&P 500 ETF',.03,'sp500'],VTI:['Vanguard Total Stock Market ETF',.03,'ustot'],
+QQQ:['Invesco QQQ Trust',.2,'ndx'],QQQM:['Invesco Nasdaq 100 ETF',.15,'ndx'],EQQQ:['Invesco EQQQ Nasdaq-100 UCITS ETF',.3,'ndx'],CNDX:['iShares Nasdaq 100 UCITS ETF (Acc)',.33,'ndx'],SXRV:['iShares Nasdaq 100 UCITS ETF (Acc)',.33,'ndx'],
+EIMI:['iShares Core MSCI EM IMI UCITS ETF (Acc)',.18,'em'],IS3N:['iShares Core MSCI EM IMI UCITS ETF (Acc)',.18,'em'],VFEM:['Vanguard FTSE Emerging Markets UCITS ETF',.22,'em'],IEMG:['iShares Core MSCI Emerging Markets ETF',.09,'em'],VWO:['Vanguard FTSE Emerging Markets ETF',.07,'em'],
+MEUD:['Amundi Stoxx Europe 600 UCITS ETF (Acc)',.07,'europe'],VEUR:['Vanguard FTSE Developed Europe UCITS ETF',.1,'europe'],IMEU:['iShares Core MSCI Europe UCITS ETF',.12,'europe'],SMEA:['iShares Core MSCI Europe UCITS ETF (Acc)',.12,'europe'],
+EXW1:['iShares Core EURO STOXX 50 UCITS ETF (DE)',.1,'es50'],CSX5:['iShares Core EURO STOXX 50 UCITS ETF (Acc)',.1,'es50'],FEZ:['SPDR EURO STOXX 50 ETF',.29,'es50'],
+ISF:['iShares Core FTSE 100 UCITS ETF',.07,'ftse100'],VUKE:['Vanguard FTSE 100 UCITS ETF',.09,'ftse100'],SJPA:['iShares Core MSCI Japan IMI UCITS ETF',.12,'japan'],EWJ:['iShares MSCI Japan ETF',.5,'japan'],
+WSML:['iShares MSCI World Small Cap UCITS ETF',.35,'wsc'],IUSN:['iShares MSCI World Small Cap UCITS ETF',.35,'wsc'],IWM:['iShares Russell 2000 ETF',.19,'r2000'],VHYL:['Vanguard FTSE All-World High Dividend Yield UCITS ETF',.29,'hdy'],
+AGGH:['iShares Core Global Aggregate Bond UCITS ETF (EUR Hedged)',.1,'bond'],VAGF:['Vanguard Global Aggregate Bond UCITS ETF (EUR Hedged)',.1,'bond'],IEAG:['iShares Core Euro Aggregate Bond UCITS ETF',.09,'bond'],VGEA:['Vanguard EUR Eurozone Government Bond UCITS ETF',.07,'bond'],AGG:['iShares Core US Aggregate Bond ETF',.03,'bond'],BND:['Vanguard Total Bond Market ETF',.03,'bond'],TLT:['iShares 20+ Year Treasury Bond ETF',.15,'bond'],
+SGLN:['iShares Physical Gold ETC',.12,'gold'],IGLN:['iShares Physical Gold ETC',.12,'gold'],GLD:['SPDR Gold Shares',.4,'gold']};
+const BMS=['acwi','world','sp500','europe'];
+const SAMPLE=[['VWCE',30000],['CSPX',15000],['EIMI',5000],['AAPL',4000],['NVDA',3000],['AGGH',8000],['CASH',5000]];
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get(k,d){try{const v=localStorage.getItem('xray.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('xray.'+k,JSON.stringify(v))}catch(e){}}};
+const pct=(x,d=1)=>(x==null||!isFinite(x))?'—':x.toFixed(d);
+const sum=a=>a.reduce((s,x)=>s+(x||0),0);
+const norm=a=>{const s=sum(a);return s>0?a.map(x=>x/s*100):a.map(()=>0)};
+
+let H=ls.get('holdings',null);
+let usedSample=!H;
+if(!H)H=SAMPLE.map(([t,v])=>({t,v,ty:'auto'}));
+let CUSTOM=ls.get('custom',{});
+let fx=1.10, fxLive=false, mcp=null, mcpTried=false;
+const INFO={};
+$('bm').innerHTML=BMS.map(k=>`<option value="${k}">${esc(IX[k].n)}</option>`).join('');
+$('cur').value=ls.get('cur','EUR');$('bm').value=ls.get('bm','acwi');
+const prof=ls.get('prof',null);
+if(prof)for(const k of ['age','hor','risk','goal','home'])if(prof[k]!=null)$(k).value=prof[k];
+$('samplenote').hidden=!usedSample;
+$('etflist').textContent=Object.keys(EF).sort().map(k=>`${k} (${IX[EF[k][2]]?.n||(EF[k][2]==='bond'?'bonds':'gold')}, TER ${EF[k][1]}%)`).join(' · ');
+
+const curSym=()=>$('cur').value==='EUR'?'€':'$';
+const fmtV=v=>curSym()+Math.round(v).toLocaleString('en-US');
+const base=t=>{t=t.trim().toUpperCase();return ALIAS[t]||t};
+const etfKey=t=>{const b=base(t).split('.')[0];return CUSTOM[base(t)]?base(t):CUSTOM[b]?b:EF[base(t)]?base(t):EF[b]?b:null};
+
+function saveAll(){ls.set('holdings',H);ls.set('cur',$('cur').value);ls.set('bm',$('bm').value);ls.set('prof',{age:$('age').value,hor:$('hor').value,risk:$('risk').value,goal:$('goal').value,home:$('home').value})}
+
+// ---------- classification ----------
+function staticInfo(h){
+  const t=base(h.t);
+  if(!t)return{kind:'empty'};
+  if(h.ty==='cash'||t==='CASH')return{kind:'cash',name:'Cash'};
+  if(h.ty==='bond')return{kind:'bond',name:'Bond holding',ter:0};
+  if(h.ty==='other')return{kind:'other',name:'Other asset',ter:0};
+  const k=etfKey(t);
+  if(k&&CUSTOM[k])return{kind:'etf',name:CUSTOM[k].n,ter:CUSTOM[k].ter,ix:CUSTOM[k],custom:true,key:k};
+  if(k){const [n,ter,ix]=EF[k];if(ix==='bond')return{kind:'bond',name:n,ter,key:k};if(ix==='gold')return{kind:'other',name:n,ter,key:k};return{kind:'etf',name:n,ter,ix:IX[ix],ixk:ix,key:k}}
+  return null;
+}
+function stockStyle(mc,s){
+  let sz=mc>=200e9?0:mc>=25e9?1:mc>=5e9?2:mc>=1e9?3:4;
+  const parts=[];if(s.pe>0)parts.push(Math.log(s.pe/18));if(s.pb>0)parts.push(Math.log(s.pb/3));if(s.ps>0)parts.push(Math.log(s.ps/2.2));
+  const sc=parts.length?sum(parts)/parts.length:0;
+  const col=sc>.25?2:sc<-.25?0:1;const row=sz<=1?0:sz===2?1:2;
+  return{sz,cell:row*3+col};
+}
+async function getMcp(){if(mcpTried)return mcp;mcpTried=true;if(WORKER_URL){mcp={worker:true};return mcp}try{mcp=await window.claude?.use?.('mcp')}catch(e){mcp=null}return mcp}
+const WPATH={'profile-symbol':'profile','metrics-ratios-ttm':'ratios','key-metrics-ttm':'metrics','quote':'quote'};
+async function fmp(tool,input){
+  if(WORKER_URL){let r,j;try{r=await fetch(`${WORKER_URL}/${WPATH[input.endpoint]}?symbol=${encodeURIComponent(input.symbol)}`);j=await r.json()}catch(e){throw{code:'server_unavailable'}}
+    if(!r.ok)throw{code:r.status===403||r.status===400?'tool_error':'server_unavailable',message:j?.error||''};return j}
+  const r=await mcp.callTool('FMP',tool,input,{cache:{staleTime:6*3600e3,gcTime:7*86400e3}});
+  return r.payload;
+}
+function errText(e){
+  const c=e?.code,m=String(e?.message||'');
+  if(c==='tool_error'&&/ACCESS DENIED|higher plan|subscription|premium|upgrade|exclusive/i.test(m))return'Not covered by your FMP plan (usually non-US listings). Classify it manually below.';
+  if(c==='tool_error')return'FMP could not return data for this ticker. Classify it manually below.';
+  if(c==='needs_reauth')return'Reconnect FMP in claude.ai Settings → Connectors.';
+  if(c==='server_not_connected'||c==='selection_required')return'Add the FMP connector in claude.ai Settings → Connectors to fetch live stock data.';
+  if(c==='not_in_manifest'||c==='approval_required')return'Live data needs your approval for FMP. Press Show X-Ray to be asked again.';
+  if(c==='server_unavailable')return'FMP is not responding right now. Try again shortly.';
+  return'Live data unavailable ('+esc(c||'error')+').';
+}
+async function resolveStock(t){
+  if(INFO[t]&&INFO[t].kind==='stock')return;
+  const m=await getMcp();
+  if(!m){INFO[t]={kind:'unk',name:'',err:'Live stock data needs this page opened in Claude with the FMP connector. Classify it manually below.'};return}
+  try{
+    const p=await fmp('company',{endpoint:'profile-symbol',symbol:t});
+    const pr=Array.isArray(p)?p[0]:p;
+    if(!pr||!pr.symbol){INFO[t]={kind:'unk',name:'',err:'Ticker not found on FMP. Check the symbol or classify it manually below.'};return}
+    if(pr.isEtf||pr.isFund){INFO[t]={kind:'unketf',name:pr.companyName||'',err:'ETF/fund without built-in data: load its holdings CSV below to look through it.'};return}
+    const [ra,km]=await Promise.all([fmp('statements',{endpoint:'metrics-ratios-ttm',symbol:t}).catch(()=>null),fmp('statements',{endpoint:'key-metrics-ttm',symbol:t}).catch(()=>null)]);
+    const r=(Array.isArray(ra)?ra[0]:ra)||{},k=(Array.isArray(km)?km[0]:km)||{};
+    const s={pe:r.priceToEarningsRatioTTM,pb:r.priceToBookRatioTTM,ps:r.priceToSalesRatioTTM,pcf:r.priceToOperatingCashFlowRatioTTM,yld:r.dividendYieldTTM!=null?r.dividendYieldTTM*100:null,roa:k.returnOnAssetsTTM!=null?k.returnOnAssetsTTM*100:null,roe:k.returnOnEquityTTM!=null?k.returnOnEquityTTM*100:null};
+    const si=SEC.findIndex(x=>x[1]===pr.sector);
+    let mc=pr.marketCap||0;if(pr.currency&&pr.currency!=='USD'&&pr.currency==='EUR')mc*=fx;
+    INFO[t]={kind:'stock',name:pr.companyName||t,sec:si,cty:String(pr.country||'').toUpperCase(),mc,s,...stockStyle(mc,s)};
+  }catch(e){INFO[t]={kind:'unk',name:'',err:errText(e),code:e?.code}}
+}
+async function resolveFx(){
+  const m=await getMcp();if(!m)return;
+  try{const q=await fmp('quote',{endpoint:'quote',symbol:'EURUSD'});const p=(Array.isArray(q)?q[0]:q)?.price;if(p>0){fx=p;fxLive=true}}catch(e){}
+}
+function infoFor(h){
+  const s=staticInfo(h);if(s)return s;
+  const t=base(h.t);const i=INFO[t];
+  if(h.man&&(!i||i.kind!=='stock')){const m=h.man;return{kind:'stock',manual:true,name:i?.name||t,sec:+m.sec,cty:m.cty,sz:+m.sz,cell:+m.sz<=1?(+m.st):+m.sz===2?3+(+m.st):6+(+m.st),s:{}}}
+  return i||{kind:'pending'};
+}
+
+// ---------- analysis ----------
+function analyse(){
+  const rows=H.map(h=>({h,i:infoFor(h),v:Math.max(0,+h.v||0)})).filter(r=>r.i.kind!=='empty');
+  const tot=sum(rows.map(r=>r.v));
+  const A={cash:0,us:0,nonus:0,bond:0,other:0};
+  const sec=Array(11).fill(0),reg=Array(10).fill(0),sty=Array(9).fill(0),mc=Array(5).fill(0);
+  let eq=0,secW=0,regW=0,styW=0;
+  const st={};STATS.forEach(([k])=>st[k]={n:0,d:0,w:0});
+  const und={};const fees=[];const unres=[];
+  const addStat=(s,w)=>{for(const [k,,m] of STATS){const x=s?.[k];if(x==null||!isFinite(x))continue;if(m==='h'){if(x<=0)continue;st[k].d+=w/x;st[k].w+=w}else{st[k].n+=w*x;st[k].w+=w}}};
+  const addU=(tk,w,via,nm,si,cty)=>{const k=ALIAS[tk]||tk;const u=und[k]||(und[k]={w:0,via:new Set(),nm:nm||ST[k]?.[0]||k,si:si??ST[k]?.[1],cty:cty||ST[k]?.[2]});u.w+=w;u.via.add(via)};
+  for(const {h,i,v} of rows){
+    const t=base(h.t);
+    if(i.kind==='cash'){A.cash+=v;continue}
+    if(i.kind==='bond'){A.bond+=v;fees.push({t,n:i.name,ter:i.ter,v});continue}
+    if(i.kind==='other'){A.other+=v;if(i.ter)fees.push({t,n:i.name,ter:i.ter,v});continue}
+    if(i.kind==='etf'){
+      const x=i.ix,ev=v*.995;A.cash+=v*.005;eq+=ev;
+      const us=x.us!=null?x.us:(x.reg?x.reg[0]*.96:0);A.us+=ev*us/100;A.nonus+=ev*(100-us)/100;
+      if(x.sec){const a=norm(x.sec);a.forEach((p,j)=>sec[j]+=ev*p/100);secW+=ev}
+      if(x.reg){const a=norm(x.reg);a.forEach((p,j)=>reg[j]+=ev*p/100);regW+=ev}
+      if(x.sty){const a=norm(x.sty);a.forEach((p,j)=>sty[j]+=ev*p/100);const b=norm(x.mc);b.forEach((p,j)=>mc[j]+=ev*p/100);styW+=ev}
+      if(x.s)addStat(x.s,ev);
+      (x.top||[]).forEach(([tk,w,nm,si,cty])=>addU(tk,v*w/100,t,nm,si,cty));
+      fees.push({t,n:i.name,ter:i.ter,v});continue}
+    if(i.kind==='stock'){
+      eq+=v;const r=C2R[i.cty];(i.cty==='US'?(A.us+=v):(A.nonus+=v));
+      if(i.sec>=0){sec[i.sec]+=v;secW+=v}
+      if(r!=null){reg[r]+=v;regW+=v}
+      if(i.cell!=null){sty[i.cell]+=v;mc[i.sz]+=v;styW+=v}
+      addStat(i.s,v);addU(t,v,'Direct',i.name,i.sec,i.cty);continue}
+    A.other+=v;unres.push(t);
+  }
+  const SP=k=>st[k].w?(STATS.find(x=>x[0]===k)[2]==='h'?st[k].w/st[k].d:st[k].n/st[k].w):null;
+  const stats={};STATS.forEach(([k])=>stats[k]=SP(k));
+  return{rows,tot,A,eq,sec:secW?sec.map(x=>x/secW*100):null,reg:regW?reg.map(x=>x/regW*100):null,sty:styW?sty.map(x=>x/styW*100):null,mc:styW?mc.map(x=>x/styW*100):null,cov:{sec:eq?secW/eq*100:0,reg:eq?regW/eq*100:0,sty:eq?styW/eq*100:0},stats,und,fees,unres};
+}
+
+// ---------- rendering ----------
+const PIEC=[['cash','Cash','#c4dcf0'],['us','US Stocks','#003E74'],['nonus','Non-US Stocks','#4E8FC8'],['bond','Bonds','#f59e0b'],['other','Other / Not Classified','#9ca3af']];
+function pieSvg(A,tot){
+  let a0=-Math.PI/2,out='';const R=80,c=85;
+  for(const [k,,col] of PIEC){const f=tot?A[k]/tot:0;if(f<=0)continue;
+    if(f>.9999){out+=`<circle cx="${c}" cy="${c}" r="${R}" fill="${col}"/>`;continue}
+    const a1=a0+f*2*Math.PI,lg=f>.5?1:0;
+    out+=`<path d="M${c},${c}L${c+R*Math.cos(a0)},${c+R*Math.sin(a0)}A${R},${R} 0 ${lg} 1 ${c+R*Math.cos(a1)},${c+R*Math.sin(a1)}Z" fill="${col}" stroke="var(--bg)" stroke-width="1"/>`;a0=a1}
+  if(!out)out=`<circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="var(--rule)"/>`;
+  return`<svg viewBox="0 0 170 170" width="170" height="170" role="img" aria-label="Asset allocation pie chart">${out}</svg>`;
+}
+const meter=(p,max,b)=>`<span class="meter${b?' b':''}" style="width:${Math.max(0,Math.min(100,p/max*100))*0.9}px"></span>`;
+function renderReport(R){
+  const bk=$('bm').value,B=IX[bk];const nb=norm(B.sec),nr=norm(B.reg),nst=norm(B.sty);
+  const T=R.tot;let h='';
+  // asset allocation
+  h+=`<div class="grid2"><section class="box"><h2>Asset Allocation</h2><div class="pie">${pieSvg(R.A,T)}<table><thead><tr><th></th><th class="n">Portfolio Net %</th><th class="n">Value</th></tr></thead><tbody>`;
+  for(const [k,l,col] of PIEC)h+=`<tr><td><span class="sw" style="background:${col}"></span>${l}</td><td class="n">${pct(T?R.A[k]/T*100:0,2)}</td><td class="n">${fmtV(R.A[k])}</td></tr>`;
+  h+=`<tr class="tot"><td>Total</td><td class="n">100.00</td><td class="n">${fmtV(T)}</td></tr></tbody></table></div>`;
+  if(R.unres.length)h+=`<p class="mute">Not classified: ${R.unres.map(esc).join(', ')}. Classify them in the Portfolio table.</p>`;
+  h+=`</section>`;
+  // style box
+  const sg=R.sty||Array(9).fill(0),mx=Math.max(...sg,1);
+  const cell=(p)=>{const a=Math.min(1,p/50);return`<div class="c" style="background:rgba(0,62,116,${(a*.92).toFixed(2)});color:${a>.45?'#fff':'inherit'}">${p>=.5?Math.round(p):'—'}</div>`};
+  h+=`<section class="box"><h2>Stock Style</h2><div class="sbox"><div class="sgrid"><div class="lab">Value</div><div class="lab">Blend</div><div class="lab">Growth</div><div></div>`;
+  ['Large','Mid','Small'].forEach((l,r)=>{for(let c=0;c<3;c++)h+=cell(sg[r*3+c]);h+=`<div class="lab">${l}</div>`});
+  h+=`</div><table><thead><tr><th>Market Cap</th><th class="n">Portfolio %</th><th class="n">Bmark %</th></tr></thead><tbody>`;
+  MCAP.forEach((l,j)=>h+=`<tr><td>${l}</td><td class="n">${pct(R.mc?R.mc[j]:null)}</td><td class="n">${pct(norm(B.mc)[j])}</td></tr>`);
+  h+=`</tbody></table></div><p class="mute">% of classified stock holdings (${pct(R.cov.sty,0)}% of stocks covered). Darker cells hold more.</p></section></div>`;
+  // sectors + regions
+  h+=`<div class="grid2"><section class="box"><h2>Stock Sectors</h2><table><thead><tr><th>Sector</th><th class="n">Portfolio %</th><th class="n">Bmark %</th><th></th></tr></thead><tbody>`;
+  for(const [g,ix] of SUPER){const ps=R.sec?sum(ix.map(j=>R.sec[j])):null,bs=sum(ix.map(j=>nb[j]));h+=`<tr class="grp"><td>${g}</td><td class="n">${pct(ps)}</td><td class="n">${pct(bs)}</td><td></td></tr>`;
+    for(const j of ix)h+=`<tr class="sub"><td>${SEC[j][1]}</td><td class="n">${pct(R.sec?R.sec[j]:null)}</td><td class="n">${pct(nb[j])}</td><td>${meter(R.sec?R.sec[j]:0,40)}<br>${meter(nb[j],40,1)}</td></tr>`}
+  h+=`</tbody></table><p class="mute">% of stocks (${pct(R.cov.sec,0)}% covered). Bars: dark = portfolio, grey = benchmark.</p></section>`;
+  h+=`<section class="box"><h2>World Regions</h2><table><thead><tr><th>Region</th><th class="n">Portfolio %</th><th class="n">Bmark %</th></tr></thead><tbody>`;
+  for(const [g,ix] of GREG){h+=`<tr class="grp"><td>${g}</td><td class="n">${pct(R.reg?sum(ix.map(j=>R.reg[j])):null)}</td><td class="n">${pct(sum(ix.map(j=>nr[j])))}</td></tr>`;
+    for(const j of ix)h+=`<tr class="sub"><td>${REG[j][1]}</td><td class="n">${pct(R.reg?R.reg[j]:null)}</td><td class="n">${pct(nr[j])}</td></tr>`}
+  const dev=R.reg?sum(DEVREG.map(j=>R.reg[j])):null,bdev=sum(DEVREG.map(j=>nr[j]));
+  h+=`<tr class="grp"><td>Market Classification</td><td></td><td></td></tr><tr class="sub"><td>Developed Markets</td><td class="n">${pct(dev)}</td><td class="n">${pct(bdev)}</td></tr><tr class="sub"><td>Emerging Markets</td><td class="n">${pct(dev==null?null:100-dev)}</td><td class="n">${pct(100-bdev)}</td></tr></tbody></table><p class="mute">% of stocks (${pct(R.cov.reg,0)}% covered).</p></section></div>`;
+  // stats + fees
+  h+=`<div class="grid2"><section class="box"><h2>Stock Stats</h2><table><thead><tr><th></th><th class="n">Portfolio</th><th class="n">Bmark</th></tr></thead><tbody>`;
+  for(const [k,l] of STATS)h+=`<tr><td>${l}</td><td class="n">${pct(R.stats[k],2)}</td><td class="n">${pct(B.s[k],2)}</td></tr>`;
+  h+=`</tbody></table><p class="mute">Valuation ratios are weighted harmonic averages; returns and yield are weighted averages.</p></section>`;
+  const fT=sum(R.fees.map(f=>f.v*f.ter/100)),wter=T?fT/T*100:0,r=.06,fee10=T*(Math.pow(1+r,10)-Math.pow(1+r-wter/100,10));
+  h+=`<section class="box"><h2>Fees &amp; Expenses</h2><div class="scroll"><table class="stack"><thead><tr><th>Holding</th><th class="n">TER %</th><th class="n">Value</th><th class="n">Annual cost</th></tr></thead><tbody>`;
+  for(const f of R.fees)h+=`<tr><td>${esc(f.t)}</td><td class="n">${pct(f.ter,2)}</td><td class="n">${fmtV(f.v)}</td><td class="n">${fmtV(f.v*f.ter/100)}</td></tr>`;
+  if(!R.fees.length)h+=`<tr><td colspan="4" class="mute">No funds in the portfolio.</td></tr>`;
+  h+=`</tbody></table></div><table><tbody><tr><td>Portfolio weighted expense ratio</td><td class="n"><b>${pct(wter,3)}%</b></td></tr><tr><td>Total annual cost</td><td class="n"><b>${fmtV(fT)}</b></td></tr><tr><td>Estimated 10-year cost (6% yearly return)</td><td class="n"><b>${fmtV(fee10)}</b></td></tr></tbody></table><p class="mute">Direct stocks carry no fund fee; broker and transaction costs are not included.</p></section></div>`;
+  // top 10 underlying
+  const U=Object.entries(R.und).sort((a,b)=>b[1].w-a[1].w).slice(0,10);
+  h+=`<section class="box"><h2>Top 10 Underlying Holdings</h2><div class="scroll"><table class="stack"><thead><tr><th>Holding</th><th>Sector</th><th>Country</th><th class="n">% of portfolio</th><th class="n">Value</th><th>Held through</th></tr></thead><tbody>`;
+  for(const [k,u] of U)h+=`<tr><td><b>${esc(k)}</b> ${esc(u.nm)}</td><td>${u.si>=0&&u.si!=null?SEC[u.si][1]:'—'}</td><td>${esc(u.cty||'—')}</td><td class="n">${pct(T?u.w/T*100:0,2)}</td><td class="n">${fmtV(u.w)}</td><td>${[...u.via].map(esc).join(', ')}${u.via.size>1?' <span class="err">(overlap)</span>':''}</td></tr>`;
+  if(!U.length)h+=`<tr><td colspan="6" class="mute">No stock holdings to look through.</td></tr>`;
+  h+=`</tbody></table></div><p class="mute">Built from each ETF's top-10 constituents plus your direct stocks, so smaller positions spread across many funds may be understated.</p></section>`;
+  h+=`<section class="box"><h2>Things to Consider</h2><ul class="tips">${considerations(R).map(([c,t,d])=>`<li class="${c}"><b>${t}</b>${d}</li>`).join('')}</ul><p class="mute">Rule-of-thumb checks based on your profile and the X-Ray above. They are educational prompts, not personal financial advice.</p></section>`;
+  $('report').innerHTML=h;
+}
+
+function considerations(R){
+  const out=[],T=R.tot;if(!T)return[['','Empty portfolio','Add holdings to see considerations.']];
+  const age=+$('age').value||30,hor=+$('hor').value||10,risk=$('risk').value,goal=$('goal').value,home=$('home').value;
+  const stk=(R.A.us+R.A.nonus)/T*100,bond=R.A.bond/T*100,cash=R.A.cash/T*100;
+  let [lo,hi]={c:[20,45],m:[45,75],a:[70,100]}[risk];
+  if(hor<3)hi=Math.min(hi,25);else if(hor<7)hi=Math.min(hi,60);lo=Math.min(lo,hi);
+  const rule=Math.max(0,Math.min(100,110-age));
+  if(stk>hi+5)out.push(['w','Equity share above your profile',` Stocks are ${pct(stk,0)}% of the portfolio, above the ${lo}–${hi}% range usually linked to a ${$('risk').selectedOptions[0].text.toLowerCase()} profile with a ${hor}-year horizon. A large fall would hit harder than your profile suggests you are comfortable with.`]);
+  else if(stk<lo-5)out.push(['w','Equity share below your profile',` Stocks are ${pct(stk,0)}%, below the ${lo}–${hi}% range for your risk tolerance and horizon. Over ${hor} years a low equity share may limit growth${goal==='g'?', which is your stated goal':''}.`]);
+  else out.push(['g','Equity share fits your profile',` Stocks at ${pct(stk,0)}% sit within the ${lo}–${hi}% range for your risk tolerance and ${hor}-year horizon.`]);
+  out.push(['',`Age-based reference: about ${rule}% in stocks`,` The common "110 minus age" rule gives ${rule}% equities for age ${age}; you hold ${pct(stk,0)}%. It is a rough starting point, not a target.`]);
+  if((age>=50||hor<7)&&bond<20)out.push(['w','Little defensive ballast',` Bonds are ${pct(bond,0)}% of the portfolio. With ${age>=50?'retirement getting closer':'a short horizon'}, a bond or cash buffer can reduce the chance of having to sell after a crash.`]);
+  if(cash>15&&hor>=5)out.push(['w','High cash level',` ${pct(cash,0)}% is in cash. Over a ${hor}-year horizon, cash beyond an emergency fund tends to lose ground to inflation.`]);
+  if(hor<3&&cash<10&&stk>40)out.push(['w','Short horizon, little cash',' Money you need within about 3 years is usually kept out of stocks.']);
+  const U=Object.entries(R.und).sort((a,b)=>b[1].w-a[1].w);
+  if(U[0]&&U[0][1].w/T>.08)out.push(['w','Single-company concentration',` ${esc(U[0][0])} makes up ${pct(U[0][1].w/T*100,1)}% of the whole portfolio once your funds are looked through. One company's bad news would move your total noticeably.`]);
+  const ov=U.filter(([,u])=>u.via.size>1).slice(0,4);
+  if(ov.length)out.push(['w','The same stocks through several holdings',` ${ov.map(([k,u])=>esc(k)+' ('+[...u.via].map(esc).join(' + ')+')').join(', ')}. Holding a stock directly and through funds increases its weight beyond what the funds alone suggest.`]);
+  const etfs=R.rows.filter(r=>r.i.kind==='etf');
+  const pairs=[];
+  for(let a=0;a<etfs.length;a++)for(let b=a+1;b<etfs.length;b++){const A=etfs[a].i,B=etfs[b].i;if(A.ixk&&A.ixk===B.ixk){pairs.push(`${base(etfs[a].h.t)} and ${base(etfs[b].h.t)} track the same index`);continue}
+    const ma=Object.fromEntries((A.ix.top||[]).map(x=>[x[0],x[1]]));const o=sum((B.ix.top||[]).map(x=>Math.min(x[1],ma[x[0]]||0)));if(o>=12)pairs.push(`${base(etfs[a].h.t)} and ${base(etfs[b].h.t)} share ${pct(o,0)}% of weight in their top holdings`)}
+  if(pairs.length)out.push(['w','Overlapping funds',` ${pairs.map(esc).join('; ')}. Overlapping funds add complexity without adding much diversification.`]);
+  if(R.sec){const nb=norm(IX[$('bm').value].sec);R.sec.forEach((p,j)=>{if(p>25&&p>nb[j]*1.3)out.push(['w',`Heavy in ${SEC[j][1]}`,` ${pct(p,0)}% of your stocks versus ${pct(nb[j],0)}% in the benchmark. Your results will lean on how this sector does.`])})}
+  if(R.reg){const usP=R.reg[0],em=sum([1,4,5,9].map(j=>R.reg[j]));
+    if(usP>70)out.push(['',`North America is ${pct(usP,0)}% of your stocks`,` The global market is about two-thirds US, so this is ${usP>75?'an overweight':'close to market weight'}. US stocks are expensive relative to most other regions, which some investors see as a reason to diversify.`]);
+    if(em<3&&R.eq/T>.3)out.push(['','Little or no emerging-markets exposure',` Emerging markets are roughly 10% of world stock market value. Leaving them out is a valid choice, but it is a bet.`]);
+    if(em>25)out.push(['w','High emerging-markets weight',` ${pct(em,0)}% of stocks are in emerging markets, more than double their world weight; expect higher volatility.`]);
+    const homeP=home==='eu'?R.reg[3]+R.reg[4]:home==='uk'?R.reg[2]:R.reg[0];
+    if(home!=='us'&&$('cur').value==='EUR'&&homeP<15)out.push(['',`Most of your stocks are outside the euro area`,` About ${pct(100-homeP,0)}% of your stocks are priced in foreign currencies. Exchange-rate moves (USD/EUR now ${fx.toFixed(4)}${fxLive?' live':', fallback rate'}) will add to or subtract from returns. Currency-hedged share classes exist if this worries you.`]);}
+  if(R.sty){const g=R.sty[2]+R.sty[5]+R.sty[8],v=R.sty[0]+R.sty[3]+R.sty[6],sm=R.sty[6]+R.sty[7]+R.sty[8];
+    if(g>50)out.push(['',`Growth tilt (${pct(g,0)}% growth stocks)`,` Growth stocks have led the last decade but tend to fall harder when interest rates rise or expectations reset.`]);
+    if(sm<2&&risk!=='c')out.push(['','Almost no small companies',` A world or S&P 500 fund is dominated by large caps. A small-cap fund is one way to broaden it, at a higher fee.`]);
+    if(v>50&&goal==='g')out.push(['',`Value tilt (${pct(v,0)}% value stocks)`,` Fine for income and stability; for pure growth, check that it is intended.`]);}
+  const fT=sum(R.fees.map(f=>f.v*f.ter/100)),wter=fT/T*100;
+  if(wter>.4)out.push(['w',`High costs (${pct(wter,2)}% per year)`,` Broad index ETFs cost 0.03–0.25%. A difference of 0.3% a year adds up to several percent of the portfolio over ten years.`]);
+  R.fees.filter(f=>f.ter>=.3&&f.v/T>.05).forEach(f=>out.push(['w',`${esc(f.t)} is relatively expensive (${pct(f.ter,2)}%)`,' A cheaper fund tracking the same or a similar index may exist.']));
+  if(wter<=.25&&R.fees.length)out.push(['g',`Low costs (${pct(wter,2)}% per year)`,' Your fund fees are in the cheap range for index investing.']);
+  const nStocks=R.rows.filter(r=>r.i.kind==='stock').length;
+  if(nStocks>0&&nStocks<10&&R.rows.filter(r=>r.i.kind==='stock').reduce((s,r)=>s+r.v,0)/T>.4)out.push(['w','Few individual stocks carry much weight',` ${nStocks} single stocks make up a large part of the portfolio; individual stocks are far more volatile than funds.`]);
+  if(R.rows.length>12)out.push(['',`Many holdings (${R.rows.length})`,' More positions do not always mean more diversification; check the overlap above.']);
+  if(goal==='i'&&(R.stats.yld||0)<2.5)out.push(['',`Income goal, ${pct(R.stats.yld,1)}% dividend yield`,' Your stocks pay out little. Dividend-focused or bond funds raise current income, usually at the cost of some growth.']);
+  if(goal==='p'&&stk>40)out.push(['w','Capital preservation with many stocks',` ${pct(stk,0)}% in stocks can mean losses of a third or more in a bad year.`]);
+  return out;
+}
+
+function renderHoldings(){
+  const R=analyse(),T=R.tot;
+  const tb=$('ht').tBodies[0];
+  tb.innerHTML=H.map((h,ix)=>{const i=infoFor(h),v=+h.v||0;
+    const kind={etf:i.custom?'ETF (CSV)':'ETF',stock:i.manual?'Stock (manual)':'Stock',bond:'Bond fund',cash:'Cash',other:'Other',pending:'…',unk:'Not classified',unketf:'ETF (no data)',empty:''}[i.kind]||'';
+    let note='';
+    if((i.kind==='unk'||i.kind==='unketf')&&!h.man)note=`<div class="mute err">${i.err||''}</div>`;
+    const cls=((i.kind==='unk')||(h.man))?`<div class="cls">Classify: <select data-m="sec" data-i="${ix}">${SEC.map((s,j)=>`<option value="${j}"${h.man&&+h.man.sec===j?' selected':''}>${s[1]}</option>`).join('')}</select><select data-m="cty" data-i="${ix}">${COUNTRIES.map(c=>`<option${h.man&&h.man.cty===c?' selected':''}>${c}</option>`).join('')}</select><select data-m="sz" data-i="${ix}">${['Giant','Large','Mid','Small','Micro'].map((s,j)=>`<option value="${j}"${h.man&&+h.man.sz===j?' selected':''}>${s}</option>`).join('')}</select><select data-m="st" data-i="${ix}">${['Value','Blend','Growth'].map((s,j)=>`<option value="${j}"${h.man&&+h.man.st===j?' selected':''}>${s}</option>`).join('')}</select>${h.man?`<button class="x" data-unm="${ix}">Undo</button>`:`<button class="x" data-setm="${ix}">Apply</button>`}</div>`:'';
+    return`<tr><td><input class="tk" data-t="${ix}" value="${esc(h.t)}" aria-label="Ticker" autocomplete="off"></td><td>${esc(i.name||'')}${note}${cls}</td><td><select data-ty="${ix}" aria-label="Type"><option value="auto"${h.ty==='auto'?' selected':''}>${esc(kind||'Auto')}</option><option value="cash"${h.ty==='cash'?' selected':''}>Cash</option><option value="bond"${h.ty==='bond'?' selected':''}>Bond</option><option value="other"${h.ty==='other'?' selected':''}>Other</option></select></td><td class="n"><input class="val" data-v="${ix}" type="number" min="0" step="100" value="${esc(h.v)}" aria-label="Value"></td><td class="n">${T?pct(v/T*100,2):'—'}</td><td><button class="x" data-del="${ix}" aria-label="Remove">Remove</button></td></tr>`}).join('')+
+    `<tr class="tot"><td>Total</td><td></td><td></td><td class="n">${fmtV(T)}</td><td class="n">100.00</td><td></td></tr>`;
+  return R;
+}
+
+async function run(){
+  saveAll();
+  $('status').textContent='Fetching live data…';$('run').disabled=true;
+  await getMcp();
+  const need=[...new Set(H.filter(h=>base(h.t)&&!staticInfo(h)&&!h.man).map(h=>base(h.t)))];
+  for(const t of need)if(INFO[t]&&INFO[t].kind!=='stock')delete INFO[t];
+  await Promise.all([resolveFx(),...need.map(resolveStock)]);
+  const R=renderHoldings();renderReport(R);
+  const bad=need.filter(t=>INFO[t]?.kind!=='stock').length;
+  const codes=need.map(t=>INFO[t]?.code).filter(Boolean);
+  $('status').innerHTML=!mcp?'<span class="err">Live stock data is off. ETF analysis still works.</span>':
+    (codes.length&&codes.length===need.length&&codes.every(c=>c===codes[0])&&codes[0]!=='tool_error')?`<span class="err">${errText({code:codes[0]})}</span>`:
+    `<span class="okc">Updated ${new Date().toLocaleTimeString()}.</span> ${need.length?`${need.length-bad} of ${need.length} stocks fetched live from FMP.`:''} EUR/USD ${fx.toFixed(4)}${fxLive?' (live)':' (fallback)'}.`;
+  $('run').disabled=false;
+}
+
+// ---------- CSV ----------
+function parseCSV(txt){
+  const rows=[];let row=[],f='',q=false;
+  for(let i=0;i<txt.length;i++){const c=txt[i];
+    if(q){if(c==='"'){if(txt[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===','||c===';'||c==='\t'){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&txt[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}else f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}
+  return rows;
+}
+const GICS={'information technology':7,technology:7,'communication':4,'communication services':4,telecommunication:4,'consumer discretionary':1,'consumer cyclical':1,'consumer staples':8,'consumer defensive':8,'health care':9,healthcare:9,financials:2,'financial services':2,industrials:6,energy:5,materials:0,'basic materials':0,utilities:10,'real estate':3};
+function numParse(s){s=String(s||'').replace(/[%\s]/g,'');if(/^-?\d+,\d+$/.test(s))s=s.replace(',','.');else s=s.replace(/,/g,'');return parseFloat(s)}
+function loadCSV(text,tk,ter){
+  const rows=parseCSV(text.replace(/^﻿/,''));
+  const hi=rows.findIndex(r=>r.some(c=>/weight|% of|allocation/i.test(c))&&r.some(c=>/name|ticker|holding|security/i.test(c)));
+  if(hi<0)throw new Error('Could not find a header row with a weight column.');
+  const hd=rows[hi].map(c=>c.trim().toLowerCase());
+  const col=re=>hd.findIndex(c=>re.test(c));
+  const cT=col(/^(ticker|symbol|issuer ticker|code)/),cN=col(/name|holding|security|description/),cW=col(/weight|% of|allocation/),cS=col(/sector/),cC=col(/location|country|domicile|market/),cA=col(/asset class|asset type/);
+  const sec=Array(11).fill(0),reg=Array(10).fill(0),top=[];let eqW=0,cash=0,usW=0;
+  for(const r of rows.slice(hi+1)){
+    const w=numParse(r[cW]);if(!isFinite(w)||w<=0)continue;
+    const ac=cA>=0?String(r[cA]).toLowerCase():'equity';
+    if(/cash|money|derivative|future|fx/.test(ac)){cash+=w;continue}
+    eqW+=w;
+    const s=cS>=0?String(r[cS]).trim().toLowerCase():'';const si=GICS[s]??GICS[Object.keys(GICS).find(k=>s.startsWith(k))];
+    if(si!=null)sec[si]+=w;
+    const cn=cC>=0?String(r[cC]).trim():'';const iso=cn.length===2?cn.toUpperCase():CNAME[cn.toLowerCase()];
+    if(iso&&C2R[iso]!=null)reg[C2R[iso]]+=w;if(iso==='US')usW+=w;
+    top.push([String(cT>=0?r[cT]:r[cN]).trim().toUpperCase(),w,cN>=0?String(r[cN]).trim():'',si,iso]);
+  }
+  if(!eqW&&!cash)throw new Error('No holdings with a weight found.');
+  top.sort((a,b)=>b[1]-a[1]);const tw=eqW+cash;
+  CUSTOM[tk]={n:`${tk} (from holdings file, ${top.length} positions)`,ter:isFinite(ter)?ter:0,us:eqW?usW/eqW*100:0,sec:sum(sec)?sec:null,reg:sum(reg)?reg:null,top:top.slice(0,10).map(x=>[x[0],x[1]/tw*100,x[2],x[3],x[4]])};
+  ls.set('custom',CUSTOM);return top.length;
+}
+function renderCustom(){
+  const ks=Object.keys(CUSTOM);
+  $('clist').innerHTML=ks.length?`<table><tbody>${ks.map(k=>`<tr><td><b>${esc(k)}</b> ${esc(CUSTOM[k].n)}</td><td class="n">TER ${pct(CUSTOM[k].ter,2)}%</td><td><button class="x" data-rmc="${esc(k)}">Remove</button></td></tr>`).join('')}</tbody></table>`:'';
+}
+
+// ---------- events ----------
+const tb=$('ht').tBodies[0];
+tb.addEventListener('change',e=>{const d=e.target.dataset;
+  if(d.t!=null){H[+d.t].t=e.target.value.trim().toUpperCase();H[+d.t].man=null;saveAll();renderHoldings()}
+  if(d.v!=null){H[+d.v].v=+e.target.value||0;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+  if(d.ty!=null){H[+d.ty].ty=e.target.value;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+  if(d.m!=null&&H[+d.i].man){H[+d.i].man[d.m]=e.target.value;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+});
+tb.addEventListener('click',e=>{const d=e.target.dataset;
+  if(d.del!=null){H.splice(+d.del,1);saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+  if(d.setm!=null){const i=+d.setm,g=m=>tb.querySelector(`[data-m="${m}"][data-i="${i}"]`).value;H[i].man={sec:g('sec'),cty:g('cty'),sz:g('sz'),st:g('st')};saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+  if(d.unm!=null){H[+d.unm].man=null;saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+});
+$('add').onclick=()=>{H.push({t:'',v:0,ty:'auto'});renderHoldings();const ins=tb.querySelectorAll('input.tk');ins[ins.length-1]?.focus()};
+$('run').onclick=run;
+$('sample').onclick=()=>{H=SAMPLE.map(([t,v])=>({t,v,ty:'auto'}));$('samplenote').hidden=false;saveAll();run()};
+$('clear').onclick=()=>{H=[{t:'',v:0,ty:'auto'}];$('samplenote').hidden=true;saveAll();renderHoldings();$('report').innerHTML=''};
+$('cur').onchange=()=>{const to=$('cur').value,from=ls.get('cur','EUR');if(to!==from){const f=to==='USD'?fx:1/fx;H.forEach(h=>h.v=Math.round((+h.v||0)*f))}saveAll();const R=renderHoldings();if($('report').innerHTML)renderReport(R)};
+$('bm').onchange=()=>{saveAll();if($('report').innerHTML)renderReport(analyse())};
+for(const k of ['age','hor','risk','goal','home'])$(k).addEventListener('change',()=>{saveAll();if($('report').innerHTML)renderReport(analyse())});
+$('cfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const tk=base($('ctk').value||'');
+  if(!tk){$('cmsg').innerHTML='<span class="err">Enter the ETF ticker first.</span>';e.target.value='';return}
+  const ter=parseFloat($('cter').value);const def=EF[tk]?.[1];
+  try{const n=loadCSV(await f.text(),tk,isFinite(ter)?ter:(def??0));$('cmsg').innerHTML=`<span class="okc">Loaded ${n} positions for ${esc(tk)}.</span>`;renderCustom();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}
+  catch(err){$('cmsg').innerHTML=`<span class="err">${esc(err.message)}</span>`}
+  e.target.value=''};
+$('clist').addEventListener('click',e=>{const k=e.target.dataset.rmc;if(k){delete CUSTOM[k];ls.set('custom',CUSTOM);renderCustom();const R=renderHoldings();if($('report').innerHTML)renderReport(R)}});
+
+renderCustom();
+const R0=renderHoldings();renderReport(R0);
+run();
+}
+</script>
+</body>
+</html>
